@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "739389135840",
+    "project_id": "heritage-walks-bb620",
+    "storage_bucket": "heritage-walks-bb620.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739389135840:android:f478a131355615df4ba985",
+        "android_client_info": {
+          "package_name": "com.ceylonheritage.ceylon_heritage"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "739389135840-ortourss6o1m2mbhr2vf92576201bgf8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ceylonheritage.ceylon_heritage",
+            "certificate_hash": "4c43ff38c3707414864061a2457ad4fac9a32595"
+          }
+        },
+        {
+          "client_id": "739389135840-dhdf1aol97qvdedgmolqhvgg4ghfrnbp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9v4I7Pngg-5ds0oYYGaKU9cj3I-CU4Qg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "739389135840-dhdf1aol97qvdedgmolqhvgg4ghfrnbp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "739389135840-52plt04t19utprnl9hqid72cuspit70m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.heritageWalksAdmin"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739389135840:android:1e8ab7354db476324ba985",
+        "android_client_info": {
+          "package_name": "com.example.heritage_walks_admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "739389135840-dhdf1aol97qvdedgmolqhvgg4ghfrnbp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9v4I7Pngg-5ds0oYYGaKU9cj3I-CU4Qg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "739389135840-dhdf1aol97qvdedgmolqhvgg4ghfrnbp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "739389135840-52plt04t19utprnl9hqid72cuspit70m.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.heritageWalksAdmin"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
