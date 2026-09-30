@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../data/historical_places_data.dart';
+import '../destinations/destination_page.dart';
+import 'profile_screen.dart';
+
 class PlaceItem {
   final String title;
   final String subtitle;
@@ -35,6 +39,17 @@ class _HomeScreenState extends State<HomeScreen> {
       subtitle: 'Ancient City',
       imagePath: 'assets/images/polonnaruwa.png',
     ),
+    PlaceItem(
+      title: 'Jaffna',
+      subtitle: 'Northern Cultural Heritage',
+      imagePath: 'assets/images/jaffna.png',
+    ),
+    PlaceItem(
+      title: 'Down South',
+      subtitle: 'Southern Heritage & Coast',
+      imagePath: 'assets/images/down_south.png',
+    ),
+
     PlaceItem(
       title: 'Kandy',
       subtitle: 'Temple of the Tooth',
@@ -272,12 +287,37 @@ class _HomeScreenState extends State<HomeScreen> {
           color: Colors.transparent,
           child: InkWell(
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Exploring ${place.title}...'),
-                  duration: const Duration(seconds: 1),
-                ),
-              );
+              if (place.title == 'Polonnaruwa') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        DestinationPage(destination: polonnaruwa),
+                  ),
+                );
+              } else if (place.title == 'Jaffna') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DestinationPage(destination: jaffna),
+                  ),
+                );
+              } else if (place.title == 'Down South') {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) =>
+                        DestinationPage(destination: downSouth),
+                  ),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Exploring ${place.title}...'),
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              }
             },
             child: Stack(
               fit: StackFit.expand,
@@ -406,7 +446,7 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             _buildNavItem(index: 0, icon: Icons.home_rounded, label: 'HOME'),
-            _buildNavItem(index: 1, icon: Icons.map_outlined, label: 'MAP'),
+
             _buildNavItem(
               index: 2,
               icon: Icons.favorite_border_rounded,
@@ -432,6 +472,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return InkWell(
       onTap: () {
+        if (index == 3) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          );
+          return;
+        }
+
         setState(() {
           _selectedIndex = index;
         });
