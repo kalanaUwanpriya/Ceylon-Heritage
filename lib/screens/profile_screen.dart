@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../services/user_service.dart';
 import 'about_app_screen.dart';
@@ -19,6 +20,16 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // ============================================================
+  // HERITAGE WALKS DESIGN COLORS
+  // ============================================================
+
+  static const Color backgroundColor = Color(0xFFF6EADA);
+  static const Color primaryColor = Color(0xFF17452F);
+  static const Color cardColor = Color(0xFFF0DDC3);
+  static const Color accentColor = Color(0xFF9F5625);
+  static const Color secondaryTextColor = Color(0xFF5F625D);
+
   final UserService _userService = UserService();
 
   bool _isLoading = true;
@@ -170,27 +181,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text(
-            'Logout',
-            style: TextStyle(fontWeight: FontWeight.bold),
+          backgroundColor: backgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-          content: const Text('Are you sure you want to logout?'),
+          title: Text(
+            'Logout',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: primaryColor,
+            ),
+          ),
+          content: Text(
+            'Are you sure you want to logout?',
+            style: GoogleFonts.inter(fontSize: 14, color: secondaryTextColor),
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context, false);
               },
-              child: const Text('Cancel'),
+              child: Text(
+                'Cancel',
+                style: GoogleFonts.inter(
+                  color: secondaryTextColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context, true);
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1E3A2B),
+                backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              child: const Text('Logout'),
+              child: Text(
+                'Logout',
+                style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+              ),
             ),
           ],
         );
@@ -218,11 +253,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F2EB),
+      backgroundColor: backgroundColor,
       body: SafeArea(
         child: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFF1E3A2B)),
+                child: CircularProgressIndicator(color: primaryColor),
               )
             : _buildProfileContent(),
       ),
@@ -236,7 +271,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _buildProfileContent() {
     return RefreshIndicator(
-      color: const Color(0xFF1E3A2B),
+      color: primaryColor,
       onRefresh: _loadProfile,
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -250,19 +285,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
                     'My Profile',
-                    style: TextStyle(
-                      fontSize: 28,
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E3A2B),
+                      color: primaryColor,
                     ),
                   ),
                 ),
                 IconButton(
                   onPressed: _loadProfile,
-                  icon: const Icon(Icons.refresh, color: Color(0xFF1E3A2B)),
+                  icon: const Icon(Icons.refresh_rounded, color: primaryColor),
                   tooltip: 'Refresh profile',
                 ),
               ],
@@ -280,11 +315,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: Colors.red.shade100),
                 ),
                 child: Text(
                   _errorMessage!,
-                  style: TextStyle(color: Colors.red.shade700, fontSize: 13),
+                  style: GoogleFonts.inter(
+                    color: Colors.red.shade700,
+                    fontSize: 13,
+                  ),
                 ),
               ),
 
@@ -295,13 +334,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
+                color: cardColor,
+                borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.06),
-                    blurRadius: 15,
-                    offset: const Offset(0, 6),
+                    blurRadius: 12,
+                    offset: const Offset(0, 5),
                   ),
                 ],
               ),
@@ -314,10 +353,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Text(
                     _name,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 22,
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E3A2B),
+                      color: primaryColor,
                     ),
                   ),
 
@@ -330,16 +369,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         const Icon(
                           Icons.email_outlined,
                           size: 16,
-                          color: Colors.grey,
+                          color: secondaryTextColor,
                         ),
                         const SizedBox(width: 6),
                         Flexible(
                           child: Text(
                             _email,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: GoogleFonts.inter(
                               fontSize: 14,
-                              color: Colors.grey,
+                              color: secondaryTextColor,
                             ),
                           ),
                         ),
@@ -354,14 +393,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const Icon(
                         Icons.location_on_outlined,
                         size: 17,
-                        color: Color(0xFFC88E38),
+                        color: accentColor,
                       ),
                       const SizedBox(width: 5),
-                      Text(
-                        _location,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
+                      Flexible(
+                        child: Text(
+                          _location,
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: secondaryTextColor,
+                          ),
                         ),
                       ),
                     ],
@@ -372,10 +414,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Text(
                       _bio,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: GoogleFonts.inter(
                         fontSize: 14,
-                        color: Color(0xFF555555),
-                        height: 1.4,
+                        color: secondaryTextColor,
+                        height: 1.5,
                       ),
                     ),
                   ],
@@ -388,12 +430,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: ElevatedButton.icon(
                       onPressed: _openEditProfile,
                       icon: const Icon(Icons.edit_outlined, size: 19),
-                      label: const Text(
+                      label: Text(
                         'Edit Profile',
-                        style: TextStyle(fontWeight: FontWeight.w600),
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1E3A2B),
+                        backgroundColor: primaryColor,
                         foregroundColor: Colors.white,
                         elevation: 0,
                         shape: RoundedRectangleBorder(
@@ -411,14 +456,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // ==================================================
             // MY ACCOUNT
             // ==================================================
-            const Text(
-              'My Account',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E3A2B),
-              ),
-            ),
+            _buildSectionHeading('My Account'),
 
             const SizedBox(height: 12),
 
@@ -459,14 +497,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // ==================================================
             // SETTINGS
             // ==================================================
-            const Text(
-              'Settings',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E3A2B),
-              ),
-            ),
+            _buildSectionHeading('Settings'),
 
             const SizedBox(height: 12),
 
@@ -560,14 +591,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: OutlinedButton.icon(
                 onPressed: _showLogoutDialog,
                 icon: const Icon(Icons.logout, color: Colors.red),
-                label: const Text(
+                label: Text(
                   'Logout',
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     color: Colors.red,
                     fontWeight: FontWeight.w600,
+                    fontSize: 14,
                   ),
                 ),
                 style: OutlinedButton.styleFrom(
+                  backgroundColor: backgroundColor,
                   side: const BorderSide(color: Colors.red, width: 1.2),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
@@ -584,22 +617,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // ============================================================
+  // SECTION HEADING
+  // ============================================================
+
+  Widget _buildSectionHeading(String title) {
+    return Text(
+      title,
+      style: GoogleFonts.playfairDisplay(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: primaryColor,
+      ),
+    );
+  }
+
+  // ============================================================
   // PROFILE AVATAR
   // ============================================================
 
   Widget _buildProfileAvatar() {
     if (_profilePhoto.isNotEmpty) {
-      return CircleAvatar(
-        radius: 48,
-        backgroundImage: NetworkImage(_profilePhoto),
-        backgroundColor: const Color(0xFFE9E1D5),
+      return Container(
+        padding: const EdgeInsets.all(3),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(color: accentColor, width: 2),
+        ),
+        child: CircleAvatar(
+          radius: 48,
+          backgroundImage: NetworkImage(_profilePhoto),
+          backgroundColor: backgroundColor,
+        ),
       );
     }
 
-    return const CircleAvatar(
-      radius: 48,
-      backgroundColor: Color(0xFFE9E1D5),
-      child: Icon(Icons.person, size: 52, color: Color(0xFF1E3A2B)),
+    return Container(
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: accentColor, width: 2),
+      ),
+      child: const CircleAvatar(
+        radius: 48,
+        backgroundColor: backgroundColor,
+        child: Icon(Icons.person_outline, size: 52, color: primaryColor),
+      ),
     );
   }
 
@@ -615,11 +677,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.035),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -627,25 +689,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: ListTile(
         onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         leading: Container(
           width: 42,
           height: 42,
           decoration: BoxDecoration(
-            color: const Color(0xFFF1EDE6),
+            color: backgroundColor,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: const Color(0xFF1E3A2B), size: 22),
+          child: Icon(icon, color: primaryColor, size: 22),
         ),
         title: Text(
           title,
-          style: const TextStyle(
-            fontSize: 15,
+          style: GoogleFonts.inter(
+            fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: Color(0xFF333333),
+            color: primaryColor,
           ),
         ),
-        trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+        trailing: const Icon(Icons.chevron_right_rounded, color: accentColor),
       ),
     );
   }
@@ -657,7 +720,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _showComingSoon(String featureName) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('$featureName will be connected next.'),
+        content: Text(
+          '$featureName will be connected next.',
+          style: GoogleFonts.inter(),
+        ),
+        backgroundColor: primaryColor,
         duration: const Duration(seconds: 2),
       ),
     );
@@ -671,20 +738,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return BottomNavigationBar(
       currentIndex: 3,
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.white,
-      selectedItemColor: const Color(0xFF1E3A2B),
-      unselectedItemColor: Colors.grey,
-      selectedFontSize: 12,
-      unselectedFontSize: 12,
+      backgroundColor: backgroundColor,
+      selectedItemColor: primaryColor,
+      unselectedItemColor: secondaryTextColor,
+      selectedFontSize: 13,
+      unselectedFontSize: 13,
+      selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
+      unselectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w500),
+      elevation: 8,
       onTap: (index) {
         if (index == 3) {
           return;
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Navigation will be connected next.'),
-            duration: Duration(seconds: 1),
+          SnackBar(
+            content: Text(
+              'Navigation will be connected next.',
+              style: GoogleFonts.inter(),
+            ),
+            backgroundColor: primaryColor,
+            duration: const Duration(seconds: 1),
           ),
         );
       },
@@ -695,13 +769,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.explore_outlined),
-          activeIcon: Icon(Icons.explore),
-          label: 'Explore',
+          icon: Icon(Icons.grid_view_outlined),
+          activeIcon: Icon(Icons.grid_view_outlined),
+          label: 'Services',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.bookmark_border),
-          activeIcon: Icon(Icons.bookmark),
+          icon: Icon(Icons.favorite_border_rounded, size: 27),
+          activeIcon: Icon(Icons.favorite_rounded, size: 27),
           label: 'Saved',
         ),
         BottomNavigationBarItem(
