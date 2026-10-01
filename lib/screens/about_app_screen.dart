@@ -3,128 +3,106 @@ import 'package:flutter/material.dart';
 class AboutAppScreen extends StatelessWidget {
   const AboutAppScreen({super.key});
 
-  static const Color primaryGreen = Color(0xFF1E3A2B);
-  static const Color backgroundColor = Color(0xFFF7F2EB);
-  static const Color goldColor = Color(0xFFC88E38);
+  static const Color backgroundColor = Color(0xFFF6EADA);
+  static const Color primaryColor = Color(0xFF17452F);
+  static const Color cardColor = Color(0xFFF0DDC3);
+  static const Color accentColor = Color(0xFF9F5625);
+  static const Color secondaryTextColor = Color(0xFF5F625D);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: backgroundColor,
-
-      // ============================================================
-      // APP BAR
-      // ============================================================
       appBar: AppBar(
         backgroundColor: backgroundColor,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: primaryGreen),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: IconButton(
+            style: IconButton.styleFrom(
+              backgroundColor: cardColor,
+              foregroundColor: primaryColor,
+            ),
+            icon: const Icon(Icons.arrow_back_rounded, size: 22),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
         title: const Text(
           'About App',
           style: TextStyle(
-            color: primaryGreen,
+            color: primaryColor,
             fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
-
-      // ============================================================
-      // BODY
-      // ============================================================
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // ======================================================
-              // APP ICON
-              // ======================================================
               Container(
-                width: 100,
-                height: 100,
+                width: 92,
+                height: 92,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE8F0EA),
-                  borderRadius: BorderRadius.circular(28),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.06),
-                      blurRadius: 12,
-                      offset: const Offset(0, 5),
-                    ),
-                  ],
+                  color: cardColor,
+                  borderRadius: BorderRadius.circular(25),
+                  border: Border.all(
+                    color: accentColor.withValues(alpha: 0.25),
+                  ),
                 ),
                 child: const Icon(
-                  Icons.account_balance,
-                  size: 52,
-                  color: primaryGreen,
+                  Icons.account_balance_rounded,
+                  size: 48,
+                  color: primaryColor,
                 ),
               ),
-
-              const SizedBox(height: 18),
-
-              // ======================================================
-              // APP NAME
-              // ======================================================
+              const SizedBox(height: 16),
               const Text(
                 'Heritage Walks',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: primaryGreen,
+                  color: primaryColor,
                   fontSize: 27,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w700,
                 ),
               ),
-
-              const SizedBox(height: 6),
-
+              const SizedBox(height: 4),
               const Text(
                 'Discover Sri Lanka',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: goldColor,
+                  color: accentColor,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
               ),
-
-              const SizedBox(height: 8),
-
+              const SizedBox(height: 6),
               const Text(
                 'Version 1.0.0',
-                style: TextStyle(color: Colors.black45, fontSize: 12),
+                style: TextStyle(color: secondaryTextColor, fontSize: 12),
               ),
+              const SizedBox(height: 24),
 
-              const SizedBox(height: 28),
-
-              // ======================================================
-              // ABOUT THE APP
-              // ======================================================
               _buildSectionCard(
                 title: 'About Heritage Walks',
                 icon: Icons.explore_outlined,
                 child: const Text(
                   'Heritage Walks is a mobile application designed to help users discover and explore the historical and cultural heritage of Sri Lanka.',
                   style: TextStyle(
-                    color: Colors.black54,
+                    color: secondaryTextColor,
                     fontSize: 14,
-                    height: 1.6,
+                    height: 1.55,
                   ),
                 ),
               ),
 
-              const SizedBox(height: 14),
+              const SizedBox(height: 12),
 
-              // ======================================================
-              // WHAT YOU CAN DO
-              // ======================================================
               _buildSectionCard(
                 title: 'What You Can Do',
                 icon: Icons.travel_explore_outlined,
@@ -143,78 +121,77 @@ class AboutAppScreen extends StatelessWidget {
                       'Plan walking routes',
                     ),
                     _buildFeatureRow(
-                      Icons.bookmark_outline,
+                      Icons.favorite_border_rounded,
                       'Save places and routes',
                     ),
                     _buildFeatureRow(
-                      Icons.star_outline,
+                      Icons.star_outline_rounded,
                       'Rate and review places',
                     ),
                     _buildFeatureRow(
                       Icons.headphones_outlined,
                       'Listen to audio guides',
+                      isLast: true,
                     ),
                   ],
                 ),
               ),
 
-              const SizedBox(height: 14),
+              const SizedBox(height: 12),
 
-              // ======================================================
-              // OUR PURPOSE
-              // ======================================================
               _buildSectionCard(
                 title: 'Our Purpose',
-                icon: Icons.favorite_border,
+                icon: Icons.favorite_border_rounded,
                 child: const Text(
                   'Our goal is to make exploring Sri Lanka’s heritage easier, more informative and more enjoyable by bringing useful historical information, walking routes and travel features together in one application.',
                   style: TextStyle(
-                    color: Colors.black54,
+                    color: secondaryTextColor,
                     fontSize: 14,
-                    height: 1.6,
+                    height: 1.55,
                   ),
                 ),
               ),
 
-              const SizedBox(height: 14),
+              const SizedBox(height: 12),
 
-              // ======================================================
-              // DEVELOPED FOR
-              // ======================================================
               _buildSectionCard(
                 title: 'Developed For',
                 icon: Icons.school_outlined,
                 child: const Text(
                   'Heritage Walks – Discover Sri Lanka is developed as a university group project with the aim of creating a digital platform for discovering Sri Lankan heritage.',
                   style: TextStyle(
-                    color: Colors.black54,
+                    color: secondaryTextColor,
                     fontSize: 14,
-                    height: 1.6,
+                    height: 1.55,
                   ),
                 ),
               ),
 
-              const SizedBox(height: 24),
+              const SizedBox(height: 22),
 
-              // ======================================================
-              // FOOTER
-              // ======================================================
-              const Text(
-                'Made with care for Sri Lankan heritage',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: primaryGreen,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.favorite_rounded, color: accentColor, size: 16),
+                  SizedBox(width: 7),
+                  Flexible(
+                    child: Text(
+                      'Made with care for Sri Lankan heritage',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-
               const SizedBox(height: 6),
-
               const Text(
                 '© 2026 Heritage Walks',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.black45, fontSize: 12),
+                style: TextStyle(color: secondaryTextColor, fontSize: 12),
               ),
             ],
           ),
@@ -223,85 +200,68 @@ class AboutAppScreen extends StatelessWidget {
     );
   }
 
-  // ================================================================
-  // SECTION CARD
-  // ================================================================
-
-  Widget _buildSectionCard({
+  static Widget _buildSectionCard({
     required String title,
     required IconData icon,
     required Widget child,
   }) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(18),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        border: Border.all(
+          color: accentColor.withValues(alpha: 0.22),
+          width: 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Container(
-                width: 42,
-                height: 42,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE8F0EA),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: primaryGreen, size: 22),
+              SizedBox(
+                width: 40,
+                height: 40,
+                child: Center(child: Icon(icon, color: primaryColor, size: 23)),
               ),
-
-              const SizedBox(width: 12),
-
+              const SizedBox(width: 9),
               Expanded(
                 child: Text(
                   title,
                   style: const TextStyle(
-                    color: primaryGreen,
+                    color: primaryColor,
                     fontSize: 17,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ),
             ],
           ),
-
-          const SizedBox(height: 14),
-
+          const SizedBox(height: 12),
           child,
         ],
       ),
     );
   }
 
-  // ================================================================
-  // FEATURE ROW
-  // ================================================================
-
-  Widget _buildFeatureRow(IconData icon, String text) {
+  static Widget _buildFeatureRow(
+    IconData icon,
+    String text, {
+    bool isLast = false,
+  }) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
+      padding: EdgeInsets.only(bottom: isLast ? 0 : 11),
       child: Row(
         children: [
-          Icon(icon, color: goldColor, size: 20),
-
-          const SizedBox(width: 12),
-
+          Icon(icon, color: accentColor, size: 20),
+          const SizedBox(width: 11),
           Expanded(
             child: Text(
               text,
               style: const TextStyle(
-                color: Colors.black54,
+                color: secondaryTextColor,
                 fontSize: 13,
                 height: 1.4,
               ),
