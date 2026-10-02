@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   google_fonts: ^8.2.1
   flutter_animate: ^4.5.2
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -62,6 +63,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/images/services/
+    - assets/images/services/anuradhapura/
+    - assets/images/services/polonnaruwa/
+    - assets/images/services/kandy/
+    - assets/images/services/jaffna/
+    - assets/images/services/downsouth/
+    - assets/images/services/dambulla/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
