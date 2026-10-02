@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:firebase_storage/firebase_storage.dart';
-
 import 'package:flutter/material.dart';
 
 import 'package:image_picker/image_picker.dart';
+
+import 'package:path_provider/path_provider.dart';
 
 import '../services/user_service.dart';
 
@@ -19,15 +19,14 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   static const Color backgroundColor = Color(0xFFF6EADA);
+
   static const Color primaryColor = Color(0xFF17452F);
+
   static const Color secondaryTextColor = Color(0xFF5F625D);
-  static const Color borderColor = Color(0xFFD8C4A8);
 
   final UserService _userService = UserService();
 
   final ImagePicker _imagePicker = ImagePicker();
-
-  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   final _nameController = TextEditingController();
 
@@ -369,7 +368,9 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ...locations.map((location) {
                   return ListTile(
                     dense: true,
+
                     visualDensity: const VisualDensity(vertical: -2),
+
                     leading: const Icon(
                       Icons.location_on_outlined,
 
@@ -521,52 +522,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         return;
       }
 
-      final File imageFile = File(pickedImage.path);
-
       if (!mounted) return;
 
       setState(() {
-        _selectedProfileImage = imageFile;
-
         _isUploadingPhoto = true;
+
+        _selectedProfileImage = File(pickedImage.path);
       });
 
-      final Reference photoRef = _storage
-          .ref()
-          .child('profile_photos')
-          .child(user.uid)
-          .child('profile.jpg');
+      // Get this app's permanent local storage folder.
 
-      await photoRef.putFile(
-        imageFile,
+      final Directory appDirectory = await getApplicationDocumentsDirectory();
 
-        SettableMetadata(contentType: 'image/jpeg'),
-      );
+      // Create a separate profile photo file for this user.
 
-      final String downloadUrl = await photoRef.getDownloadURL();
+      final String savedImagePath =
+          '${appDirectory.path}/profile_${user.uid}.jpg';
+
+      final File savedImage = await File(pickedImage.path).copy(savedImagePath);
+
+      // Save the permanent local path in the existing profilePhoto field.
 
       await _userService.updateUserProfile(
         uid: user.uid,
 
-        data: {'profilePhoto': downloadUrl},
+        data: {'profilePhoto': savedImage.path},
       );
 
       if (!mounted) return;
 
       setState(() {
-        _profilePhotoUrl = downloadUrl;
+        _profilePhotoUrl = savedImage.path;
 
-        _selectedProfileImage = null;
+        _selectedProfileImage = savedImage;
       });
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Profile photo updated successfully!')),
-      );
-    } on FirebaseException catch (e) {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.message ?? 'Unable to upload profile photo.')),
       );
     } catch (e) {
       if (!mounted) return;
@@ -584,24 +576,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   }
 
   Widget _buildProfileImage() {
+    // Show newly selected photo first.
+
     if (_selectedProfileImage != null) {
       return ClipOval(
         child: Image.file(
           _selectedProfileImage!,
-
-          width: 88,
-
-          height: 88,
-
-          fit: BoxFit.cover,
-        ),
-      );
-    }
-
-    if (_profilePhotoUrl.isNotEmpty) {
-      return ClipOval(
-        child: Image.network(
-          _profilePhotoUrl,
 
           width: 88,
 
@@ -616,6 +596,38 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       );
     }
 
+    // Show previously saved local profile photo.
+
+    if (_profilePhotoUrl.isNotEmpty) {
+      final File savedPhoto = File(_profilePhotoUrl);
+
+      if (savedPhoto.existsSync()) {
+        return ClipOval(
+          child: Image.file(
+            savedPhoto,
+
+            width: 88,
+
+            height: 88,
+
+            fit: BoxFit.cover,
+
+            errorBuilder: (context, error, stackTrace) {
+              return const Icon(
+                Icons.person,
+
+                size: 48,
+
+                color: Color(0xFF60705D),
+              );
+            },
+          ),
+        );
+      }
+    }
+
+    // No profile photo.
+
     return const Icon(Icons.person, size: 48, color: Color(0xFF60705D));
   }
 
@@ -627,75 +639,114 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget _buildProfileField({
     required IconData icon,
+
     required String label,
+
     required TextEditingController controller,
+
     TextInputType keyboardType = TextInputType.text,
+
     bool readOnly = false,
+
     int maxLines = 1,
+
     Widget? suffix,
   }) {
     const fieldCardColor = Color(0xFFF0DDC3);
+
     const accentColor = Color(0xFF9F5625);
 
     return Container(
       width: double.infinity,
+
       constraints: BoxConstraints(minHeight: maxLines > 1 ? 90 : 64),
+
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+
       decoration: BoxDecoration(
         color: fieldCardColor,
+
         borderRadius: BorderRadius.circular(16),
+
         border: Border.all(
           color: accentColor.withValues(alpha: 0.22),
+
           width: 1,
         ),
       ),
+
       child: Row(
         crossAxisAlignment: maxLines > 1
             ? CrossAxisAlignment.start
             : CrossAxisAlignment.center,
+
         children: [
           Padding(
             padding: EdgeInsets.only(top: maxLines > 1 ? 4 : 0),
+
             child: Icon(icon, size: 23, color: primaryColor),
           ),
+
           const SizedBox(width: 14),
+
           Expanded(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+
               crossAxisAlignment: CrossAxisAlignment.start,
+
               children: [
                 Text(
                   label,
+
                   style: const TextStyle(
                     fontSize: 12,
+
                     color: secondaryTextColor,
+
                     fontWeight: FontWeight.w500,
                   ),
                 ),
+
                 const SizedBox(height: 3),
+
                 TextField(
                   controller: controller,
+
                   keyboardType: keyboardType,
+
                   readOnly: readOnly,
+
                   maxLines: maxLines,
+
                   style: const TextStyle(
                     fontSize: 15,
+
                     color: primaryColor,
+
                     fontWeight: FontWeight.w600,
                   ),
+
                   decoration: const InputDecoration(
                     isDense: true,
+
                     filled: false,
+
                     border: InputBorder.none,
+
                     enabledBorder: InputBorder.none,
+
                     focusedBorder: InputBorder.none,
+
                     disabledBorder: InputBorder.none,
+
                     contentPadding: EdgeInsets.zero,
                   ),
                 ),
               ],
             ),
           ),
+
           if (suffix != null) ...[const SizedBox(width: 8), suffix],
         ],
       ),
@@ -710,61 +761,89 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget _buildLocationField() {
     const fieldCardColor = Color(0xFFF0DDC3);
+
     const accentColor = Color(0xFF9F5625);
 
     return Material(
       color: Colors.transparent,
+
       child: InkWell(
         onTap: _showLocationPicker,
+
         borderRadius: BorderRadius.circular(16),
+
         child: Container(
           width: double.infinity,
+
           height: 64,
+
           padding: const EdgeInsets.symmetric(horizontal: 16),
+
           decoration: BoxDecoration(
             color: fieldCardColor,
+
             borderRadius: BorderRadius.circular(16),
+
             border: Border.all(
               color: accentColor.withValues(alpha: 0.22),
+
               width: 1,
             ),
           ),
+
           child: Row(
             children: [
               const Icon(
                 Icons.location_on_outlined,
+
                 size: 23,
+
                 color: primaryColor,
               ),
+
               const SizedBox(width: 14),
+
               Expanded(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
+
                   crossAxisAlignment: CrossAxisAlignment.start,
+
                   children: [
                     const Text(
                       'Location',
+
                       style: TextStyle(
                         fontSize: 12,
+
                         color: secondaryTextColor,
+
                         fontWeight: FontWeight.w500,
                       ),
                     ),
+
                     const SizedBox(height: 3),
+
                     Text(
                       _selectedLocation,
+
                       style: const TextStyle(
                         fontSize: 15,
+
                         color: primaryColor,
+
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   ],
                 ),
               ),
+
               const Icon(
                 Icons.keyboard_arrow_down_rounded,
+
                 size: 24,
+
                 color: primaryColor,
               ),
             ],
@@ -782,17 +861,23 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   Widget _buildBottomItem({
     required IconData icon,
+
     required String label,
+
     required bool selected,
   }) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+
         child: Material(
           color: selected ? primaryColor : Colors.transparent,
+
           borderRadius: BorderRadius.circular(22),
+
           child: InkWell(
             borderRadius: BorderRadius.circular(22),
+
             onTap: () {
               if (!selected) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -802,22 +887,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 );
               }
             },
+
             child: SizedBox(
               height: 72,
+
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+
                 children: [
                   Icon(
                     icon,
+
                     size: 26,
+
                     color: selected ? backgroundColor : primaryColor,
                   ),
+
                   const SizedBox(height: 5),
+
                   Text(
                     label,
+
                     style: TextStyle(
                       fontSize: 13,
+
                       color: selected ? backgroundColor : primaryColor,
+
                       fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
                     ),
                   ),
@@ -839,31 +934,46 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget _buildBottomNavigation() {
     return Container(
       height: 88,
+
       padding: const EdgeInsets.symmetric(horizontal: 10),
+
       decoration: const BoxDecoration(
         color: backgroundColor,
+
         border: Border(top: BorderSide(color: Color(0xFFD8C4A8), width: 0.8)),
       ),
+
       child: Row(
         children: [
           _buildBottomItem(
             icon: Icons.home_outlined,
+
             label: 'Home',
+
             selected: false,
           ),
+
           _buildBottomItem(
             icon: Icons.grid_view_outlined,
+
             label: 'Services',
+
             selected: false,
           ),
+
           _buildBottomItem(
             icon: Icons.favorite_border,
+
             label: 'Saved',
+
             selected: false,
           ),
+
           _buildBottomItem(
             icon: Icons.person_outline,
+
             label: 'Profile',
+
             selected: true,
           ),
         ],
@@ -963,7 +1073,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                                   right: 0,
 
-                                  bottom: -43,
+                                  bottom: 0,
 
                                   child: Center(
                                     child: Stack(
