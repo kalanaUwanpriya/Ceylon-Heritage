@@ -1020,12 +1020,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                               children: [
                                 Positioned.fill(
-                                  child: Image.asset(
-                                    'assets/images/edit_profile_header.png',
-
-                                    fit: BoxFit.cover,
-
-                                    alignment: Alignment.center,
+                                  child: Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      Image.asset(
+                                        'assets/images/heritage_sketch_bg.jpg',
+                                        fit: BoxFit.cover,
+                                        alignment: Alignment.center,
+                                      ),
+                                      // Light overlay makes the cover image
+                                      // softer so the profile picture stands out.
+                                      Container(
+                                        color: backgroundColor.withValues(
+                                          alpha: 0.28,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
 

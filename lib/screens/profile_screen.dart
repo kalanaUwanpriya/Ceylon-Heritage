@@ -52,6 +52,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   bool _isLoading = true;
 
+  bool _isRefreshing = false;
+
   String? _errorMessage;
 
   String _name = 'Heritage Explorer';
@@ -202,6 +204,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // ============================================================
+
+  // REFRESH PROFILE WITH SMALL VISIBLE ANIMATION
+
+  Future<void> _refreshProfile() async {
+    if (_isRefreshing) return;
+
+    setState(() {
+      _isRefreshing = true;
+    });
+
+    final minimumAnimation = Future<void>.delayed(
+      const Duration(milliseconds: 650),
+    );
+
+    await Future.wait<void>([_loadProfile(), minimumAnimation]);
+
+    if (!mounted) return;
+
+    setState(() {
+      _isRefreshing = false;
+    });
+  }
 
   // OPEN EDIT PROFILE
 
@@ -382,12 +406,30 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
 
-                IconButton(
-                  onPressed: _loadProfile,
-
-                  icon: const Icon(Icons.refresh_rounded, color: primaryColor),
-
-                  tooltip: 'Refresh profile',
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 220),
+                  child: _isRefreshing
+                      ? const SizedBox(
+                          key: ValueKey('refreshing'),
+                          width: 48,
+                          height: 48,
+                          child: Padding(
+                            padding: EdgeInsets.all(13),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.4,
+                              color: primaryColor,
+                            ),
+                          ),
+                        )
+                      : IconButton(
+                          key: const ValueKey('refreshButton'),
+                          onPressed: _refreshProfile,
+                          icon: const Icon(
+                            Icons.refresh_rounded,
+                            color: primaryColor,
+                          ),
+                          tooltip: 'Refresh profile',
+                        ),
                 ),
               ],
             ),
@@ -656,15 +698,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 12),
 
             // LANGUAGE SETTING
+            // Temporarily hidden from the Profile UI.
+            // Keep this code so it can be enabled again later.
+            /*
             _buildMenuCard(
               icon: Icons.language,
-
               title: 'Language Setting',
-
               onTap: () {
                 _showComingSoon('Language Setting');
               },
             ),
+            */
 
             // NOTIFICATION SETTING
             _buildMenuCard(
