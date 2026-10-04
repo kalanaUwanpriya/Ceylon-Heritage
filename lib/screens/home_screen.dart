@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../data/historical_places_data.dart';
 import '../destinations/destination_page.dart';
+import '../widgets/app_navigation_bar.dart';
 import 'profile_screen.dart';
 
 class PlaceItem {
@@ -94,58 +95,58 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: backgroundColor,
       body: SafeArea(
         bottom: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // ==================================================
-                    // HEADER
-                    // ==================================================
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ==================================================
+              // HEADER
+              // ==================================================
 
-                    _buildHeader(),
+              _buildHeader(),
 
-                    // ==================================================
-                    // SEARCH
-                    // ==================================================
-                    _buildSearchBar(),
+              // ==================================================
+              // SEARCH
+              // ==================================================
+              _buildSearchBar(),
 
-                    const SizedBox(height: 18),
+              const SizedBox(height: 18),
 
-                    // ==================================================
-                    // DESTINATION CARDS
-                    // ==================================================
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _places.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 14),
-                        itemBuilder: (context, index) {
-                          final place = _places[index];
+              // ==================================================
+              // DESTINATION CARDS
+              // ==================================================
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _places.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 14),
+                  itemBuilder: (context, index) {
+                    final place = _places[index];
 
-                          return _buildPlaceCard(context, place);
-                        },
-                      ),
-                    ),
-
-                    const SizedBox(height: 28),
-                  ],
+                    return _buildPlaceCard(context, place);
+                  },
                 ),
               ),
-            ),
 
             // ============================================================
             // BOTTOM NAVIGATION
             // ============================================================
             _buildBottomNavigationBar(),
           ],
+
+              const SizedBox(height: 28),
+            ],
+          ),
+
         ),
+      ),
+      bottomNavigationBar: AppNavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _handleNavigation,
       ),
     );
   }
@@ -570,6 +571,56 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
+
+  // ============================================================
+  // DESTINATION NAVIGATION
+  // ============================================================
+
+  void _openDestination(BuildContext context, PlaceItem place) {
+    // Keep the navigation that already exists in the project.
+
+    if (place.title == 'Polonnaruwa') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DestinationPage(destination: polonnaruwa),
+        ),
+      );
+
+      return;
+    }
+
+    if (place.title == 'Jaffna') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DestinationPage(destination: jaffna),
+        ),
+      );
+
+      return;
+    }
+
+    if (place.title == 'Down South') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DestinationPage(destination: downSouth),
+        ),
+      );
+
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Exploring ${place.title}...',
+          style: GoogleFonts.inter(),
+        ),
+        backgroundColor: primaryColor,
+        duration: const Duration(seconds: 1),
+
       ),
     );
   }
@@ -655,6 +706,38 @@ class _HomeScreenState extends State<HomeScreen> {
                     ? backgroundColor
                     : primaryColor.withValues(alpha: 0.78),
               ),
+  // ============================================================
+  // NAVIGATION HANDLER
+  // ============================================================
+
+  void _handleNavigation(int index) {
+    if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+      );
+      return;
+    }
+
+    if (index == 0) {
+      setState(() {
+        _selectedIndex = 0;
+      });
+      return;
+    }
+
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          index == 1
+              ? 'Services will be connected next.'
+              : 'Saved will be connected next.',
+          style: GoogleFonts.inter(),
+
               const SizedBox(height: 4),
               Text(
                 label,
@@ -669,7 +752,10 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+
         ),
+        backgroundColor: primaryColor,
+        duration: const Duration(seconds: 1),
       ),
     );
   }
