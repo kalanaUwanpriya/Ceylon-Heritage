@@ -52,6 +52,16 @@ class _DestinationPageState extends State<DestinationPage> {
 
   List<String> get _destinationImages {
     switch (widget.destination.name) {
+      case 'Anuradhapura':
+        return [
+          'assets/images/anuradhapura.png',
+          'assets/images/Auradapura 2.png',
+          'assets/images/anuradapuraya 3.png',
+          'assets/images/anuradapuraya 4.png',
+          'assets/images/anurapura 5.png',
+          'assets/images/anuradapuraya 6.png',
+        ];
+
       case 'Polonnaruwa':
         return [
           'assets/images/polonnaruwa.png',
@@ -544,7 +554,9 @@ class _DestinationPageState extends State<DestinationPage> {
                                 const SizedBox(height: 3),
 
                                 Text(
-                                  'Narrated by Heritage Walks',
+                                  widget.destination.name == 'Anuradhapura'
+                                      ? 'Narrated by Dr. Sensaka Bandara'
+                                      : 'Narrated by Heritage Walks',
 
                                   style: GoogleFonts.inter(
                                     fontSize: 11,
@@ -1010,6 +1022,30 @@ class _DestinationPageState extends State<DestinationPage> {
 
     switch (attraction) {
       // =====================================================
+      // ANURADHAPURA
+      // =====================================================
+
+      case 'Ruwanwelisaya':
+        page = ruwanwelisayaInformation;
+        break;
+
+      case 'Sri Maha Bodhi':
+        page = sriMahaBodhiInformation;
+        break;
+
+      case 'Thuparamaya':
+        page = thuparamayaInformation;
+        break;
+
+      case 'Abhayagiri':
+        page = abhayagiriInformation;
+        break;
+
+      case 'Jetavanaramaya':
+        page = jetavanaramayaInformation;
+        break;
+
+      // =====================================================
 
       // POLONNARUWA
 
@@ -1116,6 +1152,9 @@ class _DestinationPageState extends State<DestinationPage> {
 
   String _getProvince() {
     switch (widget.destination.name) {
+      case 'Anuradhapura':
+        return 'North Central Province';
+
       case 'Polonnaruwa':
         return 'North Central Province';
 
@@ -1138,6 +1177,27 @@ class _DestinationPageState extends State<DestinationPage> {
 
   String _getAttractionImage(String attraction) {
     switch (attraction) {
+      // =====================================================
+
+      // ANURADHAPURA
+
+      // =====================================================
+
+      case 'Ruwanwelisaya':
+        return 'assets/images/anuradhapura.png';
+
+      case 'Sri Maha Bodhi':
+        return 'assets/images/Auradapura 2.png';
+
+      case 'Thuparamaya':
+        return 'assets/images/thuparamaya.png';
+
+      case 'Abhayagiri':
+        return 'assets/images/anurapura 5.png';
+
+      case 'Jetavanaramaya':
+        return 'assets/images/jetavanaramaya.png';
+
       // =====================================================
 
       // POLONNARUWA

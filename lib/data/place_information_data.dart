@@ -1,5 +1,164 @@
 import '../destinations/place_information_page.dart';
 
+// =========================================================
+// ANURADHAPURA INFORMATION PAGES
+// =========================================================
+
+final ruwanwelisayaInformation = PlaceInformationPage(
+  placeName: 'Ruwanwelisaya',
+  destinationName: 'Anuradhapura',
+  subtitle: 'The Great Stupa of Ancient Sri Lanka',
+  description:
+      'Ruwanwelisaya is a magnificent stupa and one of the world\'s tallest ancient monuments. Built by King Dutugemunu, it stands as a testament to the architectural and engineering prowess of ancient Sri Lanka.',
+  location: 'Anuradhapura, North Central Province',
+  rating: '4.9',
+  reviews: '5,231',
+  openingHours: 'Open 24 hours',
+  bestTime: 'Early morning or late afternoon',
+  entranceFee: 'Free',
+  dressCode: 'Modest attire (shoulders and knees covered, white preferred)',
+  heroImages: [
+    'assets/images/anuradhapura.png',
+  ],
+  nearbyNames: [
+    'Sri Maha Bodhi',
+    'Thuparamaya',
+    'Abhayagiri',
+    'Jetavanaramaya',
+  ],
+  nearbyImages: [
+    'assets/images/Auradapura 2.png',
+    'assets/images/thuparamaya.png',
+    'assets/images/anurapura 5.png',
+    'assets/images/jetavanaramaya.png',
+  ],
+  nearbyDistances: ['0.5 km', '1.2 km', '2.5 km', '1.8 km'],
+);
+
+final sriMahaBodhiInformation = PlaceInformationPage(
+  placeName: 'Sri Maha Bodhi',
+  destinationName: 'Anuradhapura',
+  subtitle: 'The Sacred Fig Tree',
+  description:
+      'The sacred fig tree, said to be a sapling from the historical Bodhi tree under which the Buddha became enlightened. It is the oldest living human-planted tree in the world with a known planting date.',
+  location: 'Anuradhapura, North Central Province',
+  rating: '4.9',
+  reviews: '6,102',
+  openingHours: 'Open 24 hours',
+  bestTime: 'Early morning or evening',
+  entranceFee: 'Free',
+  dressCode: 'Modest attire (shoulders and knees covered, white preferred)',
+  heroImages: [
+    'assets/images/Auradapura 2.png',
+  ],
+  nearbyNames: [
+    'Ruwanwelisaya',
+    'Thuparamaya',
+    'Abhayagiri',
+    'Jetavanaramaya',
+  ],
+  nearbyImages: [
+    'assets/images/anuradhapura.png',
+    'assets/images/thuparamaya.png',
+    'assets/images/anurapura 5.png',
+    'assets/images/jetavanaramaya.png',
+  ],
+  nearbyDistances: ['0.5 km', '1.5 km', '3.0 km', '2.0 km'],
+);
+
+final thuparamayaInformation = PlaceInformationPage(
+  placeName: 'Thuparamaya',
+  destinationName: 'Anuradhapura',
+  subtitle: 'The First Buddhist Temple in Sri Lanka',
+  description:
+      'Thuparamaya is the first Buddhist temple built in Sri Lanka after the introduction of Buddhism. It enshrines the collarbone relic of the Buddha and features distinctive stone pillars surrounding the stupa.',
+  location: 'Anuradhapura, North Central Province',
+  rating: '4.7',
+  reviews: '2,845',
+  openingHours: 'Open 24 hours',
+  bestTime: 'Early morning or late afternoon',
+  entranceFee: 'Free',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/thuparamaya.png',
+  ],
+  nearbyNames: [
+    'Ruwanwelisaya',
+    'Sri Maha Bodhi',
+    'Abhayagiri',
+    'Jetavanaramaya',
+  ],
+  nearbyImages: [
+    'assets/images/anuradhapura.png',
+    'assets/images/Auradapura 2.png',
+    'assets/images/anurapura 5.png',
+    'assets/images/jetavanaramaya.png',
+  ],
+  nearbyDistances: ['1.2 km', '1.5 km', '1.8 km', '2.5 km'],
+);
+
+final abhayagiriInformation = PlaceInformationPage(
+  placeName: 'Abhayagiri',
+  destinationName: 'Anuradhapura',
+  subtitle: 'A Major Monastery Site',
+  description:
+      'Abhayagiri was a major monastery site of Mahayana, Theravada, and Vajrayana Buddhism. It was one of the most extensive ruins in the world and a great center of learning in ancient times.',
+  location: 'Anuradhapura, North Central Province',
+  rating: '4.8',
+  reviews: '3,120',
+  openingHours: 'Open 24 hours',
+  bestTime: 'Early morning or late afternoon',
+  entranceFee: 'Site entrance fee may apply',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/anurapura 5.png',
+  ],
+  nearbyNames: [
+    'Ruwanwelisaya',
+    'Sri Maha Bodhi',
+    'Thuparamaya',
+    'Jetavanaramaya',
+  ],
+  nearbyImages: [
+    'assets/images/anuradhapura.png',
+    'assets/images/Auradapura 2.png',
+    'assets/images/thuparamaya.png',
+    'assets/images/jetavanaramaya.png',
+  ],
+  nearbyDistances: ['2.5 km', '3.0 km', '1.8 km', '3.5 km'],
+);
+
+final jetavanaramayaInformation = PlaceInformationPage(
+  placeName: 'Jetavanaramaya',
+  destinationName: 'Anuradhapura',
+  subtitle: 'A Prominent Ancient Stupa',
+  description:
+      'Jetavanaramaya is a massive ancient stupa located in the ruins of Jetavana monastery. At the time of its completion, it was one of the tallest structures in the ancient world.',
+  location: 'Anuradhapura, North Central Province',
+  rating: '4.8',
+  reviews: '3,450',
+  openingHours: 'Open 24 hours',
+  bestTime: 'Early morning or late afternoon',
+  entranceFee: 'Site entrance fee may apply',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/jetavanaramaya.png',
+  ],
+  nearbyNames: [
+    'Ruwanwelisaya',
+    'Sri Maha Bodhi',
+    'Thuparamaya',
+    'Abhayagiri',
+  ],
+  nearbyImages: [
+    'assets/images/anuradhapura.png',
+    'assets/images/Auradapura 2.png',
+    'assets/images/thuparamaya.png',
+    'assets/images/anurapura 5.png',
+  ],
+  nearbyDistances: ['1.8 km', '2.0 km', '2.5 km', '3.5 km'],
+);
+
 final galViharayaInformation = PlaceInformationPage(
   // ============================================================
   // BASIC INFORMATION

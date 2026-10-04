@@ -470,7 +470,19 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openDestination(BuildContext context, PlaceItem place) {
     // Keep the navigation that already exists in the project.
 
-    if (place.title == 'Polonnaruwa') {
+    final title = place.title.trim().toLowerCase();
+
+    if (title == 'anuradhapura') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DestinationPage(destination: anuradhapura),
+        ),
+      );
+      return;
+    }
+
+    if (title == 'polonnaruwa') {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -481,7 +493,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    if (place.title == 'Jaffna') {
+    if (title == 'jaffna') {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -492,7 +504,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    if (place.title == 'Down South') {
+    if (title == 'down south') {
       Navigator.push(
         context,
         MaterialPageRoute(
