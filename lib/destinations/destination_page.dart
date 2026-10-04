@@ -1,15 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+
+import 'package:google_fonts/google_fonts.dart';
+
 import '../models/destination.dart';
+
 import '../data/place_information_data.dart';
 
-<<<<<<< Updated upstream
-=======
 import '../screens/profile_screen.dart';
 import '../widgets/app_navigation_bar.dart';
 
->>>>>>> Stashed changes
+import '../screens/profile_screen.dart';
+
 class DestinationPage extends StatefulWidget {
   final Destination destination;
 
@@ -22,22 +25,32 @@ class DestinationPage extends StatefulWidget {
 class _DestinationPageState extends State<DestinationPage> {
   int _currentImage = 0;
 
-  late PageController _pageController;
+  late final PageController _pageController;
+
   Timer? _autoSlideTimer;
 
   // =========================================================
-  // UI COLORS - MATCH REFERENCE
-  // =========================================================
 
-  static const Color backgroundColor = Color(0xFFF6ECE2);
-  static const Color darkGreen = Color(0xFF183B2B);
-  static const Color mediumGreen = Color(0xFF2F6B4F);
-  static const Color greyText = Color(0xFF777777);
-  static const Color borderColor = Color(0xFFE1D7C8);
-  static const Color yellowLine = Color(0xFFD1A84A);
+  // CEYLON HERITAGE DESIGN COLORS
 
   // =========================================================
+
+  static const Color backgroundColor = Color(0xFFF6EADA);
+
+  static const Color darkGreen = Color(0xFF17452F);
+
+  static const Color cardColor = Color(0xFFF0DDC3);
+
+  static const Color accentColor = Color(0xFF9F5625);
+
+  static const Color greyText = Color(0xFF5F625D);
+
+  static const Color borderColor = Color(0xFFE1D2BD);
+
+  // =========================================================
+
   // DESTINATION CAROUSEL IMAGES
+
   // =========================================================
 
   List<String> get _destinationImages {
@@ -45,30 +58,45 @@ class _DestinationPageState extends State<DestinationPage> {
       case 'Polonnaruwa':
         return [
           'assets/images/polonnaruwa.png',
+
           'assets/images/gal_viharaya.png',
+
           'assets/images/royal_palace.png',
+
           'assets/images/rankoth_vehera.png',
+
           'assets/images/lankathilaka.png',
+
           'assets/images/parakrama_samudraya.png',
         ];
 
       case 'Jaffna':
         return [
           'assets/images/jaffna.png',
+
           'assets/images/nallur_kandaswamy.png',
+
           'assets/images/jaffna_fort.png',
+
           'assets/images/jaffna_library.png',
+
           'assets/images/casuarina_beach.png',
+
           'assets/images/delft_island.png',
         ];
 
       case 'Down South':
         return [
           'assets/images/down_south.png',
+
           'assets/images/galle_fort.png',
+
           'assets/images/mulgirigala.png',
+
           'assets/images/kushta_raja_gala.png',
+
           'assets/images/star_fort.png',
+
           'assets/images/ariyapala_masks.png',
         ];
 
@@ -78,8 +106,9 @@ class _DestinationPageState extends State<DestinationPage> {
   }
 
   // =========================================================
-  // AUTO SLIDE
-  // SLOWER THAN BEFORE
+
+  // AUTO IMAGE SLIDER
+
   // =========================================================
 
   @override
@@ -89,7 +118,9 @@ class _DestinationPageState extends State<DestinationPage> {
     _pageController = PageController();
 
     _autoSlideTimer = Timer.periodic(const Duration(seconds: 6), (timer) {
-      if (!_pageController.hasClients) return;
+      if (!_pageController.hasClients) {
+        return;
+      }
 
       int nextPage = _currentImage + 1;
 
@@ -99,7 +130,9 @@ class _DestinationPageState extends State<DestinationPage> {
 
       _pageController.animateToPage(
         nextPage,
+
         duration: const Duration(milliseconds: 900),
+
         curve: Curves.easeInOut,
       );
     });
@@ -108,12 +141,16 @@ class _DestinationPageState extends State<DestinationPage> {
   @override
   void dispose() {
     _autoSlideTimer?.cancel();
+
     _pageController.dispose();
+
     super.dispose();
   }
 
   // =========================================================
-  // BUILD
+
+  // MAIN PAGE
+
   // =========================================================
 
   @override
@@ -122,72 +159,88 @@ class _DestinationPageState extends State<DestinationPage> {
       backgroundColor: backgroundColor,
 
       // =====================================================
-      // TOP APP BAR
+
+      // APP BAR
+
       // =====================================================
       appBar: AppBar(
         backgroundColor: backgroundColor,
+
         elevation: 0,
+
         toolbarHeight: 64,
 
-        // BACK ARROW
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: darkGreen, size: 32),
+          icon: const Icon(Icons.arrow_back, color: darkGreen, size: 30),
+
           onPressed: () {
             Navigator.pop(context);
           },
         ),
 
-        // DESTINATION NAME
         title: Text(
           widget.destination.name,
-          style: const TextStyle(
+
+          style: GoogleFonts.playfairDisplay(
             color: darkGreen,
+
             fontSize: 26,
-            fontWeight: FontWeight.bold,
+
+            fontWeight: FontWeight.w700,
           ),
         ),
 
         centerTitle: true,
 
         actions: [
-          // HEART
           IconButton(
-            icon: const Icon(Icons.favorite_border, color: darkGreen, size: 31),
+            icon: const Icon(Icons.favorite_border, color: darkGreen, size: 29),
+
+            onPressed: () {
+              // Saved Places belongs to another group member.
+            },
+          ),
+
+          IconButton(
+            icon: const Icon(Icons.share_outlined, color: darkGreen, size: 27),
+
             onPressed: () {},
           ),
 
-          // SHARE / OPEN STYLE ICON
-          IconButton(
-            icon: const Icon(Icons.open_in_new, color: darkGreen, size: 30),
-            onPressed: () {},
-          ),
-
-          const SizedBox(width: 8),
+          const SizedBox(width: 5),
         ],
       ),
 
       // =====================================================
+
       // BODY
+
       // =====================================================
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+
             children: [
               // =================================================
-              // HERO IMAGE
-              // =================================================
 
+              // HERO IMAGE SLIDER
+
+              // =================================================
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
+
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(22),
+
                   child: SizedBox(
                     width: double.infinity,
+
                     height: 230,
 
                     child: PageView.builder(
                       controller: _pageController,
+
                       itemCount: _destinationImages.length,
 
                       onPageChanged: (index) {
@@ -199,16 +252,23 @@ class _DestinationPageState extends State<DestinationPage> {
                       itemBuilder: (context, index) {
                         return Image.asset(
                           _destinationImages[index],
+
                           width: double.infinity,
+
+                          height: 230,
+
                           fit: BoxFit.cover,
 
                           errorBuilder: (context, error, stackTrace) {
                             return Container(
-                              color: const Color(0xFFD9D0BD),
+                              color: cardColor,
+
                               child: const Center(
                                 child: Icon(
                                   Icons.image_outlined,
+
                                   size: 50,
+
                                   color: darkGreen,
                                 ),
                               ),
@@ -222,12 +282,15 @@ class _DestinationPageState extends State<DestinationPage> {
               ),
 
               // =================================================
+
               // IMAGE DOTS
+
               // =================================================
               const SizedBox(height: 10),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
+
                 children: List.generate(_destinationImages.length, (index) {
                   return AnimatedContainer(
                     duration: const Duration(milliseconds: 250),
@@ -235,85 +298,117 @@ class _DestinationPageState extends State<DestinationPage> {
                     margin: const EdgeInsets.symmetric(horizontal: 4),
 
                     width: _currentImage == index ? 15 : 7,
+
                     height: 7,
 
                     decoration: BoxDecoration(
                       color: _currentImage == index
                           ? darkGreen
-                          : const Color(0xFFC8C1B7),
-                      shape: BoxShape.circle,
+                          : const Color(0xFFC8B9A5),
+
+                      borderRadius: BorderRadius.circular(20),
                     ),
                   );
                 }),
               ),
 
               // =================================================
+
               // ABOUT
+
               // =================================================
-              const SizedBox(height: 20),
+              const SizedBox(height: 22),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'About',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: darkGreen,
-                      ),
-                    ),
 
-                    // SMALL YELLOW UNDERLINE
-                    const SizedBox(height: 5),
+                child: Text(
+                  'About',
 
-                    Container(
-                      width: 55,
-                      height: 3,
-                      decoration: BoxDecoration(
-                        color: yellowLine,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                  ],
+                  style: GoogleFonts.playfairDisplay(
+                    fontSize: 22,
+
+                    fontWeight: FontWeight.w700,
+
+                    color: darkGreen,
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 9),
+              const SizedBox(height: 5),
 
-              // DESCRIPTION
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
+
+                child: Container(
+                  width: 55,
+
+                  height: 3,
+
+                  decoration: BoxDecoration(
+                    color: accentColor,
+
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // =================================================
+
+              // DESCRIPTION
+
+              // =================================================
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+
                 child: Text(
                   widget.destination.description,
-                  style: const TextStyle(
+
+                  style: GoogleFonts.inter(
                     fontSize: 14,
-                    height: 1.4,
-                    color: Color(0xFF444444),
+
+                    height: 1.5,
+
+                    color: const Color(0xFF40433F),
                   ),
                 ),
               ),
 
               // =================================================
+
               // PROVINCE
+
               // =================================================
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
+
                 child: Row(
                   children: [
-                    const Icon(Icons.location_on, size: 20, color: darkGreen),
+                    const Icon(
+                      Icons.location_on_outlined,
+
+                      size: 20,
+
+                      color: accentColor,
+                    ),
 
                     const SizedBox(width: 7),
 
-                    Text(
-                      _getProvince(),
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Color(0xFF444444),
+                    Expanded(
+                      child: Text(
+                        _getProvince(),
+
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+
+                          fontWeight: FontWeight.w500,
+
+                          color: darkGreen,
+                        ),
                       ),
                     ),
                   ],
@@ -321,52 +416,61 @@ class _DestinationPageState extends State<DestinationPage> {
               ),
 
               // =================================================
+
               // INFORMATION / SHARE / SERVICES
-              // COMPACT LIKE REFERENCE
+
               // =================================================
-              const SizedBox(height: 17),
+              const SizedBox(height: 18),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
+
                 child: Container(
-                  height: 62,
+                  height: 66,
 
                   decoration: BoxDecoration(
-                    color: backgroundColor,
-                    borderRadius: BorderRadius.circular(16),
+                    color: cardColor,
+
+                    borderRadius: BorderRadius.circular(18),
+
                     border: Border.all(color: borderColor),
                   ),
 
                   child: Row(
                     children: [
-                      // INFORMATION
                       Expanded(
                         child: _mainAction(
-                          icon: Icons.info,
+                          icon: Icons.info_outline,
+
                           label: 'Information',
+
                           onTap: () {},
                         ),
                       ),
 
-                      Container(width: 1, height: 34, color: borderColor),
+                      Container(width: 1, height: 36, color: borderColor),
 
-                      // SHARE
                       Expanded(
                         child: _mainAction(
-                          icon: Icons.share,
+                          icon: Icons.share_outlined,
+
                           label: 'Share',
+
                           onTap: () {},
                         ),
                       ),
 
-                      Container(width: 1, height: 34, color: borderColor),
+                      Container(width: 1, height: 36, color: borderColor),
 
-                      // SERVICES
                       Expanded(
                         child: _mainAction(
-                          icon: Icons.room_service,
+                          icon: Icons.grid_view_outlined,
+
                           label: 'Services',
-                          onTap: () {},
+
+                          onTap: () {
+                            // Services belongs to another group member.
+                          },
                         ),
                       ),
                     ],
@@ -375,71 +479,79 @@ class _DestinationPageState extends State<DestinationPage> {
               ),
 
               // =================================================
+
               // AUDIO GUIDE
-              // COMPACT LIKE REFERENCE
+
               // =================================================
-              const SizedBox(height: 15),
+              const SizedBox(height: 16),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
+
                 child: Container(
                   width: double.infinity,
 
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 10,
-                  ),
+                  padding: const EdgeInsets.all(14),
 
                   decoration: BoxDecoration(
-                    color: const Color(0xFFF5EADF),
-                    borderRadius: BorderRadius.circular(16),
+                    color: cardColor,
+
+                    borderRadius: BorderRadius.circular(18),
+
                     border: Border.all(color: borderColor),
                   ),
 
                   child: Column(
                     children: [
-                      // AUDIO TOP ROW
                       Row(
                         children: [
-                          // HEADPHONES
                           Container(
-                            width: 44,
-                            height: 44,
+                            width: 46,
+
+                            height: 46,
 
                             decoration: const BoxDecoration(
-                              color: Color(0xFFE8E0CB),
+                              color: backgroundColor,
+
                               shape: BoxShape.circle,
                             ),
 
                             child: const Icon(
-                              Icons.headphones,
+                              Icons.headphones_outlined,
+
                               color: darkGreen,
+
                               size: 25,
                             ),
                           ),
 
                           const SizedBox(width: 12),
 
-                          // TEXT
-                          const Expanded(
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
+
                               children: [
                                 Text(
                                   'Audio Guide',
-                                  style: TextStyle(
+
+                                  style: GoogleFonts.inter(
                                     fontSize: 15,
-                                    fontWeight: FontWeight.bold,
+
+                                    fontWeight: FontWeight.w700,
+
                                     color: darkGreen,
                                   ),
                                 ),
 
-                                SizedBox(height: 2),
+                                const SizedBox(height: 3),
 
                                 Text(
                                   'Narrated by Heritage Walks',
-                                  style: TextStyle(
+
+                                  style: GoogleFonts.inter(
                                     fontSize: 11,
+
                                     color: greyText,
                                   ),
                                 ),
@@ -447,13 +559,14 @@ class _DestinationPageState extends State<DestinationPage> {
                             ),
                           ),
 
-                          // PLAY
                           Container(
                             width: 42,
+
                             height: 42,
 
                             decoration: const BoxDecoration(
                               color: darkGreen,
+
                               shape: BoxShape.circle,
                             ),
 
@@ -461,9 +574,11 @@ class _DestinationPageState extends State<DestinationPage> {
                               padding: EdgeInsets.zero,
 
                               icon: const Icon(
-                                Icons.play_arrow,
-                                color: Colors.white,
-                                size: 25,
+                                Icons.play_arrow_rounded,
+
+                                color: backgroundColor,
+
+                                size: 28,
                               ),
 
                               onPressed: () {},
@@ -472,61 +587,62 @@ class _DestinationPageState extends State<DestinationPage> {
                         ],
                       ),
 
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 10),
 
-                      // PROGRESS BAR
                       Row(
                         children: [
-                          const Text(
+                          Text(
                             '0:00',
-                            style: TextStyle(fontSize: 9, color: greyText),
+
+                            style: GoogleFonts.inter(
+                              fontSize: 9,
+
+                              color: greyText,
+                            ),
                           ),
 
-                          const SizedBox(width: 7),
+                          const SizedBox(width: 8),
 
                           Expanded(
                             child: Stack(
                               alignment: Alignment.centerLeft,
+
                               children: [
                                 Container(
                                   height: 3,
+
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFFD8D0BE),
-                                    borderRadius: BorderRadius.circular(10),
+                                    color: const Color(0xFFD4C5B0),
+
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
                                 ),
 
-                                FractionallySizedBox(
-                                  widthFactor: 0.35,
-                                  child: Container(
-                                    height: 3,
-                                    decoration: BoxDecoration(
-                                      color: mediumGreen,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                  ),
-                                ),
+                                Container(
+                                  width: 35,
 
-                                Positioned(
-                                  left: 0,
-                                  child: Container(
-                                    width: 8,
-                                    height: 8,
-                                    decoration: const BoxDecoration(
-                                      color: mediumGreen,
-                                      shape: BoxShape.circle,
-                                    ),
+                                  height: 3,
+
+                                  decoration: BoxDecoration(
+                                    color: accentColor,
+
+                                    borderRadius: BorderRadius.circular(20),
                                   ),
                                 ),
                               ],
                             ),
                           ),
 
-                          const SizedBox(width: 7),
+                          const SizedBox(width: 8),
 
-                          const Text(
+                          Text(
                             '45:20',
-                            style: TextStyle(fontSize: 9, color: greyText),
+
+                            style: GoogleFonts.inter(
+                              fontSize: 9,
+
+                              color: greyText,
+                            ),
                           ),
                         ],
                       ),
@@ -536,46 +652,56 @@ class _DestinationPageState extends State<DestinationPage> {
               ),
 
               // =================================================
+
               // POPULAR ATTRACTIONS
+
               // =================================================
-              const SizedBox(height: 21),
+              const SizedBox(height: 24),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Popular Attractions',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: darkGreen,
-                      ),
-                    ),
 
-                    // YELLOW UNDERLINE
-                    const SizedBox(height: 5),
+                child: Text(
+                  'Popular Attractions',
 
-                    Container(
-                      width: 55,
-                      height: 3,
-                      decoration: BoxDecoration(
-                        color: yellowLine,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                    ),
-                  ],
+                  style: GoogleFonts.playfairDisplay(
+                    fontSize: 22,
+
+                    fontWeight: FontWeight.w700,
+
+                    color: darkGreen,
+                  ),
                 ),
               ),
 
               const SizedBox(height: 5),
 
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+
+                child: Container(
+                  width: 85,
+
+                  height: 3,
+
+                  decoration: BoxDecoration(
+                    color: accentColor,
+
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
               // =================================================
+
               // ATTRACTION LIST
+
               // =================================================
               ListView.builder(
                 shrinkWrap: true,
+
                 physics: const NeverScrollableScrollPhysics(),
 
                 itemCount: widget.destination.popularAttractions.length,
@@ -590,144 +716,18 @@ class _DestinationPageState extends State<DestinationPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
 
                     child: InkWell(
+                      borderRadius: BorderRadius.circular(14),
+
                       onTap: () {
-                        if (attraction == 'Gal Viharaya') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => galViharayaInformation,
-                            ),
-                          );
-                        }
-
-                        if (attraction == 'Royal Palace') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => royalPalaceInformation,
-                            ),
-                          );
-                        }
-
-                        if (attraction == 'Rankoth Vehera') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => rankothVeheraInformation,
-                            ),
-                          );
-                        }
-                        if (attraction == 'Lankathilaka Image House') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => lankathilakaInformation,
-                            ),
-                          );
-                        }
-                        if (attraction == 'Parakrama Samudraya') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  parakramaSamudrayaInformation,
-                            ),
-                          );
-                        }
-                        if (attraction == 'Nallur Kandaswamy Kovil') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => nallurKandaswamyInformation,
-                            ),
-                          );
-                        }
-
-                        if (attraction == 'Jaffna Fort') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => jaffnaFortInformation,
-                            ),
-                          );
-                        }
-
-                        if (attraction == 'Jaffna Public Library') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => jaffnaLibraryInformation,
-                            ),
-                          );
-                        }
-
-                        if (attraction == 'Casuarina Beach') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => casuarinaBeachInformation,
-                            ),
-                          );
-                        }
-
-                        if (attraction == 'Delft Island') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => delftIslandInformation,
-                            ),
-                          );
-                        }
-                        if (attraction == 'Galle Dutch Fort & Lighthouse') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => galleFortInformation,
-                            ),
-                          );
-                        }
-
-                        if (attraction == 'Mulgirigala Rock Temple') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => mulgirigalaInformation,
-                            ),
-                          );
-                        }
-
-                        if (attraction == 'Kushta Raja Gala') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => kushtaRajaGalaInformation,
-                            ),
-                          );
-                        }
-
-                        if (attraction == 'Star Fort (Matara)') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => starFortInformation,
-                            ),
-                          );
-                        }
-
-                        if (attraction == 'Ariyapala Masks Museum') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ariyapalaMasksInformation,
-                            ),
-                          );
-                        }
+                        _openAttraction(attraction);
                       },
 
                       child: Container(
-                        height: 70,
+                        constraints: const BoxConstraints(minHeight: 76),
 
-                        decoration: BoxDecoration(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+
+                        decoration: const BoxDecoration(
                           border: Border(
                             bottom: BorderSide(color: borderColor, width: 1),
                           ),
@@ -735,56 +735,62 @@ class _DestinationPageState extends State<DestinationPage> {
 
                         child: Row(
                           children: [
-                            // RECTANGULAR IMAGE
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(9),
+                              borderRadius: BorderRadius.circular(10),
 
                               child: Image.asset(
                                 imagePath,
 
-                                width: 125,
-                                height: 54,
+                                width: 120,
+
+                                height: 58,
 
                                 fit: BoxFit.cover,
 
                                 errorBuilder: (context, error, stackTrace) {
                                   return Container(
-                                    width: 125,
-                                    height: 54,
+                                    width: 120,
+
+                                    height: 58,
 
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFE5E0D2),
-                                      borderRadius: BorderRadius.circular(9),
+                                      color: cardColor,
+
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
 
                                     child: const Icon(
                                       Icons.image_outlined,
-                                      color: mediumGreen,
+
+                                      color: darkGreen,
                                     ),
                                   );
                                 },
                               ),
                             ),
 
-                            const SizedBox(width: 16),
+                            const SizedBox(width: 14),
 
-                            // PLACE NAME ONLY
                             Expanded(
                               child: Text(
                                 attraction,
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: Color(0xFF333333),
-                                  fontWeight: FontWeight.w500,
+
+                                style: GoogleFonts.inter(
+                                  fontSize: 15,
+
+                                  color: const Color(0xFF303530),
+
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                             ),
 
-                            // RIGHT ARROW
                             const Icon(
-                              Icons.chevron_right,
+                              Icons.chevron_right_rounded,
+
                               size: 26,
-                              color: Color(0xFF555555),
+
+                              color: accentColor,
                             ),
                           ],
                         ),
@@ -795,7 +801,9 @@ class _DestinationPageState extends State<DestinationPage> {
               ),
 
               // =================================================
+
               // MORE PLACES
+
               // =================================================
               const SizedBox(height: 10),
 
@@ -804,80 +812,98 @@ class _DestinationPageState extends State<DestinationPage> {
                   onPressed: () {},
 
                   icon: const Icon(
-                    Icons.keyboard_arrow_down,
+                    Icons.keyboard_arrow_down_rounded,
+
                     color: darkGreen,
+
                     size: 22,
                   ),
 
-                  label: const Text(
+                  label: Text(
                     'More places',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w500,
+
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+
+                      fontWeight: FontWeight.w600,
+
                       color: darkGreen,
                     ),
-                  ),
-
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                 ),
               ),
 
               // =================================================
+
               // START WALKING TOUR
+
               // =================================================
               const SizedBox(height: 8),
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
+
                 child: SizedBox(
                   width: double.infinity,
-                  height: 62,
+
+                  height: 58,
 
                   child: ElevatedButton.icon(
                     onPressed: () {},
 
-                    icon: const Icon(Icons.directions_walk, size: 29),
+                    icon: const Icon(Icons.directions_walk_rounded, size: 27),
 
-                    label: const Text(
+                    label: Text(
                       'START WALKING TOUR',
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+
+                      style: GoogleFonts.inter(
+                        fontSize: 15,
+
+                        fontWeight: FontWeight.w700,
+
                         letterSpacing: 0.3,
                       ),
                     ),
 
                     style: ElevatedButton.styleFrom(
                       backgroundColor: darkGreen,
-                      foregroundColor: Colors.white,
 
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
+                      foregroundColor: backgroundColor,
 
                       elevation: 0,
+
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
                     ),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 18),
+              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
 
       // =====================================================
+
       // BOTTOM NAVIGATION
-<<<<<<< Updated upstream
-      // KEEP IMAGE 3 STYLE
+
+      // Home | Services | Saved | Profile
+
       // =====================================================
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 0,
+
+        onTap: (index) {
+          if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfileScreen()),
+            );
+          }
+        },
 
         type: BottomNavigationBarType.fixed,
 
@@ -885,45 +911,52 @@ class _DestinationPageState extends State<DestinationPage> {
 
         selectedItemColor: darkGreen,
 
-        unselectedItemColor: const Color(0xFF555555),
+        unselectedItemColor: greyText,
 
         selectedFontSize: 12,
+
         unselectedFontSize: 12,
+
+        selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
+
+        unselectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w500),
 
         elevation: 0,
 
         items: const [
-          // HOME
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 28),
-            label: 'HOME',
+            icon: Icon(Icons.home_outlined, size: 27),
+
+            activeIcon: Icon(Icons.home, size: 27),
+
+            label: 'Home',
           ),
 
-          // MAP
           BottomNavigationBarItem(
-            icon: Icon(Icons.location_on_outlined, size: 28),
-            label: 'MAP',
+            icon: Icon(Icons.grid_view_outlined, size: 27),
+
+            activeIcon: Icon(Icons.grid_view_outlined, size: 27),
+
+            label: 'Services',
           ),
 
-          // SAVED
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border, size: 30),
-            label: 'SAVED',
+            icon: Icon(Icons.favorite_border_rounded, size: 27),
+
+            activeIcon: Icon(Icons.favorite_rounded, size: 27),
+
+            label: 'Saved',
           ),
 
-          // SERVICES
           BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view_outlined, size: 29),
-            label: 'SERVICES',
-          ),
+            icon: Icon(Icons.person_outline_rounded, size: 27),
 
-          // PROFILE
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline, size: 30),
-            label: 'PROFILE',
+            activeIcon: Icon(Icons.person_rounded, size: 27),
+
+            label: 'Profile',
           ),
         ],
-=======
+
 
       // Home | Services | Saved | Profile
 
@@ -954,37 +987,46 @@ class _DestinationPageState extends State<DestinationPage> {
             ),
           );
         },
->>>>>>> Stashed changes
+
       ),
     );
   }
 
   // =========================================================
+
   // INFORMATION / SHARE / SERVICES ACTION
+
   // =========================================================
 
   Widget _mainAction({
     required IconData icon,
+
     required String label,
+
     required VoidCallback onTap,
   }) {
     return InkWell(
       onTap: onTap,
 
+      borderRadius: BorderRadius.circular(16),
+
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
 
         children: [
-          Icon(icon, size: 24, color: darkGreen),
+          Icon(icon, size: 23, color: darkGreen),
 
-          const SizedBox(height: 3),
+          const SizedBox(height: 4),
 
           Text(
             label,
-            style: const TextStyle(
+
+            style: GoogleFonts.inter(
               fontSize: 11,
-              color: Color(0xFF333333),
-              fontWeight: FontWeight.w500,
+
+              color: darkGreen,
+
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
@@ -993,7 +1035,118 @@ class _DestinationPageState extends State<DestinationPage> {
   }
 
   // =========================================================
-  // PROVINCE
+
+  // OPEN HISTORICAL PLACE
+
+  // =========================================================
+
+  void _openAttraction(String attraction) {
+    Widget? page;
+
+    switch (attraction) {
+      // =====================================================
+
+      // POLONNARUWA
+
+      // =====================================================
+
+      case 'Gal Viharaya':
+        page = galViharayaInformation;
+
+        break;
+
+      case 'Royal Palace':
+        page = royalPalaceInformation;
+
+        break;
+
+      case 'Rankoth Vehera':
+        page = rankothVeheraInformation;
+
+        break;
+
+      case 'Lankathilaka Image House':
+        page = lankathilakaInformation;
+
+        break;
+
+      case 'Parakrama Samudraya':
+        page = parakramaSamudrayaInformation;
+
+        break;
+
+      // =====================================================
+
+      // JAFFNA
+
+      // =====================================================
+
+      case 'Nallur Kandaswamy Kovil':
+        page = nallurKandaswamyInformation;
+
+        break;
+
+      case 'Jaffna Fort':
+        page = jaffnaFortInformation;
+
+        break;
+
+      case 'Jaffna Public Library':
+        page = jaffnaLibraryInformation;
+
+        break;
+
+      case 'Casuarina Beach':
+        page = casuarinaBeachInformation;
+
+        break;
+
+      case 'Delft Island':
+        page = delftIslandInformation;
+
+        break;
+
+      // =====================================================
+
+      // DOWN SOUTH
+
+      // =====================================================
+
+      case 'Galle Dutch Fort & Lighthouse':
+        page = galleFortInformation;
+
+        break;
+
+      case 'Mulgirigala Rock Temple':
+        page = mulgirigalaInformation;
+
+        break;
+
+      case 'Kushta Raja Gala':
+        page = kushtaRajaGalaInformation;
+
+        break;
+
+      case 'Star Fort (Matara)':
+        page = starFortInformation;
+
+        break;
+
+      case 'Ariyapala Masks Museum':
+        page = ariyapalaMasksInformation;
+
+        break;
+    }
+
+    if (page != null) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => page!));
+    }
+  }
+
+  // =========================================================
+
+  // GET PROVINCE
+
   // =========================================================
 
   String _getProvince() {
@@ -1013,14 +1166,18 @@ class _DestinationPageState extends State<DestinationPage> {
   }
 
   // =========================================================
-  // ATTRACTION IMAGE PATH
+
+  // GET ATTRACTION IMAGE
+
   // =========================================================
 
   String _getAttractionImage(String attraction) {
     switch (attraction) {
-      // -------------------------------------------------------
+      // =====================================================
+
       // POLONNARUWA
-      // -------------------------------------------------------
+
+      // =====================================================
 
       case 'Gal Viharaya':
         return 'assets/images/gal_viharaya.png';
@@ -1037,9 +1194,11 @@ class _DestinationPageState extends State<DestinationPage> {
       case 'Parakrama Samudraya':
         return 'assets/images/parakrama_samudraya.png';
 
-      // -------------------------------------------------------
+      // =====================================================
+
       // JAFFNA
-      // -------------------------------------------------------
+
+      // =====================================================
 
       case 'Nallur Kandaswamy Kovil':
         return 'assets/images/nallur_kandaswamy.png';
@@ -1056,9 +1215,11 @@ class _DestinationPageState extends State<DestinationPage> {
       case 'Delft Island':
         return 'assets/images/delft_island.png';
 
-      // -------------------------------------------------------
+      // =====================================================
+
       // DOWN SOUTH
-      // -------------------------------------------------------
+
+      // =====================================================
 
       case 'Galle Dutch Fort & Lighthouse':
         return 'assets/images/galle_fort.png';
@@ -1075,9 +1236,11 @@ class _DestinationPageState extends State<DestinationPage> {
       case 'Ariyapala Masks Museum':
         return 'assets/images/ariyapala_masks.png';
 
-      // -------------------------------------------------------
+      // =====================================================
+
       // DEFAULT
-      // -------------------------------------------------------
+
+      // =====================================================
 
       default:
         return 'assets/images/heritage_sketch_bg.jpg';

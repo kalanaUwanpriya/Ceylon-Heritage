@@ -2,49 +2,79 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-<<<<<<< Updated upstream
-=======
 import 'package:google_fonts/google_fonts.dart';
 
 import '../screens/profile_screen.dart';
 import '../widgets/app_navigation_bar.dart';
 
->>>>>>> Stashed changes
+
+import 'package:google_fonts/google_fonts.dart';
+
+import '../screens/profile_screen.dart';
+
+
 class PlaceInformationPage extends StatefulWidget {
   final String placeName;
+
   final String destinationName;
+
   final String subtitle;
+
   final String description;
+
   final String location;
+
   final String rating;
+
   final String reviews;
+
   final String openingHours;
+
   final String bestTime;
+
   final String entranceFee;
+
   final String dressCode;
 
   final List<String> heroImages;
 
   final List<String> nearbyNames;
+
   final List<String> nearbyImages;
+
   final List<String> nearbyDistances;
 
   const PlaceInformationPage({
     super.key,
+
     required this.placeName,
+
     required this.destinationName,
+
     required this.subtitle,
+
     required this.description,
+
     required this.location,
+
     required this.rating,
+
     required this.reviews,
+
     required this.openingHours,
+
     required this.bestTime,
+
     required this.entranceFee,
+
     required this.dressCode,
+
     required this.heroImages,
+
     required this.nearbyNames,
+
     required this.nearbyImages,
+
     required this.nearbyDistances,
   });
 
@@ -53,16 +83,37 @@ class PlaceInformationPage extends StatefulWidget {
 }
 
 class _PlaceInformationPageState extends State<PlaceInformationPage> {
-  late PageController _pageController;
+  late final PageController _pageController;
+
   Timer? _autoSlideTimer;
 
   int _currentImage = 0;
 
-  static const Color backgroundColor = Color(0xFFF6ECE2);
-  static const Color darkGreen = Color(0xFF183B2B);
-  static const Color gold = Color(0xFFD1A84A);
-  static const Color borderColor = Color(0xFFE1D7C8);
-  static const Color textColor = Color(0xFF303030);
+  // =========================================================
+
+  // CEYLON HERITAGE DESIGN COLORS
+
+  // =========================================================
+
+  static const Color backgroundColor = Color(0xFFF6EADA);
+
+  static const Color darkGreen = Color(0xFF17452F);
+
+  static const Color cardColor = Color(0xFFF0DDC3);
+
+  static const Color accentColor = Color(0xFF9F5625);
+
+  static const Color borderColor = Color(0xFFE1D2BD);
+
+  static const Color textColor = Color(0xFF303530);
+
+  static const Color secondaryTextColor = Color(0xFF5F625D);
+
+  // =========================================================
+
+  // INITIAL SETUP
+
+  // =========================================================
 
   @override
   void initState() {
@@ -71,9 +122,13 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
     _pageController = PageController();
 
     _autoSlideTimer = Timer.periodic(const Duration(seconds: 6), (_) {
-      if (!mounted || !_pageController.hasClients) return;
+      if (!mounted || !_pageController.hasClients) {
+        return;
+      }
 
-      if (widget.heroImages.length <= 1) return;
+      if (widget.heroImages.length <= 1) {
+        return;
+      }
 
       int nextPage = _currentImage + 1;
 
@@ -83,7 +138,9 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
 
       _pageController.animateToPage(
         nextPage,
+
         duration: const Duration(milliseconds: 900),
+
         curve: Curves.easeInOut,
       );
     });
@@ -92,56 +149,65 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
   @override
   void dispose() {
     _autoSlideTimer?.cancel();
+
     _pageController.dispose();
+
     super.dispose();
   }
+
+  // =========================================================
+
+  // MAIN PAGE
+
+  // =========================================================
 
   @override
   Widget build(BuildContext context) {
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaler: TextScaler.noScaling),
+
       child: Scaffold(
         backgroundColor: backgroundColor,
+
+        appBar: _buildAppBar(),
+
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(18, 8, 18, 18),
+            padding: const EdgeInsets.fromLTRB(20, 10, 20, 24),
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+
               children: [
-                _buildTopBar(),
-
-                const SizedBox(height: 12),
-
                 _buildHero(),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
 
                 _buildImageDots(),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 20),
 
                 _buildAbout(),
 
-                const SizedBox(height: 14),
+                const SizedBox(height: 20),
 
                 _buildVisitorRating(),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 22),
 
                 _buildVisitorInformation(),
 
-                const SizedBox(height: 18),
+                const SizedBox(height: 24),
 
                 _buildNearbyAttractions(),
 
-                const SizedBox(height: 95),
+                const SizedBox(height: 0.05),
               ],
             ),
           ),
         ),
-<<<<<<< Updated upstream
+
         bottomNavigationBar: _buildBottomNavigation(),
-=======
 
         bottomNavigationBar: AppNavigationBar(
           selectedIndex: 0,
@@ -171,47 +237,78 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
             );
           },
         ),
->>>>>>> Stashed changes
+
       ),
     );
   }
 
-  // ============================================================
-  // TOP BAR
-  // ============================================================
+  // =========================================================
 
-  Widget _buildTopBar() {
-    return SizedBox(
-      height: 38,
-      child: Row(
-        children: [
-          IconButton(
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(minWidth: 34, minHeight: 34),
-            icon: const Icon(Icons.arrow_back, color: darkGreen, size: 29),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+  // APP BAR
 
-          const SizedBox(width: 7),
+  // =========================================================
 
-          Text(
-            widget.destinationName,
-            style: const TextStyle(
-              color: darkGreen,
-              fontSize: 19,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      backgroundColor: backgroundColor,
+
+      elevation: 0,
+
+      scrolledUnderElevation: 0,
+
+      toolbarHeight: 64,
+
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back, color: darkGreen, size: 29),
+
+        onPressed: () {
+          Navigator.pop(context);
+        },
       ),
+
+      title: Text(
+        widget.destinationName,
+
+        maxLines: 1,
+
+        overflow: TextOverflow.ellipsis,
+
+        style: GoogleFonts.playfairDisplay(
+          color: darkGreen,
+
+          fontSize: 23,
+
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+
+      centerTitle: true,
+
+      actions: [
+        IconButton(
+          icon: const Icon(
+            Icons.favorite_border_rounded,
+
+            color: darkGreen,
+
+            size: 28,
+          ),
+
+          onPressed: () {
+            // Saved Places belongs to another group member.
+          },
+        ),
+
+        const SizedBox(width: 5),
+      ],
     );
   }
 
-  // ============================================================
+  // =========================================================
+
   // HERO IMAGE
-  // ============================================================
+
+  // =========================================================
 
   Widget _buildHero() {
     if (widget.heroImages.isEmpty) {
@@ -220,79 +317,113 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
 
     return SizedBox(
       width: double.infinity,
-      height: 175,
+
+      height: 220,
+
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(22),
+
         child: PageView.builder(
           controller: _pageController,
+
           itemCount: widget.heroImages.length,
+
           onPageChanged: (index) {
-            if (!mounted) return;
+            if (!mounted) {
+              return;
+            }
 
             setState(() {
               _currentImage = index;
             });
           },
+
           itemBuilder: (context, index) {
             return Stack(
               fit: StackFit.expand,
+
               children: [
                 Image.asset(
                   widget.heroImages[index],
+
                   fit: BoxFit.cover,
+
                   errorBuilder: (context, error, stackTrace) {
                     return _imageErrorBox();
                   },
                 ),
 
-                // Bottom gradient
+                // Bottom dark gradient
                 Positioned(
                   left: 0,
+
                   right: 0,
+
                   bottom: 0,
-                  height: 75,
+
+                  height: 100,
+
                   child: Container(
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
+
                         end: Alignment.bottomCenter,
+
                         colors: [
                           Colors.transparent,
-                          Colors.black.withValues(alpha: 0.78),
+
+                          Colors.black.withValues(alpha: 0.82),
                         ],
                       ),
                     ),
                   ),
                 ),
 
-                // Hero title and subtitle
+                // Place name and subtitle
                 Positioned(
-                  left: 16,
-                  right: 16,
-                  bottom: 12,
+                  left: 18,
+
+                  right: 18,
+
+                  bottom: 16,
+
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+
                     children: [
                       Text(
                         widget.placeName,
-                        maxLines: 1,
+
+                        maxLines: 2,
+
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+
+                        style: GoogleFonts.playfairDisplay(
                           color: Colors.white,
-                          fontSize: 19,
-                          fontWeight: FontWeight.bold,
+
+                          fontSize: 24,
+
+                          fontWeight: FontWeight.w700,
+
+                          height: 1.1,
                         ),
                       ),
 
-                      const SizedBox(height: 2),
+                      const SizedBox(height: 4),
 
                       Text(
                         widget.subtitle,
+
                         maxLines: 1,
+
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+
+                        style: GoogleFonts.inter(
                           color: Colors.white,
-                          fontSize: 11.5,
+
+                          fontSize: 12,
+
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -307,41 +438,69 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
     );
   }
 
-  // ============================================================
+  // =========================================================
+
   // IMAGE ERROR
-  // ============================================================
+
+  // =========================================================
 
   Widget _imageErrorBox() {
     return Container(
-      color: const Color(0xFFE6DDCE),
+      width: double.infinity,
+
+      height: 220,
+
+      decoration: BoxDecoration(
+        color: cardColor,
+
+        borderRadius: BorderRadius.circular(22),
+      ),
+
       alignment: Alignment.center,
+
       child: const Icon(
         Icons.image_not_supported_outlined,
+
         color: darkGreen,
-        size: 38,
+
+        size: 42,
       ),
     );
   }
 
-  // ============================================================
+  // =========================================================
+
   // IMAGE DOTS
-  // ============================================================
+
+  // =========================================================
 
   Widget _buildImageDots() {
+    if (widget.heroImages.length <= 1) {
+      return const SizedBox.shrink();
+    }
+
     return SizedBox(
       height: 12,
+
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
+
         children: List.generate(widget.heroImages.length, (index) {
           final bool selected = index == _currentImage;
 
-          return Container(
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 250),
+
             margin: const EdgeInsets.symmetric(horizontal: 4),
-            width: 8,
-            height: 8,
+
+            width: selected ? 15 : 7,
+
+            height: 7,
+
             decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: selected ? darkGreen : const Color(0xFFC9C9C9),
+              color: selected ? darkGreen : const Color(0xFFC8B9A5),
+
+              borderRadius: BorderRadius.circular(20),
             ),
           );
         }),
@@ -349,99 +508,144 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
     );
   }
 
-  // ============================================================
+  // =========================================================
+
   // ABOUT
-  // ============================================================
+
+  // =========================================================
 
   Widget _buildAbout() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+
       children: [
         _sectionTitle('About'),
 
-        const SizedBox(height: 7),
+        const SizedBox(height: 10),
 
         Text(
           widget.description,
-          style: const TextStyle(
-            color: textColor,
-            fontSize: 13.5,
-            height: 1.38,
-          ),
+
+          style: GoogleFonts.inter(color: textColor, fontSize: 14, height: 1.5),
         ),
 
-        const SizedBox(height: 9),
+        const SizedBox(height: 12),
 
         Row(
           crossAxisAlignment: CrossAxisAlignment.center,
+
           children: [
-            const Icon(Icons.location_on, color: darkGreen, size: 21),
+            const Icon(
+              Icons.location_on_outlined,
+
+              color: accentColor,
+
+              size: 21,
+            ),
 
             const SizedBox(width: 6),
 
             Expanded(
               child: Text(
                 widget.location,
+
                 maxLines: 1,
+
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 13, color: textColor),
+
+                style: GoogleFonts.inter(
+                  fontSize: 13,
+
+                  color: darkGreen,
+
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
 
             const SizedBox(width: 6),
 
-            const Text(
+            Text(
               'More',
-              style: TextStyle(
+
+              style: GoogleFonts.inter(
                 fontSize: 13,
-                fontWeight: FontWeight.w500,
-                color: textColor,
+
+                fontWeight: FontWeight.w600,
+
+                color: darkGreen,
               ),
             ),
 
-            const SizedBox(width: 4),
+            const SizedBox(width: 2),
 
-            const Icon(Icons.keyboard_arrow_down, color: darkGreen, size: 21),
+            const Icon(
+              Icons.keyboard_arrow_down_rounded,
+
+              color: darkGreen,
+
+              size: 21,
+            ),
           ],
         ),
       ],
     );
   }
 
-  // ============================================================
+  // =========================================================
+
   // VISITOR RATING
-  // ============================================================
+
+  // =========================================================
 
   Widget _buildVisitorRating() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(18, 12, 18, 12),
+
+      padding: const EdgeInsets.fromLTRB(16, 15, 16, 15),
+
       decoration: BoxDecoration(
+        color: cardColor,
+
         border: Border.all(color: borderColor),
-        borderRadius: BorderRadius.circular(15),
+
+        borderRadius: BorderRadius.circular(18),
       ),
+
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+
         children: [
-          const Text(
+          Text(
             'Visitor Rating',
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF202020),
+
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 19,
+
+              fontWeight: FontWeight.w700,
+
+              color: darkGreen,
             ),
           ),
 
-          const SizedBox(height: 5),
+          const SizedBox(height: 9),
 
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
+
             children: [
               Row(
                 children: List.generate(3, (_) {
                   return const Padding(
-                    padding: EdgeInsets.only(right: 4),
-                    child: Icon(Icons.star, color: gold, size: 27),
+                    padding: EdgeInsets.only(right: 3),
+
+                    child: Icon(
+                      Icons.star_rounded,
+
+                      color: accentColor,
+
+                      size: 27,
+                    ),
                   );
                 }),
               ),
@@ -451,9 +655,18 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
               Expanded(
                 child: Text(
                   '${widget.rating} out of 3 (${widget.reviews} reviews)',
+
                   maxLines: 1,
+
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 13, color: textColor),
+
+                  style: GoogleFonts.inter(
+                    fontSize: 12,
+
+                    color: secondaryTextColor,
+
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],
@@ -463,28 +676,37 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
     );
   }
 
-  // ============================================================
+  // =========================================================
+
   // VISITOR INFORMATION
-  // ============================================================
+
+  // =========================================================
 
   Widget _buildVisitorInformation() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+
       children: [
         _sectionTitle('Visitor Information'),
 
-        const SizedBox(height: 7),
+        const SizedBox(height: 11),
 
         Container(
           decoration: BoxDecoration(
+            color: cardColor,
+
             border: Border.all(color: borderColor),
-            borderRadius: BorderRadius.circular(15),
+
+            borderRadius: BorderRadius.circular(18),
           ),
+
           child: Column(
             children: [
               _informationRow(
-                Icons.access_time,
+                Icons.access_time_rounded,
+
                 'Opening Hours',
+
                 widget.openingHours,
               ),
 
@@ -492,7 +714,9 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
 
               _informationRow(
                 Icons.calendar_month_outlined,
+
                 'Best Time to Visit',
+
                 widget.bestTime,
               ),
 
@@ -500,13 +724,21 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
 
               _informationRow(
                 Icons.local_offer_outlined,
+
                 'Entrance Fee',
+
                 widget.entranceFee,
               ),
 
               _divider(),
 
-              _informationRow(Icons.person, 'Dress Code', widget.dressCode),
+              _informationRow(
+                Icons.person_outline_rounded,
+
+                'Dress Code',
+
+                widget.dressCode,
+              ),
             ],
           ),
         ),
@@ -514,25 +746,37 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
     );
   }
 
-  // ============================================================
+  // =========================================================
+
   // INFORMATION ROW
-  // ============================================================
+
+  // =========================================================
 
   Widget _informationRow(IconData icon, String title, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
+
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
+
         children: [
-          SizedBox(width: 35, child: Icon(icon, color: darkGreen, size: 26)),
+          SizedBox(width: 34, child: Icon(icon, color: darkGreen, size: 24)),
 
           const SizedBox(width: 9),
 
           SizedBox(
-            width: 125,
+            width: 120,
+
             child: Text(
               title,
-              style: const TextStyle(fontSize: 12.5, color: textColor),
+
+              style: GoogleFonts.inter(
+                fontSize: 12,
+
+                color: textColor,
+
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
 
@@ -541,7 +785,8 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
           Expanded(
             child: Text(
               value,
-              style: const TextStyle(fontSize: 12.5, color: textColor),
+
+              style: GoogleFonts.inter(fontSize: 12, color: secondaryTextColor),
             ),
           ),
         ],
@@ -553,42 +798,71 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
     return const Divider(height: 1, thickness: 1, color: borderColor);
   }
 
-  // ============================================================
+  // =========================================================
+
   // NEARBY ATTRACTIONS
-  // ============================================================
+
+  // =========================================================
 
   Widget _buildNearbyAttractions() {
-    final int count = widget.nearbyNames.length > 4
-        ? 4
-        : widget.nearbyNames.length;
+    final int availableCount = [
+      widget.nearbyNames.length,
+
+      widget.nearbyImages.length,
+
+      widget.nearbyDistances.length,
+    ].reduce((value, element) => value < element ? value : element);
+
+    final int count = availableCount > 4 ? 4 : availableCount;
+
+    if (count == 0) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.end,
+
           children: [
             Expanded(child: _sectionTitle('Nearby Attractions')),
 
-            const Text(
+            Text(
               'See All',
-              style: TextStyle(fontSize: 13, color: textColor),
+
+              style: GoogleFonts.inter(
+                fontSize: 13,
+
+                color: darkGreen,
+
+                fontWeight: FontWeight.w600,
+              ),
             ),
 
             const SizedBox(width: 2),
 
-            const Icon(Icons.chevron_right, color: darkGreen, size: 21),
+            const Icon(
+              Icons.chevron_right_rounded,
+
+              color: accentColor,
+
+              size: 22,
+            ),
           ],
         ),
 
-        const SizedBox(height: 7),
+        const SizedBox(height: 12),
 
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: List.generate(count, (index) {
             return Expanded(
               child: Padding(
-                padding: EdgeInsets.only(right: index == count - 1 ? 0 : 6),
+                padding: EdgeInsets.only(right: index == count - 1 ? 0 : 7),
+
                 child: _nearbyCard(index),
               ),
             );
@@ -598,28 +872,39 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
     );
   }
 
-  // ============================================================
+  // =========================================================
+
   // SINGLE NEARBY CARD
-  // ============================================================
+
+  // =========================================================
 
   Widget _nearbyCard(int index) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+
       children: [
         ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(12),
+
           child: AspectRatio(
-            aspectRatio: 1.32,
+            aspectRatio: 1.25,
+
             child: Image.asset(
               widget.nearbyImages[index],
+
               fit: BoxFit.cover,
+
               errorBuilder: (context, error, stackTrace) {
                 return Container(
-                  color: const Color(0xFFE6DDCE),
+                  color: cardColor,
+
                   alignment: Alignment.center,
+
                   child: const Icon(
                     Icons.image_not_supported_outlined,
+
                     color: darkGreen,
+
                     size: 22,
                   ),
                 );
@@ -628,33 +913,53 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
           ),
         ),
 
-        const SizedBox(height: 4),
+        const SizedBox(height: 6),
 
         Text(
           widget.nearbyNames[index],
-          maxLines: 1,
+
+          maxLines: 2,
+
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            fontSize: 11,
-            fontWeight: FontWeight.w500,
+
+          style: GoogleFonts.inter(
+            fontSize: 10.5,
+
+            fontWeight: FontWeight.w600,
+
             color: textColor,
+
+            height: 1.2,
           ),
         ),
 
-        const SizedBox(height: 2),
+        const SizedBox(height: 3),
 
         Row(
           children: [
-            const Icon(Icons.location_on, color: darkGreen, size: 15),
+            const Icon(
+              Icons.location_on_outlined,
+
+              color: accentColor,
+
+              size: 14,
+            ),
 
             const SizedBox(width: 2),
 
             Expanded(
               child: Text(
                 widget.nearbyDistances[index],
+
                 maxLines: 1,
+
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(fontSize: 10.5, color: textColor),
+
+                style: GoogleFonts.inter(
+                  fontSize: 9.5,
+
+                  color: secondaryTextColor,
+                ),
               ),
             ),
           ],
@@ -663,30 +968,39 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
     );
   }
 
-  // ============================================================
+  // =========================================================
+
   // SECTION TITLE
-  // ============================================================
+
+  // =========================================================
 
   Widget _sectionTitle(String title) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+
       children: [
         Text(
           title,
-          style: const TextStyle(
+
+          style: GoogleFonts.playfairDisplay(
             color: darkGreen,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+
+            fontSize: 21,
+
+            fontWeight: FontWeight.w700,
           ),
         ),
 
-        const SizedBox(height: 3),
+        const SizedBox(height: 4),
 
         Container(
-          width: 32,
+          width: 45,
+
           height: 3,
+
           decoration: BoxDecoration(
-            color: gold,
+            color: accentColor,
+
             borderRadius: BorderRadius.circular(5),
           ),
         ),
@@ -694,65 +1008,82 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
     );
   }
 
-<<<<<<< Updated upstream
-  // ============================================================
-  // BOTTOM NAVIGATION
-  // ============================================================
-
-  Widget _buildBottomNavigation() {
-    return SafeArea(
-      top: false,
-      child: Container(
-        margin: const EdgeInsets.fromLTRB(18, 0, 18, 10),
-        height: 72,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          border: Border.all(color: borderColor),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _navItem(Icons.home, 'HOME', true),
-            _navItem(Icons.location_on_outlined, 'MAP', false),
-            _navItem(Icons.favorite_border, 'SAVED', false),
-            _navItem(Icons.grid_view_outlined, 'SERVICES', false),
-            _navItem(Icons.person_outline, 'PROFILE', false),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _navItem(IconData icon, String label, bool selected) {
-    return Expanded(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 27,
-            color: selected ? darkGreen : const Color(0xFF555555),
-          ),
-
-          const SizedBox(height: 3),
-
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 10.5,
-              color: selected
-                  ? const Color(0xFF202020)
-                  : const Color(0xFF555555),
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-=======
   // =========================================================
 
->>>>>>> Stashed changes
+  // BOTTOM NAVIGATION
+
+  // Home | Services | Saved | Profile
+
+  // =========================================================
+
+  Widget _buildBottomNavigation() {
+    return BottomNavigationBar(
+      currentIndex: 0,
+
+      onTap: (index) {
+        if (index == 3) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ProfileScreen()),
+          );
+        }
+      },
+
+      type: BottomNavigationBarType.fixed,
+
+      backgroundColor: backgroundColor,
+
+      selectedItemColor: darkGreen,
+
+      unselectedItemColor: secondaryTextColor,
+
+      selectedFontSize: 12,
+
+      unselectedFontSize: 12,
+
+      selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
+
+      unselectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w500),
+
+      elevation: 0,
+
+      items: const [
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home_outlined, size: 27),
+
+          activeIcon: Icon(Icons.home, size: 27),
+
+          label: 'Home',
+        ),
+
+        BottomNavigationBarItem(
+          icon: Icon(Icons.grid_view_outlined, size: 27),
+
+          activeIcon: Icon(Icons.grid_view_outlined, size: 27),
+
+          label: 'Services',
+        ),
+
+        BottomNavigationBarItem(
+          icon: Icon(Icons.favorite_border_rounded, size: 27),
+
+          activeIcon: Icon(Icons.favorite_rounded, size: 27),
+
+          label: 'Saved',
+        ),
+
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person_outline_rounded, size: 27),
+
+          activeIcon: Icon(Icons.person_rounded, size: 27),
+
+          label: 'Profile',
+        ),
+      ],
+    );
+  }
+
+  // =========================================================
+
+
 }

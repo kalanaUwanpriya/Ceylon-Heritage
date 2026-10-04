@@ -14,6 +14,12 @@ class VisitedHistoryScreen extends StatefulWidget {
 class _VisitedHistoryScreenState extends State<VisitedHistoryScreen> {
   final VisitedHistoryService _visitedHistoryService = VisitedHistoryService();
 
+  static const Color backgroundColor = Color(0xFFF6EADA);
+  static const Color primaryColor = Color(0xFF17452F);
+  static const Color cardColor = Color(0xFFF0DDC3);
+  static const Color accentColor = Color(0xFF9F5625);
+  static const Color secondaryTextColor = Color(0xFF5F625D);
+
   bool _isLoading = true;
   String? _errorMessage;
 
@@ -40,9 +46,7 @@ class _VisitedHistoryScreenState extends State<VisitedHistoryScreen> {
         final data = document.data();
 
         final String? placeId = data['placeId'] as String?;
-
         final String? routeId = data['routeId'] as String?;
-
         final Timestamp? visitedAt = data['visitedAt'] as Timestamp?;
 
         if (placeId == null || placeId.isEmpty) {
@@ -149,23 +153,29 @@ class _VisitedHistoryScreenState extends State<VisitedHistoryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F2EB),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF7F2EB),
+        backgroundColor: backgroundColor,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF1E3A2B)),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: IconButton(
+            style: IconButton.styleFrom(
+              backgroundColor: cardColor,
+              foregroundColor: primaryColor,
+            ),
+            icon: const Icon(Icons.arrow_back_rounded, size: 22),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
         title: const Text(
           'Visited History',
           style: TextStyle(
-            color: Color(0xFF1E3A2B),
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
+            color: primaryColor,
+            fontSize: 20,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
@@ -176,7 +186,7 @@ class _VisitedHistoryScreenState extends State<VisitedHistoryScreen> {
   Widget _buildBody() {
     if (_isLoading) {
       return const Center(
-        child: CircularProgressIndicator(color: Color(0xFF1E3A2B)),
+        child: CircularProgressIndicator(color: primaryColor),
       );
     }
 
@@ -189,16 +199,18 @@ class _VisitedHistoryScreenState extends State<VisitedHistoryScreen> {
     }
 
     return RefreshIndicator(
-      color: const Color(0xFF1E3A2B),
+      color: primaryColor,
+      backgroundColor: cardColor,
       onRefresh: _loadVisitedHistory,
       child: ListView.builder(
+        physics: const AlwaysScrollableScrollPhysics(
+          parent: BouncingScrollPhysics(),
+        ),
         padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
         itemCount: _visitedPlaces.length,
         itemBuilder: (context, index) {
           final item = _visitedPlaces[index];
-
           final place = item['place'];
-
           final Timestamp? visitedAt = item['visitedAt'];
 
           return _buildVisitedCard(place: place, visitedAt: visitedAt);
@@ -212,94 +224,105 @@ class _VisitedHistoryScreenState extends State<VisitedHistoryScreen> {
     required Timestamp? visitedAt,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 18),
+      margin: const EdgeInsets.only(bottom: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.07),
-            blurRadius: 12,
-            offset: const Offset(0, 5),
-          ),
-        ],
+        color: cardColor,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: accentColor.withValues(alpha: 0.22),
+          width: 1,
+        ),
       ),
+      clipBehavior: Clip.antiAlias,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-            child: Image.asset(
-              place.image,
-              height: 180,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: 180,
-                  color: const Color(0xFFE8E0D5),
-                  child: const Center(
-                    child: Icon(
-                      Icons.image_not_supported_outlined,
-                      size: 50,
-                      color: Color(0xFF1E3A2B),
-                    ),
+          Image.asset(
+            place.image,
+            height: 170,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                height: 170,
+                width: double.infinity,
+                color: backgroundColor,
+                child: const Center(
+                  child: Icon(
+                    Icons.image_not_supported_outlined,
+                    size: 46,
+                    color: primaryColor,
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(15, 13, 15, 15),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   place.name,
                   style: const TextStyle(
-                    color: Color(0xFF1E3A2B),
-                    fontSize: 19,
-                    fontWeight: FontWeight.bold,
+                    color: primaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 const SizedBox(height: 7),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Icon(
                       Icons.location_on_outlined,
                       size: 18,
-                      color: Color(0xFFC88E38),
+                      color: accentColor,
                     ),
                     const SizedBox(width: 5),
                     Expanded(
                       child: Text(
                         place.location,
-                        style: TextStyle(
-                          color: Colors.grey.shade700,
+                        style: const TextStyle(
+                          color: secondaryTextColor,
                           fontSize: 13,
+                          height: 1.3,
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.calendar_today_outlined,
-                      size: 17,
-                      color: Color(0xFF1E3A2B),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      'Visited: ${_formatVisitedDate(visitedAt)}',
-                      style: TextStyle(
-                        color: Colors.grey.shade700,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
+                const SizedBox(height: 9),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 7,
+                  ),
+                  decoration: BoxDecoration(
+                    color: backgroundColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.calendar_today_outlined,
+                        size: 15,
+                        color: primaryColor,
                       ),
-                    ),
-                  ],
+                      const SizedBox(width: 6),
+                      Flexible(
+                        child: Text(
+                          'Visited: ${_formatVisitedDate(visitedAt)}',
+                          style: const TextStyle(
+                            color: secondaryTextColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
@@ -310,43 +333,54 @@ class _VisitedHistoryScreenState extends State<VisitedHistoryScreen> {
   }
 
   Widget _buildEmptyState() {
-    return Center(
-      child: Padding(
+    return RefreshIndicator(
+      color: primaryColor,
+      backgroundColor: cardColor,
+      onRefresh: _loadVisitedHistory,
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.all(30),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 90,
-              height: 90,
-              decoration: BoxDecoration(
-                color: const Color(0xFFE8E0D5),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.history,
-                size: 45,
-                color: Color(0xFF1E3A2B),
-              ),
+        children: [
+          SizedBox(height: MediaQuery.of(context).size.height * 0.16),
+          Center(
+            child: Column(
+              children: [
+                Container(
+                  width: 88,
+                  height: 88,
+                  decoration: BoxDecoration(
+                    color: cardColor,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: accentColor.withValues(alpha: 0.25),
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.history_rounded,
+                    size: 43,
+                    color: primaryColor,
+                  ),
+                ),
+                const SizedBox(height: 18),
+                const Text(
+                  'No Visited Places Yet',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: primaryColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Places you visit will appear here.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: secondaryTextColor, fontSize: 14),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'No Visited Places Yet',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xFF1E3A2B),
-                fontSize: 21,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Places you visit will appear here.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey.shade700, fontSize: 15),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -355,26 +389,51 @@ class _VisitedHistoryScreenState extends State<VisitedHistoryScreen> {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(30),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 55, color: Color(0xFF1E3A2B)),
-            const SizedBox(height: 15),
-            Text(
-              _errorMessage!,
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16, color: Color(0xFF1E3A2B)),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _loadVisitedHistory,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1E3A2B),
-                foregroundColor: Colors.white,
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: cardColor,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: accentColor.withValues(alpha: 0.22)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.error_outline_rounded,
+                size: 48,
+                color: accentColor,
               ),
-              child: const Text('Try Again'),
-            ),
-          ],
+              const SizedBox(height: 13),
+              Text(
+                _errorMessage!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 15,
+                  color: primaryColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 18),
+              ElevatedButton.icon(
+                onPressed: _loadVisitedHistory,
+                icon: const Icon(Icons.refresh_rounded, size: 19),
+                label: const Text('Try Again'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

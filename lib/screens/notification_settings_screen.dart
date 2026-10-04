@@ -12,6 +12,12 @@ class NotificationSettingsScreen extends StatefulWidget {
 
 class _NotificationSettingsScreenState
     extends State<NotificationSettingsScreen> {
+  static const Color backgroundColor = Color(0xFFF6EADA);
+  static const Color primaryColor = Color(0xFF17452F);
+  static const Color cardColor = Color(0xFFF0DDC3);
+  static const Color accentColor = Color(0xFF9F5625);
+  static const Color secondaryTextColor = Color(0xFF5F625D);
+
   final NotificationPreferencesService _preferencesService =
       NotificationPreferencesService();
 
@@ -32,10 +38,6 @@ class _NotificationSettingsScreenState
     _loadPreferences();
   }
 
-  // ============================================================
-  // LOAD PREFERENCES FROM FIRESTORE
-  // ============================================================
-
   Future<void> _loadPreferences() async {
     try {
       final preferences = await _preferencesService.getPreferences();
@@ -44,20 +46,13 @@ class _NotificationSettingsScreenState
 
       setState(() {
         generalUpdates = preferences['generalUpdates'] as bool? ?? true;
-
         routeRecommendations =
             preferences['routeRecommendations'] as bool? ?? true;
-
         savedPlaces = preferences['savedPlaces'] as bool? ?? true;
-
         eventsActivities = preferences['eventsActivities'] as bool? ?? true;
-
         offersPromotions = preferences['offersPromotions'] as bool? ?? false;
-
         travelTips = preferences['travelTips'] as bool? ?? true;
-
         securityAlerts = preferences['securityAlerts'] as bool? ?? true;
-
         _isLoading = false;
       });
     } catch (e) {
@@ -74,10 +69,6 @@ class _NotificationSettingsScreenState
       );
     }
   }
-
-  // ============================================================
-  // SAVE PREFERENCES TO FIRESTORE
-  // ============================================================
 
   Future<void> _savePreferences() async {
     if (_isSaving) return;
@@ -123,66 +114,67 @@ class _NotificationSettingsScreenState
     }
   }
 
-  // ============================================================
-  // MAIN BUILD
-  // ============================================================
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F2EB),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF7F2EB),
+        backgroundColor: backgroundColor,
+        surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF1E3A2B)),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: IconButton(
+            style: IconButton.styleFrom(
+              backgroundColor: cardColor,
+              foregroundColor: primaryColor,
+            ),
+            icon: const Icon(Icons.arrow_back_rounded, size: 22),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
         title: const Text(
           'Notification Settings',
           style: TextStyle(
-            color: Color(0xFF1E3A2B),
+            color: primaryColor,
             fontSize: 20,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w700,
           ),
         ),
       ),
       body: SafeArea(
         child: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFF1E3A2B)),
+                child: CircularProgressIndicator(color: primaryColor),
               )
             : SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 10, 20, 30),
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Manage Notifications',
                       style: TextStyle(
-                        color: Color(0xFF1E3A2B),
+                        color: primaryColor,
                         fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
-
-                    const SizedBox(height: 8),
-
+                    const SizedBox(height: 6),
                     const Text(
                       'Choose the types of notifications you would like to receive.',
                       style: TextStyle(
-                        color: Colors.black54,
+                        color: secondaryTextColor,
                         fontSize: 14,
-                        height: 1.5,
+                        height: 1.4,
                       ),
                     ),
-
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
 
                     _buildNotificationCard(
+                      icon: Icons.notifications_none_rounded,
                       title: 'General Updates',
                       description:
                           'Receive important updates about the Heritage Walks app.',
@@ -195,6 +187,7 @@ class _NotificationSettingsScreenState
                     ),
 
                     _buildNotificationCard(
+                      icon: Icons.route_outlined,
                       title: 'Route Recommendations',
                       description:
                           'Get recommendations for walking routes and places.',
@@ -207,6 +200,7 @@ class _NotificationSettingsScreenState
                     ),
 
                     _buildNotificationCard(
+                      icon: Icons.favorite_border_rounded,
                       title: 'Saved Places',
                       description:
                           'Receive updates related to your saved places.',
@@ -219,6 +213,7 @@ class _NotificationSettingsScreenState
                     ),
 
                     _buildNotificationCard(
+                      icon: Icons.event_outlined,
                       title: 'Events & Activities',
                       description:
                           'Stay informed about heritage events and activities.',
@@ -231,6 +226,7 @@ class _NotificationSettingsScreenState
                     ),
 
                     _buildNotificationCard(
+                      icon: Icons.local_offer_outlined,
                       title: 'Offers & Promotions',
                       description:
                           'Receive special offers and promotional notifications.',
@@ -243,6 +239,7 @@ class _NotificationSettingsScreenState
                     ),
 
                     _buildNotificationCard(
+                      icon: Icons.lightbulb_outline_rounded,
                       title: 'Travel Tips',
                       description:
                           'Get useful travel tips for exploring Sri Lanka.',
@@ -255,6 +252,7 @@ class _NotificationSettingsScreenState
                     ),
 
                     _buildNotificationCard(
+                      icon: Icons.shield_outlined,
                       title: 'Security Alerts',
                       description:
                           'Receive important safety and security notifications.',
@@ -266,7 +264,7 @@ class _NotificationSettingsScreenState
                       },
                     ),
 
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 10),
 
                     SizedBox(
                       width: double.infinity,
@@ -274,28 +272,30 @@ class _NotificationSettingsScreenState
                       child: ElevatedButton(
                         onPressed: _isSaving ? null : _savePreferences,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF1E3A2B),
+                          backgroundColor: primaryColor,
                           foregroundColor: Colors.white,
-                          disabledBackgroundColor: const Color(0xFF9EAAA3),
+                          disabledBackgroundColor: primaryColor.withValues(
+                            alpha: 0.45,
+                          ),
                           elevation: 0,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
                         child: _isSaving
                             ? const SizedBox(
-                                width: 22,
-                                height: 22,
+                                width: 21,
+                                height: 21,
                                 child: CircularProgressIndicator(
-                                  strokeWidth: 2.5,
+                                  strokeWidth: 2.3,
                                   color: Colors.white,
                                 ),
                               )
                             : const Text(
                                 'Save Preferences',
                                 style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
                       ),
@@ -307,48 +307,32 @@ class _NotificationSettingsScreenState
     );
   }
 
-  // ============================================================
-  // NOTIFICATION CARD
-  // ============================================================
-
   Widget _buildNotificationCard({
+    required IconData icon,
     required String title,
     required String description,
     required bool value,
     required ValueChanged<bool> onChanged,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.fromLTRB(14, 12, 8, 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
+        border: Border.all(
+          color: accentColor.withValues(alpha: 0.22),
+          width: 1,
+        ),
       ),
       child: Row(
         children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: const Color(0xFFE8F0EA),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Icon(
-              Icons.notifications_none_rounded,
-              color: Color(0xFF1E3A2B),
-              size: 23,
-            ),
+          SizedBox(
+            width: 38,
+            height: 38,
+            child: Center(child: Icon(icon, color: primaryColor, size: 23)),
           ),
-
-          const SizedBox(width: 14),
-
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -356,16 +340,16 @@ class _NotificationSettingsScreenState
                 Text(
                   title,
                   style: const TextStyle(
-                    color: Color(0xFF1E3A2B),
+                    color: primaryColor,
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 3),
                 Text(
                   description,
                   style: const TextStyle(
-                    color: Colors.black54,
+                    color: secondaryTextColor,
                     fontSize: 12,
                     height: 1.35,
                   ),
@@ -373,13 +357,22 @@ class _NotificationSettingsScreenState
               ],
             ),
           ),
-
-          const SizedBox(width: 8),
-
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeThumbColor: const Color(0xFF1E3A2B),
+          const SizedBox(width: 6),
+          Transform.scale(
+            scale: 0.88,
+            child: Switch(
+              value: value,
+              onChanged: onChanged,
+              activeThumbColor: backgroundColor,
+              activeTrackColor: primaryColor,
+              inactiveThumbColor: secondaryTextColor,
+              inactiveTrackColor: backgroundColor,
+              trackOutlineColor: WidgetStateProperty.resolveWith<Color?>(
+                (states) => states.contains(WidgetState.selected)
+                    ? primaryColor
+                    : secondaryTextColor.withValues(alpha: 0.35),
+              ),
+            ),
           ),
         ],
       ),

@@ -1,22 +1,34 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 
+import 'package:google_fonts/google_fonts.dart';
+
 import '../services/user_service.dart';
-<<<<<<< Updated upstream
-import 'about_app_screen.dart';
-=======
 import '../widgets/app_navigation_bar.dart';
 
 import 'about_app_screen.dart';
 import 'home_screen.dart';
 
->>>>>>> Stashed changes
+
+
+import 'about_app_screen.dart';
+
+
 import 'change_password_screen.dart';
+
 import 'edit_profile_screen.dart';
+
 import 'help_support_screen.dart';
+
 import 'login_screen.dart';
+
 import 'notification_settings_screen.dart';
+
 import 'privacy_policy_screen.dart';
+
 import 'visited_history_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -27,25 +39,51 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  // ============================================================
+
+  // HERITAGE WALKS DESIGN COLORS
+
+  // ============================================================
+
+  static const Color backgroundColor = Color(0xFFF6EADA);
+
+  static const Color primaryColor = Color(0xFF17452F);
+
+  static const Color cardColor = Color(0xFFF0DDC3);
+
+  static const Color accentColor = Color(0xFF9F5625);
+
+  static const Color secondaryTextColor = Color(0xFF5F625D);
+
   final UserService _userService = UserService();
 
   bool _isLoading = true;
+
+  bool _isRefreshing = false;
+
   String? _errorMessage;
 
   String _name = 'Heritage Explorer';
+
   String _email = '';
+
   String _bio = '';
+
   String _location = 'Sri Lanka';
+
   String _profilePhoto = '';
 
   @override
   void initState() {
     super.initState();
+
     _loadProfile();
   }
 
   // ============================================================
+
   // LOAD PROFILE FROM FIRESTORE
+
   // ============================================================
 
   Future<void> _loadProfile() async {
@@ -56,6 +94,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       setState(() {
         _isLoading = false;
+
         _errorMessage = 'No logged-in user found.';
       });
 
@@ -66,7 +105,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       final snapshot = await _userService.getUserProfile(user.uid);
 
       // --------------------------------------------------------
+
       // IF FIRESTORE PROFILE DOES NOT EXIST
+
       // --------------------------------------------------------
 
       if (!snapshot.exists || snapshot.data() == null) {
@@ -78,10 +119,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               : 'Heritage Explorer';
 
           _email = user.email ?? '';
+
           _bio = '';
+
           _location = 'Sri Lanka';
+
           _profilePhoto = '';
+
           _isLoading = false;
+
           _errorMessage = null;
         });
 
@@ -89,15 +135,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
       }
 
       // --------------------------------------------------------
+
       // GET FIRESTORE DATA
+
       // --------------------------------------------------------
 
       final data = snapshot.data()!;
 
       final nameValue = data['name'];
+
       final emailValue = data['email'];
+
       final bioValue = data['bio'];
+
       final locationValue = data['location'];
+
       final profilePhotoValue = data['profilePhoto'];
 
       final String firestoreName = nameValue is String ? nameValue.trim() : '';
@@ -119,7 +171,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       if (!mounted) return;
 
       // --------------------------------------------------------
+
       // UPDATE SCREEN
+
       // --------------------------------------------------------
 
       setState(() {
@@ -142,6 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _profilePhoto = firestoreProfilePhoto;
 
         _isLoading = false;
+
         _errorMessage = null;
       });
     } catch (e) {
@@ -149,56 +204,127 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       setState(() {
         _isLoading = false;
+
         _errorMessage = 'Unable to load profile.';
       });
     }
   }
 
   // ============================================================
+
+  // REFRESH PROFILE WITH SMALL VISIBLE ANIMATION
+
+  Future<void> _refreshProfile() async {
+    if (_isRefreshing) return;
+
+    setState(() {
+      _isRefreshing = true;
+    });
+
+    final minimumAnimation = Future<void>.delayed(
+      const Duration(milliseconds: 650),
+    );
+
+    await Future.wait<void>([_loadProfile(), minimumAnimation]);
+
+    if (!mounted) return;
+
+    setState(() {
+      _isRefreshing = false;
+    });
+  }
+
   // OPEN EDIT PROFILE
+
   // ============================================================
 
   Future<void> _openEditProfile() async {
-    final result = await Navigator.push(
+    await Navigator.push(
       context,
+
       MaterialPageRoute(builder: (context) => const EditProfileScreen()),
     );
 
-    if (result == true) {
-      await _loadProfile();
-    }
+    if (!mounted) return;
+
+    await _loadProfile();
   }
 
   // ============================================================
+
   // LOGOUT
+
   // ============================================================
 
   Future<void> _showLogoutDialog() async {
     final bool? shouldLogout = await showDialog<bool>(
       context: context,
+
       builder: (context) {
         return AlertDialog(
-          title: const Text(
-            'Logout',
-            style: TextStyle(fontWeight: FontWeight.bold),
+          backgroundColor: backgroundColor,
+
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
           ),
-          content: const Text('Are you sure you want to logout?'),
+
+          title: Text(
+            'Logout',
+
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 20,
+
+              fontWeight: FontWeight.bold,
+
+              color: primaryColor,
+            ),
+          ),
+
+          content: Text(
+            'Are you sure you want to logout?',
+
+            style: GoogleFonts.inter(fontSize: 14, color: secondaryTextColor),
+          ),
+
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.pop(context, false);
               },
-              child: const Text('Cancel'),
+
+              child: Text(
+                'Cancel',
+
+                style: GoogleFonts.inter(
+                  color: secondaryTextColor,
+
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
+
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context, true);
               },
+
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1E3A2B),
+                backgroundColor: primaryColor,
+
                 foregroundColor: Colors.white,
+
+                elevation: 0,
+
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
-              child: const Text('Logout'),
+
+              child: Text(
+                'Logout',
+
+                style: GoogleFonts.inter(fontWeight: FontWeight.w600),
+              ),
             ),
           ],
         );
@@ -208,35 +334,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (shouldLogout != true) return;
 
     // Sign out from Firebase Authentication.
+
     await FirebaseAuth.instance.signOut();
 
     if (!mounted) return;
 
     // Remove all previous screens and open Login Screen.
+
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => const LoginScreen()),
+
       (route) => false,
     );
   }
 
   // ============================================================
+
   // MAIN BUILD
+
   // ============================================================
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F2EB),
+      backgroundColor: backgroundColor,
+
       body: SafeArea(
         child: _isLoading
             ? const Center(
-                child: CircularProgressIndicator(color: Color(0xFF1E3A2B)),
+                child: CircularProgressIndicator(color: primaryColor),
               )
             : _buildProfileContent(),
       ),
-<<<<<<< Updated upstream
+
       bottomNavigationBar: _buildBottomNavigation(),
-=======
+
 
       bottomNavigationBar: AppNavigationBar(
         selectedIndex: 3,
@@ -271,44 +403,76 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         },
       ),
->>>>>>> Stashed changes
+
     );
   }
 
   // ============================================================
+
   // PROFILE CONTENT
+
   // ============================================================
 
   Widget _buildProfileContent() {
     return RefreshIndicator(
-      color: const Color(0xFF1E3A2B),
+      color: primaryColor,
+
       onRefresh: _loadProfile,
+
       child: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
+
         padding: const EdgeInsets.fromLTRB(20, 20, 20, 30),
+
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+
           children: [
             // ==================================================
-            // HEADER
-            // ==================================================
 
+            // HEADER
+
+            // ==================================================
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Text(
                     'My Profile',
-                    style: TextStyle(
-                      fontSize: 28,
+
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 20,
+
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E3A2B),
+
+                      color: primaryColor,
                     ),
                   ),
                 ),
-                IconButton(
-                  onPressed: _loadProfile,
-                  icon: const Icon(Icons.refresh, color: Color(0xFF1E3A2B)),
-                  tooltip: 'Refresh profile',
+
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 220),
+                  child: _isRefreshing
+                      ? const SizedBox(
+                          key: ValueKey('refreshing'),
+                          width: 48,
+                          height: 48,
+                          child: Padding(
+                            padding: EdgeInsets.all(13),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.4,
+                              color: primaryColor,
+                            ),
+                          ),
+                        )
+                      : IconButton(
+                          key: const ValueKey('refreshButton'),
+                          onPressed: _refreshProfile,
+                          icon: const Icon(
+                            Icons.refresh_rounded,
+                            color: primaryColor,
+                          ),
+                          tooltip: 'Refresh profile',
+                        ),
                 ),
               ],
             ),
@@ -316,40 +480,63 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 18),
 
             // ==================================================
+
             // ERROR MESSAGE
+
             // ==================================================
             if (_errorMessage != null)
               Container(
                 width: double.infinity,
+
                 margin: const EdgeInsets.only(bottom: 15),
+
                 padding: const EdgeInsets.all(12),
+
                 decoration: BoxDecoration(
                   color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(12),
+
+                  borderRadius: BorderRadius.circular(14),
+
+                  border: Border.all(color: Colors.red.shade100),
                 ),
+
                 child: Text(
                   _errorMessage!,
-                  style: TextStyle(color: Colors.red.shade700, fontSize: 13),
+
+                  style: GoogleFonts.inter(
+                    color: Colors.red.shade700,
+
+                    fontSize: 13,
+                  ),
                 ),
               ),
 
             // ==================================================
+
             // PROFILE CARD
+
             // ==================================================
             Container(
               width: double.infinity,
+
               padding: const EdgeInsets.all(20),
+
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
+                color: cardColor,
+
+                borderRadius: BorderRadius.circular(20),
+
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withValues(alpha: 0.06),
-                    blurRadius: 15,
-                    offset: const Offset(0, 6),
+
+                    blurRadius: 12,
+
+                    offset: const Offset(0, 5),
                   ),
                 ],
               ),
+
               child: Column(
                 children: [
                   _buildProfileAvatar(),
@@ -358,11 +545,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   Text(
                     _name,
+
                     textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 22,
+
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 20,
+
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E3A2B),
+
+                      color: primaryColor,
                     ),
                   ),
 
@@ -371,20 +562,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   if (_email.isNotEmpty)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
+
                       children: [
                         const Icon(
                           Icons.email_outlined,
+
                           size: 16,
-                          color: Colors.grey,
+
+                          color: secondaryTextColor,
                         ),
+
                         const SizedBox(width: 6),
+
                         Flexible(
                           child: Text(
                             _email,
+
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+
+                            style: GoogleFonts.inter(
                               fontSize: 14,
-                              color: Colors.grey,
+
+                              color: secondaryTextColor,
                             ),
                           ),
                         ),
@@ -395,18 +594,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+
                     children: [
                       const Icon(
                         Icons.location_on_outlined,
+
                         size: 17,
-                        color: Color(0xFFC88E38),
+
+                        color: accentColor,
                       ),
+
                       const SizedBox(width: 5),
-                      Text(
-                        _location,
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey,
+
+                      Flexible(
+                        child: Text(
+                          _location,
+
+                          textAlign: TextAlign.center,
+
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+
+                            color: secondaryTextColor,
+                          ),
                         ),
                       ),
                     ],
@@ -414,13 +624,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   if (_bio.isNotEmpty) ...[
                     const SizedBox(height: 12),
+
                     Text(
                       _bio,
+
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+
+                      style: GoogleFonts.inter(
                         fontSize: 14,
-                        color: Color(0xFF555555),
-                        height: 1.4,
+
+                        color: secondaryTextColor,
+
+                        height: 1.5,
                       ),
                     ),
                   ],
@@ -429,18 +644,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   SizedBox(
                     width: double.infinity,
+
                     height: 48,
+
                     child: ElevatedButton.icon(
                       onPressed: _openEditProfile,
+
                       icon: const Icon(Icons.edit_outlined, size: 19),
-                      label: const Text(
+
+                      label: Text(
                         'Edit Profile',
-                        style: TextStyle(fontWeight: FontWeight.w600),
+
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
+
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
+
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1E3A2B),
+                        backgroundColor: primaryColor,
+
                         foregroundColor: Colors.white,
+
                         elevation: 0,
+
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(14),
                         ),
@@ -454,23 +682,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 25),
 
             // ==================================================
+
             // MY ACCOUNT
+
             // ==================================================
-            const Text(
-              'My Account',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E3A2B),
-              ),
-            ),
+            _buildSectionHeading('My Account'),
 
             const SizedBox(height: 12),
 
             // SAVED PLACES
             _buildMenuCard(
               icon: Icons.bookmark_outline,
+
               title: 'Saved Places',
+
               onTap: () {
                 _showComingSoon('Saved Places');
               },
@@ -479,10 +704,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // VISITED HISTORY
             _buildMenuCard(
               icon: Icons.history,
+
               title: 'Visited History',
+
               onTap: () {
                 Navigator.push(
                   context,
+
                   MaterialPageRoute(
                     builder: (context) => const VisitedHistoryScreen(),
                   ),
@@ -493,7 +721,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // MY REVIEWS
             _buildMenuCard(
               icon: Icons.star_outline,
+
               title: 'My Reviews',
+
               onTap: () {
                 _showComingSoon('My Reviews');
               },
@@ -502,20 +732,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 20),
 
             // ==================================================
+
             // SETTINGS
+
             // ==================================================
-            const Text(
-              'Settings',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF1E3A2B),
-              ),
-            ),
+            _buildSectionHeading('Settings'),
 
             const SizedBox(height: 12),
 
             // LANGUAGE SETTING
+            // Temporarily hidden from the Profile UI.
+            // Keep this code so it can be enabled again later.
+            /*
             _buildMenuCard(
               icon: Icons.language,
               title: 'Language Setting',
@@ -523,14 +751,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _showComingSoon('Language Setting');
               },
             ),
+            */
 
             // NOTIFICATION SETTING
             _buildMenuCard(
               icon: Icons.notifications_none,
+
               title: 'Notification Setting',
+
               onTap: () {
                 Navigator.push(
                   context,
+
                   MaterialPageRoute(
                     builder: (context) => const NotificationSettingsScreen(),
                   ),
@@ -541,10 +773,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // CHANGE PASSWORD
             _buildMenuCard(
               icon: Icons.lock_outline,
+
               title: 'Change Password',
+
               onTap: () {
                 Navigator.push(
                   context,
+
                   MaterialPageRoute(
                     builder: (context) => const ChangePasswordScreen(),
                   ),
@@ -555,10 +790,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // HELP & SUPPORT
             _buildMenuCard(
               icon: Icons.help_outline,
+
               title: 'Help & Support',
+
               onTap: () {
                 Navigator.push(
                   context,
+
                   MaterialPageRoute(
                     builder: (context) => const HelpSupportScreen(),
                   ),
@@ -569,10 +807,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // ABOUT APP
             _buildMenuCard(
               icon: Icons.info_outline,
+
               title: 'About App',
+
               onTap: () {
                 Navigator.push(
                   context,
+
                   MaterialPageRoute(
                     builder: (context) => const AboutAppScreen(),
                   ),
@@ -583,10 +824,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // PRIVACY POLICY
             _buildMenuCard(
               icon: Icons.privacy_tip_outlined,
+
               title: 'Privacy Policy',
+
               onTap: () {
                 Navigator.push(
                   context,
+
                   MaterialPageRoute(
                     builder: (context) => const PrivacyPolicyScreen(),
                   ),
@@ -597,23 +841,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 20),
 
             // ==================================================
+
             // LOGOUT
+
             // ==================================================
             SizedBox(
               width: double.infinity,
+
               height: 52,
+
               child: OutlinedButton.icon(
                 onPressed: _showLogoutDialog,
+
                 icon: const Icon(Icons.logout, color: Colors.red),
-                label: const Text(
+
+                label: Text(
                   'Logout',
-                  style: TextStyle(
+
+                  style: GoogleFonts.inter(
                     color: Colors.red,
+
                     fontWeight: FontWeight.w600,
+
+                    fontSize: 14,
                   ),
                 ),
+
                 style: OutlinedButton.styleFrom(
+                  backgroundColor: backgroundColor,
+
                   side: const BorderSide(color: Colors.red, width: 1.2),
+
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(14),
                   ),
@@ -629,135 +887,165 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // ============================================================
+
+  // SECTION HEADING
+
+  // ============================================================
+
+  Widget _buildSectionHeading(String title) {
+    return Text(
+      title,
+
+      style: GoogleFonts.playfairDisplay(
+        fontSize: 20,
+
+        fontWeight: FontWeight.bold,
+
+        color: primaryColor,
+      ),
+    );
+  }
+
+  // ============================================================
+
   // PROFILE AVATAR
+
   // ============================================================
 
   Widget _buildProfileAvatar() {
     if (_profilePhoto.isNotEmpty) {
-      return CircleAvatar(
-        radius: 48,
-        backgroundImage: NetworkImage(_profilePhoto),
-        backgroundColor: const Color(0xFFE9E1D5),
-      );
+      final File profileFile = File(_profilePhoto);
+
+      if (profileFile.existsSync()) {
+        return Container(
+          padding: const EdgeInsets.all(3),
+
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+
+            border: Border.all(color: accentColor, width: 2),
+          ),
+
+          child: CircleAvatar(
+            radius: 48,
+
+            backgroundImage: FileImage(profileFile),
+
+            backgroundColor: backgroundColor,
+          ),
+        );
+      }
     }
 
-    return const CircleAvatar(
-      radius: 48,
-      backgroundColor: Color(0xFFE9E1D5),
-      child: Icon(Icons.person, size: 52, color: Color(0xFF1E3A2B)),
+    return Container(
+      padding: const EdgeInsets.all(3),
+
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+
+        border: Border.all(color: accentColor, width: 2),
+      ),
+
+      child: const CircleAvatar(
+        radius: 48,
+
+        backgroundColor: backgroundColor,
+
+        child: Icon(Icons.person_outline, size: 52, color: primaryColor),
+      ),
     );
   }
 
   // ============================================================
+
   // MENU CARD
+
   // ============================================================
 
   Widget _buildMenuCard({
     required IconData icon,
+
     required String title,
+
     required VoidCallback onTap,
   }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
+
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
+
         borderRadius: BorderRadius.circular(16),
+
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.035),
+            color: Colors.black.withValues(alpha: 0.04),
+
             blurRadius: 8,
+
             offset: const Offset(0, 3),
           ),
         ],
       ),
+
       child: ListTile(
         onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
+
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+
         leading: Container(
           width: 42,
+
           height: 42,
+
           decoration: BoxDecoration(
-            color: const Color(0xFFF1EDE6),
+            color: backgroundColor,
+
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(icon, color: const Color(0xFF1E3A2B), size: 22),
+
+          child: Icon(icon, color: primaryColor, size: 22),
         ),
+
         title: Text(
           title,
-          style: const TextStyle(
-            fontSize: 15,
+
+          style: GoogleFonts.inter(
+            fontSize: 16,
+
             fontWeight: FontWeight.w600,
-            color: Color(0xFF333333),
+
+            color: primaryColor,
           ),
         ),
-        trailing: const Icon(Icons.chevron_right, color: Colors.grey),
+
+        trailing: const Icon(Icons.chevron_right_rounded, color: accentColor),
       ),
     );
   }
 
   // ============================================================
+
   // COMING SOON
+
   // ============================================================
 
   void _showComingSoon(String featureName) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('$featureName will be connected next.'),
+        content: Text(
+          '$featureName will be connected next.',
+
+          style: GoogleFonts.inter(),
+        ),
+
+        backgroundColor: primaryColor,
+
         duration: const Duration(seconds: 2),
       ),
     );
   }
 
-<<<<<<< Updated upstream
-  // ============================================================
-  // BOTTOM NAVIGATION
-  // ============================================================
-
-  Widget _buildBottomNavigation() {
-    return BottomNavigationBar(
-      currentIndex: 3,
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.white,
-      selectedItemColor: const Color(0xFF1E3A2B),
-      unselectedItemColor: Colors.grey,
-      selectedFontSize: 12,
-      unselectedFontSize: 12,
-      onTap: (index) {
-        if (index == 3) {
-          return;
-        }
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Navigation will be connected next.'),
-            duration: Duration(seconds: 1),
-          ),
-        );
-      },
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          activeIcon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.explore_outlined),
-          activeIcon: Icon(Icons.explore),
-          label: 'Explore',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.bookmark_border),
-          activeIcon: Icon(Icons.bookmark),
-          label: 'Saved',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-          activeIcon: Icon(Icons.person),
-          label: 'Profile',
-        ),
-      ],
-    );
-  }
-=======
->>>>>>> Stashed changes
 }
