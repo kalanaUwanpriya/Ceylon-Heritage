@@ -200,7 +200,65 @@ final List<HistoricalPlace> downSouthPlaces = [
 ];
 
 // ============================================================
+// ANURADHAPURA
+// ============================================================
+
+final Destination anuradhapura = Destination(
+  name: 'Anuradhapura',
+  location: 'North Central Province',
+  description:
+      'Anuradhapura is one of the oldest continuously inhabited cities in the world and a UNESCO World Heritage Site. Renowned for its colossal stupas, ancient temples, sacred Bodhi tree, and remarkable ancient irrigation systems.',
+  image: 'assets/images/anuradhapura.png',
+  popularAttractions: [
+    'Ruwanwelisaya',
+    'Sri Maha Bodhi',
+    'Thuparamaya',
+    'Abhayagiri',
+    'Jetavanaramaya',
+  ],
+);
+
+final List<HistoricalPlace> anuradhapuraPlaces = [
+  HistoricalPlace(
+    name: 'Ruwanwelisaya',
+    destination: 'Anuradhapura',
+    description: 'A magnificent stupa and one of the world\'s tallest ancient monuments.',
+    location: 'Anuradhapura, Sri Lanka',
+    image: 'assets/images/anuradhapura.png',
+  ),
+  HistoricalPlace(
+    name: 'Sri Maha Bodhi',
+    destination: 'Anuradhapura',
+    description: 'The sacred fig tree, said to be a sapling from the historical Bodhi tree under which Buddha became enlightened.',
+    location: 'Anuradhapura, Sri Lanka',
+    image: 'assets/images/Auradapura 2.png',
+  ),
+  HistoricalPlace(
+    name: 'Thuparamaya',
+    destination: 'Anuradhapura',
+    description: 'The first Buddhist temple in Sri Lanka.',
+    location: 'Anuradhapura, Sri Lanka',
+    image: 'assets/images/thuparamaya.png',
+  ),
+  HistoricalPlace(
+    name: 'Abhayagiri',
+    destination: 'Anuradhapura',
+    description: 'A major monastery site of Mahayana, Theravada and Vajrayana Buddhism.',
+    location: 'Anuradhapura, Sri Lanka',
+    image: 'assets/images/anurapura 5.png',
+  ),
+  HistoricalPlace(
+    name: 'Jetavanaramaya',
+    destination: 'Anuradhapura',
+    description: 'A prominent ancient stupa in the ruins of Jetavana monastery.',
+    location: 'Anuradhapura, Sri Lanka',
+    image: 'assets/images/jetavanaramaya.png',
+  ),
+];
+
+// ============================================================
 // ALL DESTINATIONS
 // ============================================================
 
-final List<Destination> destinations = [polonnaruwa, jaffna, downSouth];
+final List<Destination> destinations = [anuradhapura, polonnaruwa, jaffna, downSouth];
+
