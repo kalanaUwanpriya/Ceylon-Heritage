@@ -11,8 +11,6 @@ import '../data/place_information_data.dart';
 import '../screens/profile_screen.dart';
 import '../widgets/app_navigation_bar.dart';
 
-import '../screens/profile_screen.dart';
-
 class DestinationPage extends StatefulWidget {
   final Destination destination;
 
@@ -893,73 +891,6 @@ class _DestinationPageState extends State<DestinationPage> {
       // Home | Services | Saved | Profile
 
       // =====================================================
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-
-        onTap: (index) {
-          if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfileScreen()),
-            );
-          }
-        },
-
-        type: BottomNavigationBarType.fixed,
-
-        backgroundColor: backgroundColor,
-
-        selectedItemColor: darkGreen,
-
-        unselectedItemColor: greyText,
-
-        selectedFontSize: 12,
-
-        unselectedFontSize: 12,
-
-        selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
-
-        unselectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w500),
-
-        elevation: 0,
-
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined, size: 27),
-
-            activeIcon: Icon(Icons.home, size: 27),
-
-            label: 'Home',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view_outlined, size: 27),
-
-            activeIcon: Icon(Icons.grid_view_outlined, size: 27),
-
-            label: 'Services',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border_rounded, size: 27),
-
-            activeIcon: Icon(Icons.favorite_rounded, size: 27),
-
-            label: 'Saved',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline_rounded, size: 27),
-
-            activeIcon: Icon(Icons.person_rounded, size: 27),
-
-            label: 'Profile',
-          ),
-        ],
-
-
-      // Home | Services | Saved | Profile
-
       bottomNavigationBar: AppNavigationBar(
         selectedIndex: 0,
         onDestinationSelected: (index) {

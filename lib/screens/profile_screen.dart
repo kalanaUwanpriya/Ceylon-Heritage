@@ -12,11 +12,6 @@ import '../widgets/app_navigation_bar.dart';
 import 'about_app_screen.dart';
 import 'home_screen.dart';
 
-
-
-import 'about_app_screen.dart';
-
-
 import 'change_password_screen.dart';
 
 import 'edit_profile_screen.dart';
@@ -367,9 +362,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             : _buildProfileContent(),
       ),
 
-      bottomNavigationBar: _buildBottomNavigation(),
-
-
       bottomNavigationBar: AppNavigationBar(
         selectedIndex: 3,
         onDestinationSelected: (index) {
@@ -403,7 +395,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         },
       ),
-
     );
   }
 
@@ -1047,5 +1038,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
-
 }

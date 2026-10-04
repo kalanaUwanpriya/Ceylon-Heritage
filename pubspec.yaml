@@ -17,7 +17,7 @@ dependencies:
 
 
   # UI
-  google_fonts: ^9.0.0
+  google_fonts: ^8.2.1
 
   flutter_animate: ^4.5.2
 
@@ -33,13 +33,6 @@ dependencies:
   # Profile image picker
   image_picker: ^1.2.1
   path_provider: ^2.1.6
-  google_fonts: 8.2.1
-
-
-  # Profile image picker
-  image_picker: ^1.2.1
-  path_provider: ^2.1.6
-
 
 dev_dependencies:
   flutter_test:
