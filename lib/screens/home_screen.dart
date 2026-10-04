@@ -131,17 +131,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                 ),
               ),
-
-            // ============================================================
-            // BOTTOM NAVIGATION
-            // ============================================================
-            _buildBottomNavigationBar(),
-          ],
-
               const SizedBox(height: 28),
             ],
           ),
-
         ),
       ),
       bottomNavigationBar: AppNavigationBar(
@@ -517,196 +509,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // ============================================================
-  // BOTTOM NAVIGATION
-  // ============================================================
-
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, -3),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildNavItem(
-                index: 0,
-                icon: Icons.home_outlined,
-                activeIcon: Icons.home_outlined,
-                label: 'Home',
-              ),
-            ),
-            Expanded(
-              child: _buildNavItem(
-                index: 1,
-                icon: Icons.grid_view_outlined,
-                activeIcon: Icons.grid_view_outlined,
-                label: 'Services',
-              ),
-            ),
-            Expanded(
-              child: _buildNavItem(
-                index: 2,
-                icon: Icons.favorite_border_rounded,
-                activeIcon: Icons.favorite_rounded,
-                label: 'Saved',
-              ),
-            ),
-            Expanded(
-              child: _buildNavItem(
-                index: 3,
-                icon: Icons.person_outline,
-                activeIcon: Icons.person_outline,
-                label: 'Profile',
-              ),
-            ),
-          ],
-        ),
-
-  // ============================================================
-  // DESTINATION NAVIGATION
-  // ============================================================
-
-  void _openDestination(BuildContext context, PlaceItem place) {
-    // Keep the navigation that already exists in the project.
-
-    if (place.title == 'Polonnaruwa') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DestinationPage(destination: polonnaruwa),
-        ),
-      );
-
-      return;
-    }
-
-    if (place.title == 'Jaffna') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DestinationPage(destination: jaffna),
-        ),
-      );
-
-      return;
-    }
-
-    if (place.title == 'Down South') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DestinationPage(destination: downSouth),
-        ),
-      );
-
-      return;
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Exploring ${place.title}...',
-          style: GoogleFonts.inter(),
-        ),
-        backgroundColor: primaryColor,
-        duration: const Duration(seconds: 1),
-
-      ),
-    );
-  }
-
-  // ============================================================
-  // BOTTOM NAV ITEM
-  // ============================================================
-
-  Widget _buildNavItem({
-    required int index,
-    required IconData icon,
-    required IconData activeIcon,
-    required String label,
-  }) {
-    final bool isSelected = _selectedIndex == index;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 3),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(18),
-        onTap: () {
-          // ------------------------------------------------------------
-          // PROFILE
-          // ------------------------------------------------------------
-
-          if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfileScreen()),
-            );
-
-            return;
-          }
-
-          // ------------------------------------------------------------
-          // HOME
-          // ------------------------------------------------------------
-
-          if (index == 0) {
-            setState(() {
-              _selectedIndex = 0;
-            });
-
-            return;
-          }
-
-          // ------------------------------------------------------------
-          // SERVICES / SAVED
-          // These will be connected when those screens are styled.
-          // ------------------------------------------------------------
-
-          setState(() {
-            _selectedIndex = index;
-          });
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                index == 1
-                    ? 'Services will be connected next.'
-                    : 'Saved will be connected next.',
-                style: GoogleFonts.inter(),
-              ),
-              backgroundColor: primaryColor,
-              duration: const Duration(seconds: 1),
-            ),
-          );
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          height: 68,
-          decoration: BoxDecoration(
-            color: isSelected ? primaryColor : Colors.transparent,
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                isSelected ? activeIcon : icon,
-                size: 25,
-                color: isSelected
-                    ? backgroundColor
-                    : primaryColor.withValues(alpha: 0.78),
-              ),
-  // ============================================================
   // NAVIGATION HANDLER
   // ============================================================
 
@@ -737,22 +539,6 @@ class _HomeScreenState extends State<HomeScreen> {
               ? 'Services will be connected next.'
               : 'Saved will be connected next.',
           style: GoogleFonts.inter(),
-
-              const SizedBox(height: 4),
-              Text(
-                label,
-                maxLines: 1,
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected
-                      ? backgroundColor
-                      : primaryColor.withValues(alpha: 0.78),
-                ),
-              ),
-            ],
-          ),
-
         ),
         backgroundColor: primaryColor,
         duration: const Duration(seconds: 1),
