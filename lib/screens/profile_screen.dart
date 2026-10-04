@@ -2,7 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../services/user_service.dart';
+<<<<<<< Updated upstream
 import 'about_app_screen.dart';
+=======
+import '../widgets/app_navigation_bar.dart';
+
+import 'about_app_screen.dart';
+import 'home_screen.dart';
+
+>>>>>>> Stashed changes
 import 'change_password_screen.dart';
 import 'edit_profile_screen.dart';
 import 'help_support_screen.dart';
@@ -226,7 +234,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
               )
             : _buildProfileContent(),
       ),
+<<<<<<< Updated upstream
       bottomNavigationBar: _buildBottomNavigation(),
+=======
+
+      bottomNavigationBar: AppNavigationBar(
+        selectedIndex: 3,
+        onDestinationSelected: (index) {
+          if (index == 3) {
+            return;
+          }
+
+          if (index == 0) {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
+              );
+            }
+            return;
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                index == 1
+                    ? 'Services will be connected next.'
+                    : 'Saved will be connected next.',
+                style: GoogleFonts.inter(),
+              ),
+              backgroundColor: primaryColor,
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        },
+      ),
+>>>>>>> Stashed changes
     );
   }
 
@@ -663,6 +708,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+<<<<<<< Updated upstream
   // ============================================================
   // BOTTOM NAVIGATION
   // ============================================================
@@ -712,4 +758,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
     );
   }
+=======
+>>>>>>> Stashed changes
 }

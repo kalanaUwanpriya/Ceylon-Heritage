@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../services/user_service.dart';
+import '../widgets/app_navigation_bar.dart';
+import 'home_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -508,6 +510,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
+<<<<<<< Updated upstream
   // ============================================================
   // BOTTOM NAV ITEM
   // ============================================================
@@ -614,6 +617,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       ),
     );
   }
+=======
+>>>>>>> Stashed changes
 
   // ============================================================
   // BUILD
@@ -629,11 +634,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ? const Center(
                 child: CircularProgressIndicator(color: Color(0xFF15543A)),
               )
-            : Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
+            : SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
 
                       child: Column(
                         children: [
@@ -963,12 +965,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ],
                       ),
                     ),
-                  ),
-
-                  _buildBottomNavigation(),
-                ],
-              ),
       ),
+      bottomNavigationBar: _isLoading
+          ? null
+          : AppNavigationBar(
+              selectedIndex: 3,
+              onDestinationSelected: (index) {
+                if (index == 3) {
+                  Navigator.pop(context);
+                  return;
+                }
+                if (index == 0) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    (route) => false,
+                  );
+                  return;
+                }
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      index == 1
+                          ? 'Services will be connected next.'
+                          : 'Saved will be connected next.',
+                    ),
+                    backgroundColor: primaryColor,
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              },
+            ),
     );
   }
 

@@ -4,6 +4,12 @@ import 'package:flutter/material.dart';
 import '../models/destination.dart';
 import '../data/place_information_data.dart';
 
+<<<<<<< Updated upstream
+=======
+import '../screens/profile_screen.dart';
+import '../widgets/app_navigation_bar.dart';
+
+>>>>>>> Stashed changes
 class DestinationPage extends StatefulWidget {
   final Destination destination;
 
@@ -867,6 +873,7 @@ class _DestinationPageState extends State<DestinationPage> {
 
       // =====================================================
       // BOTTOM NAVIGATION
+<<<<<<< Updated upstream
       // KEEP IMAGE 3 STYLE
       // =====================================================
       bottomNavigationBar: BottomNavigationBar(
@@ -916,6 +923,38 @@ class _DestinationPageState extends State<DestinationPage> {
             label: 'PROFILE',
           ),
         ],
+=======
+
+      // Home | Services | Saved | Profile
+
+      bottomNavigationBar: AppNavigationBar(
+        selectedIndex: 0,
+        onDestinationSelected: (index) {
+          if (index == 0) {
+            Navigator.pop(context);
+            return;
+          }
+          if (index == 3) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ProfileScreen()),
+            );
+            return;
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                index == 1
+                    ? 'Services will be connected next.'
+                    : 'Saved will be connected next.',
+                style: GoogleFonts.inter(),
+              ),
+              backgroundColor: darkGreen,
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        },
+>>>>>>> Stashed changes
       ),
     );
   }
