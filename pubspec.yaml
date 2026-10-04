@@ -14,6 +14,11 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # UI
+
+
+  # UI
+  google_fonts: ^8.2.1
+
   flutter_animate: ^4.5.2
 
   # Firebase

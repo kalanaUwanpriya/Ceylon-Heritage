@@ -9,6 +9,7 @@ import '../models/destination.dart';
 import '../data/place_information_data.dart';
 
 import '../screens/profile_screen.dart';
+import '../widgets/app_navigation_bar.dart';
 
 class DestinationPage extends StatefulWidget {
   final Destination destination;
@@ -902,69 +903,34 @@ class _DestinationPageState extends State<DestinationPage> {
       // Home | Services | Saved | Profile
 
       // =====================================================
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-
-        onTap: (index) {
+      bottomNavigationBar: AppNavigationBar(
+        selectedIndex: 0,
+        onDestinationSelected: (index) {
+          if (index == 0) {
+            Navigator.pop(context);
+            return;
+          }
           if (index == 3) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const ProfileScreen()),
             );
+            return;
           }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                index == 1
+                    ? 'Services will be connected next.'
+                    : 'Saved will be connected next.',
+                style: GoogleFonts.inter(),
+              ),
+              backgroundColor: darkGreen,
+              duration: const Duration(seconds: 1),
+            ),
+          );
         },
 
-        type: BottomNavigationBarType.fixed,
-
-        backgroundColor: backgroundColor,
-
-        selectedItemColor: darkGreen,
-
-        unselectedItemColor: greyText,
-
-        selectedFontSize: 12,
-
-        unselectedFontSize: 12,
-
-        selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
-
-        unselectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w500),
-
-        elevation: 0,
-
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined, size: 27),
-
-            activeIcon: Icon(Icons.home, size: 27),
-
-            label: 'Home',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view_outlined, size: 27),
-
-            activeIcon: Icon(Icons.grid_view_outlined, size: 27),
-
-            label: 'Services',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border_rounded, size: 27),
-
-            activeIcon: Icon(Icons.favorite_rounded, size: 27),
-
-            label: 'Saved',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline_rounded, size: 27),
-
-            activeIcon: Icon(Icons.person_rounded, size: 27),
-
-            label: 'Profile',
-          ),
-        ],
       ),
     );
   }

@@ -7,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../services/user_service.dart';
+import '../widgets/app_navigation_bar.dart';
 
 import 'about_app_screen.dart';
+import 'home_screen.dart';
 
 import 'change_password_screen.dart';
 
@@ -360,7 +362,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
             : _buildProfileContent(),
       ),
 
-      bottomNavigationBar: _buildBottomNavigation(),
+      bottomNavigationBar: AppNavigationBar(
+        selectedIndex: 3,
+        onDestinationSelected: (index) {
+          if (index == 3) {
+            return;
+          }
+
+          if (index == 0) {
+            if (Navigator.canPop(context)) {
+              Navigator.pop(context);
+            } else {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HomeScreen()),
+              );
+            }
+            return;
+          }
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                index == 1
+                    ? 'Services will be connected next.'
+                    : 'Saved will be connected next.',
+                style: GoogleFonts.inter(),
+              ),
+              backgroundColor: primaryColor,
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -1002,90 +1036,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
         duration: const Duration(seconds: 2),
       ),
-    );
-  }
-
-  // ============================================================
-
-  // BOTTOM NAVIGATION
-
-  // ============================================================
-
-  Widget _buildBottomNavigation() {
-    return BottomNavigationBar(
-      currentIndex: 3,
-
-      type: BottomNavigationBarType.fixed,
-
-      backgroundColor: backgroundColor,
-
-      selectedItemColor: primaryColor,
-
-      unselectedItemColor: secondaryTextColor,
-
-      selectedFontSize: 13,
-
-      unselectedFontSize: 13,
-
-      selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
-
-      unselectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w500),
-
-      elevation: 8,
-
-      onTap: (index) {
-        if (index == 3) {
-          return;
-        }
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Navigation will be connected next.',
-
-              style: GoogleFonts.inter(),
-            ),
-
-            backgroundColor: primaryColor,
-
-            duration: const Duration(seconds: 1),
-          ),
-        );
-      },
-
-      items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-
-          activeIcon: Icon(Icons.home),
-
-          label: 'Home',
-        ),
-
-        BottomNavigationBarItem(
-          icon: Icon(Icons.grid_view_outlined),
-
-          activeIcon: Icon(Icons.grid_view_outlined),
-
-          label: 'Services',
-        ),
-
-        BottomNavigationBarItem(
-          icon: Icon(Icons.favorite_border_rounded, size: 27),
-
-          activeIcon: Icon(Icons.favorite_rounded, size: 27),
-
-          label: 'Saved',
-        ),
-
-        BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline),
-
-          activeIcon: Icon(Icons.person),
-
-          label: 'Profile',
-        ),
-      ],
     );
   }
 }

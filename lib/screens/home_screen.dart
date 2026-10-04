@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../data/historical_places_data.dart';
 import '../destinations/destination_page.dart';
+import '../widgets/app_navigation_bar.dart';
 import 'profile_screen.dart';
 
 class PlaceItem {
@@ -94,58 +95,50 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: backgroundColor,
       body: SafeArea(
         bottom: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // ==================================================
-                    // HEADER
-                    // ==================================================
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ==================================================
+              // HEADER
+              // ==================================================
 
-                    _buildHeader(),
+              _buildHeader(),
 
-                    // ==================================================
-                    // SEARCH
-                    // ==================================================
-                    _buildSearchBar(),
+              // ==================================================
+              // SEARCH
+              // ==================================================
+              _buildSearchBar(),
 
-                    const SizedBox(height: 18),
+              const SizedBox(height: 18),
 
-                    // ==================================================
-                    // DESTINATION CARDS
-                    // ==================================================
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _places.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 14),
-                        itemBuilder: (context, index) {
-                          final place = _places[index];
+              // ==================================================
+              // DESTINATION CARDS
+              // ==================================================
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _places.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 14),
+                  itemBuilder: (context, index) {
+                    final place = _places[index];
 
-                          return _buildPlaceCard(context, place);
-                        },
-                      ),
-                    ),
-
-                    const SizedBox(height: 28),
-                  ],
+                    return _buildPlaceCard(context, place);
+                  },
                 ),
               ),
-            ),
-
-            // ============================================================
-            // BOTTOM NAVIGATION
-            // ============================================================
-            _buildBottomNavigationBar(),
-          ],
+              const SizedBox(height: 28),
+            ],
+          ),
         ),
+      ),
+      bottomNavigationBar: AppNavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _handleNavigation,
       ),
     );
   }
@@ -528,160 +521,39 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // ============================================================
-  // BOTTOM NAVIGATION
+  // NAVIGATION HANDLER
   // ============================================================
 
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, -3),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildNavItem(
-                index: 0,
-                icon: Icons.home_outlined,
-                activeIcon: Icons.home_outlined,
-                label: 'Home',
-              ),
-            ),
-            Expanded(
-              child: _buildNavItem(
-                index: 1,
-                icon: Icons.grid_view_outlined,
-                activeIcon: Icons.grid_view_outlined,
-                label: 'Services',
-              ),
-            ),
-            Expanded(
-              child: _buildNavItem(
-                index: 2,
-                icon: Icons.favorite_border_rounded,
-                activeIcon: Icons.favorite_rounded,
-                label: 'Saved',
-              ),
-            ),
-            Expanded(
-              child: _buildNavItem(
-                index: 3,
-                icon: Icons.person_outline,
-                activeIcon: Icons.person_outline,
-                label: 'Profile',
-              ),
-            ),
-          ],
+  void _handleNavigation(int index) {
+    if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+      );
+      return;
+    }
+
+    if (index == 0) {
+      setState(() {
+        _selectedIndex = 0;
+      });
+      return;
+    }
+
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          index == 1
+              ? 'Services will be connected next.'
+              : 'Saved will be connected next.',
+          style: GoogleFonts.inter(),
         ),
-      ),
-    );
-  }
-
-  // ============================================================
-  // BOTTOM NAV ITEM
-  // ============================================================
-
-  Widget _buildNavItem({
-    required int index,
-    required IconData icon,
-    required IconData activeIcon,
-    required String label,
-  }) {
-    final bool isSelected = _selectedIndex == index;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 3),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(18),
-        onTap: () {
-          // ------------------------------------------------------------
-          // PROFILE
-          // ------------------------------------------------------------
-
-          if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfileScreen()),
-            );
-
-            return;
-          }
-
-          // ------------------------------------------------------------
-          // HOME
-          // ------------------------------------------------------------
-
-          if (index == 0) {
-            setState(() {
-              _selectedIndex = 0;
-            });
-
-            return;
-          }
-
-          // ------------------------------------------------------------
-          // SERVICES / SAVED
-          // These will be connected when those screens are styled.
-          // ------------------------------------------------------------
-
-          setState(() {
-            _selectedIndex = index;
-          });
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                index == 1
-                    ? 'Services will be connected next.'
-                    : 'Saved will be connected next.',
-                style: GoogleFonts.inter(),
-              ),
-              backgroundColor: primaryColor,
-              duration: const Duration(seconds: 1),
-            ),
-          );
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          height: 68,
-          decoration: BoxDecoration(
-            color: isSelected ? primaryColor : Colors.transparent,
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                isSelected ? activeIcon : icon,
-                size: 25,
-                color: isSelected
-                    ? backgroundColor
-                    : primaryColor.withValues(alpha: 0.78),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                maxLines: 1,
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected
-                      ? backgroundColor
-                      : primaryColor.withValues(alpha: 0.78),
-                ),
-              ),
-            ],
-          ),
-        ),
+        backgroundColor: primaryColor,
+        duration: const Duration(seconds: 1),
       ),
     );
   }
