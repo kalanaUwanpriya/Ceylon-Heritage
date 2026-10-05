@@ -257,8 +257,74 @@ final List<HistoricalPlace> anuradhapuraPlaces = [
 ];
 
 // ============================================================
+// KANDY
+// ============================================================
+
+final Destination kandy = Destination(
+  name: 'Kandy',
+  location: 'Central Province',
+  description:
+      'Kandy is a major city in the Central Province of Sri Lanka, situated in the midst of hills in the Kandy plateau, the last kingdom of the Sri Lankan kings. It is a UNESCO World Heritage Site and home to the sacred Temple of the Tooth Relic.',
+  image: 'assets/images/kandy.png',
+  popularAttractions: [
+    'Sri Dalada Maligawa',
+    'Bahirawakanda Buddha Statue',
+    'Ehalepola Wax Museum',
+    'Gadaladeniya Vihara',
+    'Lankathilaka Vihara',
+  ],
+);
+
+final List<HistoricalPlace> kandyPlaces = [
+  HistoricalPlace(
+    name: 'Sri Dalada Maligawa',
+    destination: 'Kandy',
+    description:
+        'Sri Dalada Maligawa, or the Temple of the Sacred Tooth Relic, is a Buddhist temple in the city of Kandy. It is one of the most sacred places of worship in the Buddhist world and houses the relic of the tooth of the Buddha.',
+    location: 'Kandy, Sri Lanka',
+    image: 'assets/images/kandy.png',
+  ),
+
+  HistoricalPlace(
+    name: 'Bahirawakanda Buddha Statue',
+    destination: 'Kandy',
+    description:
+        'The Bahirawakanda Buddha Statue is a large white sitting Buddha statue located on the top of Bahirawakanda hill in Kandy. It offers panoramic views of the city and is a prominent landmark visible from across Kandy.',
+    location: 'Kandy, Sri Lanka',
+    image: 'assets/images/bahirawakanda_buddha.jpg',
+  ),
+
+  HistoricalPlace(
+    name: 'Ehalepola Wax Museum',
+    destination: 'Kandy',
+    description:
+        'The Ehalepola Wax Museum is a cultural museum in Kandy that commemorates the story of Ehalepola Nilame and showcases life-size wax figures depicting significant moments in the last Kandyan kingdom.',
+    location: 'Kandy, Sri Lanka',
+    image: 'assets/images/ehalepola_wax_museum.jpg',
+  ),
+
+  HistoricalPlace(
+    name: 'Gadaladeniya Viharaya',
+    destination: 'Kandy',
+    description:
+        'Gadaladeniya Vihara is an ancient Buddhist temple built in the 14th century. It features a unique blend of South Indian and Sri Lankan architectural styles and is one of the remarkable medieval temples near Kandy.',
+    location: 'Gadaladeniya, Kandy, Sri Lanka',
+    image: 'assets/images/gadaladeniya_vihara.jpg',
+  ),
+
+  HistoricalPlace(
+    name: 'Lankathilaka Viharaya',
+    destination: 'Kandy',
+    description:
+        'Lankathilaka Vihara is a magnificent ancient Buddhist temple built in the 14th century during the reign of King Bhuvanekabahu IV. It stands on a rock and is known for its impressive multi-storey structure and ancient carvings.',
+    location: 'Lankathilaka, Kandy, Sri Lanka',
+    image: 'assets/images/lankathilaka_vihara.jpg',
+  ),
+];
+
+// ============================================================
 // ALL DESTINATIONS
 // ============================================================
 
-final List<Destination> destinations = [anuradhapura, polonnaruwa, jaffna, downSouth];
+final List<Destination> destinations = [anuradhapura, polonnaruwa, jaffna, downSouth, kandy];
 

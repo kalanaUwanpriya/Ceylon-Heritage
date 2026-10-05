@@ -108,6 +108,19 @@ class _DestinationPageState extends State<DestinationPage> {
           'assets/images/ariyapala_masks.png',
         ];
 
+      case 'Kandy':
+        return [
+          'assets/images/kandy.png',
+
+          'assets/images/bahirawakanda_buddha.jpg',
+
+          'assets/images/ehalepola_wax_museum.jpg',
+
+          'assets/images/gadaladeniya_vihara.jpg',
+
+          'assets/images/lankathilaka_vihara.jpg',
+        ];
+
       default:
         return [widget.destination.image];
     }
@@ -1103,6 +1116,32 @@ class _DestinationPageState extends State<DestinationPage> {
         page = ariyapalaMasksInformation;
 
         break;
+
+      // =====================================================
+
+      // KANDY
+
+      // =====================================================
+
+      case 'Sri Dalada Maligawa':
+        // Kandy attraction detail pages to be implemented.
+        break;
+
+      case 'Bahirawakanda Buddha Statue':
+        // Kandy attraction detail pages to be implemented.
+        break;
+
+      case 'Ehalepola Wax Museum':
+        // Kandy attraction detail pages to be implemented.
+        break;
+
+      case 'Gadaladeniya Vihara':
+        // Kandy attraction detail pages to be implemented.
+        break;
+
+      case 'Lankathilaka Vihara':
+        // Kandy attraction detail pages to be implemented.
+        break;
     }
 
     if (page != null) {
@@ -1129,6 +1168,9 @@ class _DestinationPageState extends State<DestinationPage> {
 
       case 'Down South':
         return 'Southern Province';
+
+      case 'Kandy':
+        return 'Central Province';
 
       default:
         return widget.destination.location;
@@ -1226,6 +1268,27 @@ class _DestinationPageState extends State<DestinationPage> {
 
       case 'Ariyapala Masks Museum':
         return 'assets/images/ariyapala_masks.png';
+
+      // =====================================================
+
+      // KANDY
+
+      // =====================================================
+
+      case 'Sri Dalada Maligawa':
+        return 'assets/images/kandy.png';
+
+      case 'Bahirawakanda Buddha Statue':
+        return 'assets/images/bahirawakanda_buddha.jpg';
+
+      case 'Ehalepola Wax Museum':
+        return 'assets/images/ehalepola_wax_museum.jpg';
+
+      case 'Gadaladeniya Vihara':
+        return 'assets/images/gadaladeniya_vihara.jpg';
+
+      case 'Lankathilaka Vihara':
+        return 'assets/images/lankathilaka_vihara.jpg';
 
       // =====================================================
 
