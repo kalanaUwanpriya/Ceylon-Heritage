@@ -110,14 +110,11 @@ class _DestinationPageState extends State<DestinationPage> {
 
       case 'Kandy':
         return [
+          'assets/images/kandy_main.jpg',
           'assets/images/kandy.png',
-
           'assets/images/bahirawakanda_buddha.jpg',
-
           'assets/images/ehalepola_wax_museum.jpg',
-
           'assets/images/gadaladeniya_vihara.jpg',
-
           'assets/images/lankathilaka_vihara.jpg',
         ];
 

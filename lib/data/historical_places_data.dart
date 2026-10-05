@@ -265,7 +265,7 @@ final Destination kandy = Destination(
   location: 'Central Province',
   description:
       'Kandy is a major city in the Central Province of Sri Lanka, situated in the midst of hills in the Kandy plateau, the last kingdom of the Sri Lankan kings. It is a UNESCO World Heritage Site and home to the sacred Temple of the Tooth Relic.',
-  image: 'assets/images/kandy.png',
+  image: 'assets/images/kandy_main.jpg',
   popularAttractions: [
     'Sri Dalada Maligawa',
     'Bahirawakanda Buddha Statue',
