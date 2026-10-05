@@ -323,8 +323,54 @@ final List<HistoricalPlace> kandyPlaces = [
 ];
 
 // ============================================================
+// DAMBULLA
+// ============================================================
+
+final Destination dambulla = Destination(
+  name: 'Dambulla',
+  location: 'Central Province',
+  description:
+      'Dambulla is a historic city in Sri Lanka, famous for the UNESCO World Heritage Site Dambulla Cave Temple. It is renowned for its ancient rock temples, rich cultural heritage, archaeological sites and natural beauty.',
+  image: 'assets/images/dambulla.png',
+  popularAttractions: [
+    'Dambulla Cave Temple',
+    'Sigiriya Rock Fortress',
+    'Ibbankatuwa Megalithic Tombs',
+  ],
+);
+
+final List<HistoricalPlace> dambullaPlaces = [
+  HistoricalPlace(
+    name: 'Dambulla Cave Temple',
+    destination: 'Dambulla',
+    description:
+        'Dambulla Cave Temple is a UNESCO World Heritage Site and the largest, best-preserved cave temple complex in Sri Lanka, featuring 153 Buddha statues and ancient murals spanning 2,100 square metres.',
+    location: 'Dambulla, Sri Lanka',
+    image: 'assets/images/dambulla_cave_temple.jpg',
+  ),
+
+  HistoricalPlace(
+    name: 'Sigiriya Rock Fortress',
+    destination: 'Dambulla',
+    description:
+        'Sigiriya is an ancient rock fortress and palace ruin built by King Kashyapa. Rising 200 metres above the surrounding jungle, it is a UNESCO World Heritage Site and one of the best-preserved examples of ancient urban planning.',
+    location: 'Sigiriya, Sri Lanka',
+    image: 'assets/images/sigiriya_rock_fortress.jpg',
+  ),
+
+  HistoricalPlace(
+    name: 'Ibbankatuwa Megalithic Tombs',
+    destination: 'Dambulla',
+    description:
+        'Ibbankatuwa Megalithic Tombs is a prehistoric burial site near Dambulla, containing ancient megalithic tombs dating back to the Iron Age. It is an important archaeological site that reveals early human settlements in Sri Lanka.',
+    location: 'Dambulla, Sri Lanka',
+    image: 'assets/images/ibbankatuwa_megalithic_tombs.jpg',
+  ),
+];
+
+// ============================================================
 // ALL DESTINATIONS
 // ============================================================
 
-final List<Destination> destinations = [anuradhapura, polonnaruwa, jaffna, downSouth, kandy];
+final List<Destination> destinations = [anuradhapura, polonnaruwa, jaffna, downSouth, kandy, dambulla];
 
