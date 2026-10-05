@@ -508,6 +508,17 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
+    if (title == 'kandy') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DestinationPage(destination: kandy),
+        ),
+      );
+
+      return;
+    }
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
