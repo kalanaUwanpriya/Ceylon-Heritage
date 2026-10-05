@@ -9,6 +9,7 @@ import '../models/destination.dart';
 import '../data/place_information_data.dart';
 
 import '../screens/profile_screen.dart';
+import '../screens/plan/walking_plan_page.dart';
 import '../widgets/app_navigation_bar.dart';
 
 class DestinationPage extends StatefulWidget {
@@ -872,7 +873,14 @@ class _DestinationPageState extends State<DestinationPage> {
                   height: 58,
 
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const WalkingPlanPage(),
+                        ),
+                      );
+                    },
 
                     icon: const Icon(Icons.directions_walk_rounded, size: 27),
 
