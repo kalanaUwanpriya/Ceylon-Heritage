@@ -450,6 +450,17 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
+    if (title == 'dambulla') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DestinationPage(destination: dambulla),
+        ),
+      );
+
+      return;
+    }
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
