@@ -103,7 +103,6 @@ class _HomeScreenState extends State<HomeScreen> {
               // ==================================================
               // HEADER
               // ==================================================
-
               _buildHeader(),
 
               // ==================================================
@@ -155,7 +154,6 @@ class _HomeScreenState extends State<HomeScreen> {
           // ------------------------------------------------------------
           // HERITAGE BACKGROUND SKETCH
           // ------------------------------------------------------------
-
           Positioned.fill(
             child: ShaderMask(
               shaderCallback: (rect) {
@@ -349,7 +347,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 // ------------------------------------------------------
                 // DESTINATION IMAGE
                 // ------------------------------------------------------
-
                 Image.asset(
                   place.imagePath,
                   fit: BoxFit.cover,
