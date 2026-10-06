@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../login_screen.dart';
 
 class OnboardingScreen3 extends StatelessWidget {
   const OnboardingScreen3({super.key});
@@ -22,16 +24,16 @@ class OnboardingScreen3 extends StatelessWidget {
                 // ================= TITLE =================
                 // Road eka iwara wena cream area eke
                 Positioned(
-                  top: h * 0.67,
+                  top: h * 0.65,
                   left: 22,
                   right: 20,
-                  child: const Text(
+                  child: Text(
                     'Navigate Easily',
-                    style: TextStyle(
-                      fontSize: 37,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF294D1C),
-                      height: 1.05,
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF17452F),
+                      height: 1.10,
                     ),
                   ),
                 ),
@@ -41,16 +43,15 @@ class OnboardingScreen3 extends StatelessWidget {
                   top: h * 0.73,
                   left: 22,
                   right: 20,
-                  child: const Text(
+                  child: Text(
                     'Use GPS Navigation and\n'
                     'offline information while\n'
                     'exploring.',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'serif',
-                      color: Color(0xFF111111),
-                      height: 1.25,
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF17452F),
+                      height: 1.35,
                     ),
                   ),
                 ),
@@ -80,10 +81,15 @@ class OnboardingScreen3 extends StatelessWidget {
                   child: Center(
                     child: ElevatedButton(
                       onPressed: () {
-                        // Passe Login/Home ekata connect karamu
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF536B35),
+                        backgroundColor: const Color(0xFF17452F),
                         foregroundColor: Colors.white,
                         elevation: 0,
                         padding: const EdgeInsets.symmetric(
@@ -94,11 +100,10 @@ class OnboardingScreen3 extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                       ),
-                      child: const Text(
+                      child: Text(
                         'Get Started',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'serif',
+                        style: GoogleFonts.inter(
+                          fontSize: 14,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -119,7 +124,7 @@ class OnboardingScreen3 extends StatelessWidget {
       height: 13,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: active ? const Color(0xFF4B5427) : Colors.white,
+        color: active ? const Color(0xFF17452F) : const Color(0xFFE8C99F),
       ),
     );
   }
