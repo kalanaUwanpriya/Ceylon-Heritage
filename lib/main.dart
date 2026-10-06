@@ -8,7 +8,7 @@ import 'firebase_options.dart';
 // Restore login_screen.dart before final submission.
 // import 'screens/login_screen.dart';
 
-import 'screens/home_screen.dart';
+import 'screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -188,10 +188,8 @@ class CeylonHeritageApp extends StatelessWidget {
         ),
       ),
 
-      // TEMPORARY DEVELOPMENT BYPASS
-      // Login/Register is skipped while the group is developing.
-      // Restore: home: const LoginScreen(),
-      home: const HomeScreen(),
+      // Splash screen is displayed first when the app launches
+      home: const SplashScreen(),
     );
   }
 }

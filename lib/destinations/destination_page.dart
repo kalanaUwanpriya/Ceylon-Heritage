@@ -111,15 +111,25 @@ class _DestinationPageState extends State<DestinationPage> {
 
       case 'Kandy':
         return [
+          'assets/images/kandy_main.jpg',
           'assets/images/kandy.png',
-
           'assets/images/bahirawakanda_buddha.jpg',
-
           'assets/images/ehalepola_wax_museum.jpg',
-
           'assets/images/gadaladeniya_vihara.jpg',
-
           'assets/images/lankathilaka_vihara.jpg',
+        ];
+
+      // =====================================================
+      // DAMBULLA — 6 slider images
+      // =====================================================
+      case 'Dambulla':
+        return [
+          'assets/images/dambulla_cave_temple.jpg',
+          'assets/images/sigiriya_rock_fortress.jpg',
+          'assets/images/ibbankatuwa_megalithic_tombs.jpg',
+          'assets/images/dambulla_cave_temple_exterior.jpg',
+          'assets/images/sigiriya_frescoes.jpg',
+          'assets/images/sigiriya_lion_paw.jpg',
         ];
 
       default:
@@ -569,7 +579,9 @@ class _DestinationPageState extends State<DestinationPage> {
                                 const SizedBox(height: 3),
 
                                 Text(
-                                  widget.destination.name == 'Anuradhapura'
+                                  (widget.destination.name == 'Anuradhapura' ||
+                                          widget.destination.name ==
+                                              'Dambulla')
                                       ? 'Narrated by Dr. Sensaka Bandara'
                                       : 'Narrated by Heritage Walks',
 
@@ -826,36 +838,38 @@ class _DestinationPageState extends State<DestinationPage> {
 
               // =================================================
 
-              // MORE PLACES
+              // MORE PLACES (hidden for Dambulla)
 
               // =================================================
-              const SizedBox(height: 10),
+              if (widget.destination.name != 'Dambulla') ...[
+                const SizedBox(height: 10),
 
-              Center(
-                child: TextButton.icon(
-                  onPressed: () {},
+                Center(
+                  child: TextButton.icon(
+                    onPressed: () {},
 
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
-
-                    color: darkGreen,
-
-                    size: 22,
-                  ),
-
-                  label: Text(
-                    'More places',
-
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-
-                      fontWeight: FontWeight.w600,
+                    icon: const Icon(
+                      Icons.keyboard_arrow_down_rounded,
 
                       color: darkGreen,
+
+                      size: 22,
+                    ),
+
+                    label: Text(
+                      'More places',
+
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+
+                        fontWeight: FontWeight.w600,
+
+                        color: darkGreen,
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
 
               // =================================================
 
@@ -1150,6 +1164,24 @@ class _DestinationPageState extends State<DestinationPage> {
       case 'Lankathilaka Vihara':
         // Kandy attraction detail pages to be implemented.
         break;
+
+      // =====================================================
+
+      // DAMBULLA
+
+      // =====================================================
+
+      case 'Dambulla Cave Temple':
+        // Dambulla attraction detail pages to be implemented.
+        break;
+
+      case 'Sigiriya Rock Fortress':
+        // Dambulla attraction detail pages to be implemented.
+        break;
+
+      case 'Ibbankatuwa Megalithic Tombs':
+        // Dambulla attraction detail pages to be implemented.
+        break;
     }
 
     if (page != null) {
@@ -1178,6 +1210,9 @@ class _DestinationPageState extends State<DestinationPage> {
         return 'Southern Province';
 
       case 'Kandy':
+        return 'Central Province';
+
+      case 'Dambulla':
         return 'Central Province';
 
       default:
@@ -1297,6 +1332,21 @@ class _DestinationPageState extends State<DestinationPage> {
 
       case 'Lankathilaka Vihara':
         return 'assets/images/lankathilaka_vihara.jpg';
+
+      // =====================================================
+
+      // DAMBULLA
+
+      // =====================================================
+
+      case 'Dambulla Cave Temple':
+        return 'assets/images/dambulla_cave_temple.jpg';
+
+      case 'Sigiriya Rock Fortress':
+        return 'assets/images/sigiriya_rock_fortress.jpg';
+
+      case 'Ibbankatuwa Megalithic Tombs':
+        return 'assets/images/ibbankatuwa_megalithic_tombs.jpg';
 
       // =====================================================
 
