@@ -14,11 +14,7 @@ dependencies:
   cupertino_icons: ^1.0.8
 
   # UI
-
-
-  # UI
   google_fonts: ^8.2.1
-
   flutter_animate: ^4.5.2
 
   # Firebase
@@ -33,7 +29,10 @@ dependencies:
   # Profile image picker
   image_picker: ^1.2.1
   path_provider: ^2.1.6
-google_fonts: ^8.2.1
+
+  # Open Google Maps / URLs
+  url_launcher: ^6.3.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -45,3 +44,10 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/images/services/
+    - assets/images/services/anuradhapura/
+    - assets/images/services/polonnaruwa/
+    - assets/images/services/kandy/
+    - assets/images/services/jaffna/
+    - assets/images/services/downsouth/
+    - assets/images/services/dambulla/
