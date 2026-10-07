@@ -11,6 +11,11 @@ import '../data/place_information_data.dart';
 import '../screens/profile_screen.dart';
 import '../screens/plan/walking_plan_page.dart';
 import '../widgets/app_navigation_bar.dart';
+import 'ruwanwelisaya_detail_page.dart';
+import 'sri_maha_bodhi_detail_page.dart';
+import 'thuparamaya_detail_page.dart';
+import 'abhayagiriya_detail_page.dart';
+import 'jetavanaramaya_detail_page.dart';
 
 class DestinationPage extends StatefulWidget {
   final Destination destination;
@@ -1027,23 +1032,24 @@ class _DestinationPageState extends State<DestinationPage> {
       // =====================================================
 
       case 'Ruwanwelisaya':
-        page = ruwanwelisayaInformation;
+        page = const RuwanwelisayaDetailPage();
         break;
 
       case 'Sri Maha Bodhi':
-        page = sriMahaBodhiInformation;
+        page = const SriMahaBodhiDetailPage();
         break;
 
       case 'Thuparamaya':
-        page = thuparamayaInformation;
+        page = const ThuparamayaDetailPage();
         break;
 
       case 'Abhayagiri':
-        page = abhayagiriInformation;
+      case 'Abhayagiriya':
+        page = const AbhayagiriyaDetailPage();
         break;
 
       case 'Jetavanaramaya':
-        page = jetavanaramayaInformation;
+        page = const JetavanaramayaDetailPage();
         break;
 
       // =====================================================
