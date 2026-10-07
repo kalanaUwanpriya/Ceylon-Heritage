@@ -1152,15 +1152,15 @@ class _DestinationPageState extends State<DestinationPage> {
       // =====================================================
 
       case 'Sri Dalada Maligawa':
-        // Kandy attraction detail pages to be implemented.
+        page = sriDaladaMaligawaInformation;
         break;
 
       case 'Bahirawakanda Buddha Statue':
-        // Kandy attraction detail pages to be implemented.
+        page = bahirawakandaBuddhaInformation;
         break;
 
       case 'Ehalepola Wax Museum':
-        // Kandy attraction detail pages to be implemented.
+        page = ahalepolaWalawwaInformation;
         break;
 
       case 'Gadaladeniya Vihara':
