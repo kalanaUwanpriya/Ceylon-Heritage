@@ -6,6 +6,7 @@ import '../destinations/destination_page.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'notification_settings_screen.dart';
 import 'profile_screen.dart';
+import 'services/services_screen.dart';
 
 class PlaceItem {
   final String title;
@@ -217,9 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
             decoration: BoxDecoration(
               color: backgroundColor.withValues(alpha: 0.94),
               shape: BoxShape.circle,
-              border: Border.all(
-                color: primaryColor.withValues(alpha: 0.08),
-              ),
+              border: Border.all(color: primaryColor.withValues(alpha: 0.08)),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
@@ -478,6 +477,14 @@ class _HomeScreenState extends State<HomeScreen> {
   // ============================================================
 
   void _handleNavigation(int index) {
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ServicesScreen()),
+      );
+      return;
+    }
+
     if (index == 3) {
       Navigator.push(
         context,

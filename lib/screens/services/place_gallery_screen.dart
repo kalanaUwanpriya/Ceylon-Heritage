@@ -15,11 +15,7 @@ class PlaceGalleryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final images = [
-      'assets/images/services/anuradhapura/Heritage Hotel Anuradhapura.jpg',
-      'assets/images/services/anuradhapura/Hotel Alakamanda.jpg',
-      'assets/images/services/anuradhapura/The Lake Forest Hotel.jpg',
-    ];
+    final images = place.galleryImages;
     return Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
@@ -68,9 +64,10 @@ class PlaceGalleryScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                   child: Container(
                     color: cardColor,
-                    child: Image.asset(
+                    child: Image.network(
                       images[index],
                       fit: BoxFit.cover,
+
                       errorBuilder: (context, error, stackTrace) {
                         return const Center(
                           child: Icon(
