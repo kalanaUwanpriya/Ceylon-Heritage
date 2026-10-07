@@ -768,3 +768,124 @@ final ariyapalaMasksInformation = PlaceInformationPage(
   ],
   nearbyDistances: ['35 km', '65 km', '80 km', '100 km'],
 );
+
+// =========================================================
+// KANDY INFORMATION PAGES
+// =========================================================
+
+// ---------------------------------------------------------
+// 1. SRI DALADA MALIGAWA
+// ---------------------------------------------------------
+
+final sriDaladaMaligawaInformation = PlaceInformationPage(
+  placeName: 'Sri Dalada Maligawa',
+  destinationName: 'Kandy',
+  subtitle: 'Temple of the Sacred Tooth Relic',
+  description:
+      'Sri Dalada Maligawa, or the Temple of the Sacred Tooth Relic, is a Buddhist temple in the city of Kandy. It is one of the most sacred places of worship in the Buddhist world and houses the relic of the tooth of the Buddha.',
+  location: 'Kandy, Sri Lanka',
+  rating: '3.0',
+  reviews: '8,412',
+  openingHours: '5:30 AM – 8:00 PM\nDaily',
+  bestTime: 'Early morning or evening',
+  entranceFee:
+      'Children and Locals: Free\nSAARC Countries (South Asia): LKR 2,500\nThailand and Myanmar: LKR 2,500\nAll Other Countries: LKR 3,000',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/kandy.png',
+    'assets/images/kandy_main.jpg',
+    'assets/images/sri_dalada_maligawa_3.jpg',
+    'assets/images/sri_dalada_maligawa_4.jpg',
+  ],
+  nearbyNames: [
+    'Bahirawakanda Buddha Statue',
+    'Ehalepola Wax Museum',
+    'Gadaladeniya Viharaya',
+    'Lankathilaka Vihara',
+  ],
+  nearbyImages: [
+    'assets/images/bahirawakanda_buddha.jpg',
+    'assets/images/ehalepola_wax_museum.jpg',
+    'assets/images/gadaladeniya_vihara.jpg',
+    'assets/images/lankathilaka_vihara.jpg',
+  ],
+  nearbyDistances: ['2 km', '1.2 km', '9 km', '13 km'],
+);
+
+// ---------------------------------------------------------
+// 2. BAHIRAWAKANDA BUDDHA STATUE
+// ---------------------------------------------------------
+
+final bahirawakandaBuddhaInformation = PlaceInformationPage(
+  placeName: 'Bahirawakanda Buddha Statue',
+  destinationName: 'Kandy',
+  subtitle: 'The Giant White Buddha of Kandy',
+  description:
+      'The Bahirawakanda Buddha Statue is a large white sitting Buddha statue located on the top of Bahirawakanda hill in Kandy. It offers panoramic views of the city and is a prominent landmark visible from across Kandy.',
+  location: 'Kandy, Sri Lanka',
+  rating: '3.0',
+  reviews: '3,876',
+  openingHours: '6:00 AM – 8:00 PM',
+  bestTime: 'Early morning or sunset',
+  entranceFee: 'Local: Free\nForeign Tourists: Rs. 300–500',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/bahirawakanda_buddha.jpg',
+    'assets/images/bahirawakanda_2.jpg',
+    'assets/images/bahirawakanda_3.jpg',
+    'assets/images/bahirawakanda_4.jpg',
+  ],
+  nearbyNames: [
+    'Sri Dalada Maligawa',
+    'Ehelepola Wax Museum',
+    'Gadaladeniya Vihara',
+    'Lankatilaka Vihara',
+  ],
+  nearbyImages: [
+    'assets/images/kandy.png',
+    'assets/images/ehalepola_wax_museum.jpg',
+    'assets/images/gadaladeniya_vihara.jpg',
+    'assets/images/lankathilaka_vihara.jpg',
+  ],
+  nearbyDistances: ['1.5 km', '0.9 km', '12 km', '14 km'],
+);
+
+
+// ---------------------------------------------------------
+// 3. AHALEPOLA WALAWWA (EHALEPOLA WAX MUSEUM)
+// ---------------------------------------------------------
+
+final ahalepolaWalawwaInformation = PlaceInformationPage(
+  placeName: 'Ahalepola Walawwa',
+  destinationName: 'Kandy',
+  subtitle: 'A Living Story of the Last Kandyan Kingdom',
+  description:
+      'The Ehalepola Wax Museum is a cultural museum in Kandy that commemorates the story of Ehalepola Nilame and showcases life-size wax figures depicting significant moments in the last Kandyan kingdom.',
+  location: 'Kandy, Sri Lanka',
+  rating: '3.0',
+  reviews: '2,134',
+  openingHours: '9:00 AM – 7:00 PM',
+  bestTime: 'Morning or afternoon',
+  entranceFee:
+      'Local Adults: Rs. 400\nChildren under 15: Rs. 200\nSchool Children (in uniform): Rs. 100\nForeign Tourists: USD 10 (approx. Rs. 3,000)\nForeign Children under 15: USD 5 (approx. Rs. 1,500)',
+  dressCode: 'Comfortable and modest attire',
+  heroImages: [
+    'assets/images/ehalepola_wax_museum.jpg',
+    'assets/images/ahalepola_walawwa_1.jpg',
+    'assets/images/ahalepola_walawwa_2.jpg',
+    'assets/images/ahalepola_walawwa_3.jpg',
+  ],
+  nearbyNames: [
+    'Sri Dalada Maligawa',
+    'Bahirawakanda Buddha Statue',
+    'Gadaladeniya Vihara',
+    'Lankathilaka Vihara',
+  ],
+  nearbyImages: [
+    'assets/images/kandy.png',
+    'assets/images/bahirawakanda_buddha.jpg',
+    'assets/images/gadaladeniya_vihara.jpg',
+    'assets/images/lankathilaka_vihara.jpg',
+  ],
+  nearbyDistances: ['~1.2 km', '~2 km', '~11 km', '~14 km'],
+);
