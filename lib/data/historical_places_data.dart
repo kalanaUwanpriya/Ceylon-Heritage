@@ -200,7 +200,177 @@ final List<HistoricalPlace> downSouthPlaces = [
 ];
 
 // ============================================================
+// ANURADHAPURA
+// ============================================================
+
+final Destination anuradhapura = Destination(
+  name: 'Anuradhapura',
+  location: 'North Central Province',
+  description:
+      'Anuradhapura is one of the oldest continuously inhabited cities in the world and a UNESCO World Heritage Site. Renowned for its colossal stupas, ancient temples, sacred Bodhi tree, and remarkable ancient irrigation systems.',
+  image: 'assets/images/anuradhapura.png',
+  popularAttractions: [
+    'Ruwanwelisaya',
+    'Sri Maha Bodhi',
+    'Thuparamaya',
+    'Abhayagiri',
+    'Jetavanaramaya',
+  ],
+);
+
+final List<HistoricalPlace> anuradhapuraPlaces = [
+  HistoricalPlace(
+    name: 'Ruwanwelisaya',
+    destination: 'Anuradhapura',
+    description: 'A magnificent stupa and one of the world\'s tallest ancient monuments.',
+    location: 'Anuradhapura, Sri Lanka',
+    image: 'assets/images/anuradhapura.png',
+  ),
+  HistoricalPlace(
+    name: 'Sri Maha Bodhi',
+    destination: 'Anuradhapura',
+    description: 'The sacred fig tree, said to be a sapling from the historical Bodhi tree under which Buddha became enlightened.',
+    location: 'Anuradhapura, Sri Lanka',
+    image: 'assets/images/Auradapura 2.png',
+  ),
+  HistoricalPlace(
+    name: 'Thuparamaya',
+    destination: 'Anuradhapura',
+    description: 'The first Buddhist temple in Sri Lanka.',
+    location: 'Anuradhapura, Sri Lanka',
+    image: 'assets/images/thuparamaya.png',
+  ),
+  HistoricalPlace(
+    name: 'Abhayagiri',
+    destination: 'Anuradhapura',
+    description: 'A major monastery site of Mahayana, Theravada and Vajrayana Buddhism.',
+    location: 'Anuradhapura, Sri Lanka',
+    image: 'assets/images/anurapura 5.png',
+  ),
+  HistoricalPlace(
+    name: 'Jetavanaramaya',
+    destination: 'Anuradhapura',
+    description: 'A prominent ancient stupa in the ruins of Jetavana monastery.',
+    location: 'Anuradhapura, Sri Lanka',
+    image: 'assets/images/jetavanaramaya.png',
+  ),
+];
+
+// ============================================================
+// KANDY
+// ============================================================
+
+final Destination kandy = Destination(
+  name: 'Kandy',
+  location: 'Central Province',
+  description:
+      'Kandy is a major city in the Central Province of Sri Lanka, situated in the midst of hills in the Kandy plateau, the last kingdom of the Sri Lankan kings. It is a UNESCO World Heritage Site and home to the sacred Temple of the Tooth Relic.',
+  image: 'assets/images/kandy_main.jpg',
+  popularAttractions: [
+    'Sri Dalada Maligawa',
+    'Bahirawakanda Buddha Statue',
+    'Ehalepola Wax Museum',
+    'Gadaladeniya Vihara',
+    'Lankathilaka Vihara',
+  ],
+);
+
+final List<HistoricalPlace> kandyPlaces = [
+  HistoricalPlace(
+    name: 'Sri Dalada Maligawa',
+    destination: 'Kandy',
+    description:
+        'Sri Dalada Maligawa, or the Temple of the Sacred Tooth Relic, is a Buddhist temple in the city of Kandy. It is one of the most sacred places of worship in the Buddhist world and houses the relic of the tooth of the Buddha.',
+    location: 'Kandy, Sri Lanka',
+    image: 'assets/images/kandy.png',
+  ),
+
+  HistoricalPlace(
+    name: 'Bahirawakanda Buddha Statue',
+    destination: 'Kandy',
+    description:
+        'The Bahirawakanda Buddha Statue is a large white sitting Buddha statue located on the top of Bahirawakanda hill in Kandy. It offers panoramic views of the city and is a prominent landmark visible from across Kandy.',
+    location: 'Kandy, Sri Lanka',
+    image: 'assets/images/bahirawakanda_buddha.jpg',
+  ),
+
+  HistoricalPlace(
+    name: 'Ehalepola Wax Museum',
+    destination: 'Kandy',
+    description:
+        'The Ehalepola Wax Museum is a cultural museum in Kandy that commemorates the story of Ehalepola Nilame and showcases life-size wax figures depicting significant moments in the last Kandyan kingdom.',
+    location: 'Kandy, Sri Lanka',
+    image: 'assets/images/ehalepola_wax_museum.jpg',
+  ),
+
+  HistoricalPlace(
+    name: 'Gadaladeniya Viharaya',
+    destination: 'Kandy',
+    description:
+        'Gadaladeniya Vihara is an ancient Buddhist temple built in the 14th century. It features a unique blend of South Indian and Sri Lankan architectural styles and is one of the remarkable medieval temples near Kandy.',
+    location: 'Gadaladeniya, Kandy, Sri Lanka',
+    image: 'assets/images/gadaladeniya_vihara.jpg',
+  ),
+
+  HistoricalPlace(
+    name: 'Lankathilaka Viharaya',
+    destination: 'Kandy',
+    description:
+        'Lankathilaka Vihara is a magnificent ancient Buddhist temple built in the 14th century during the reign of King Bhuvanekabahu IV. It stands on a rock and is known for its impressive multi-storey structure and ancient carvings.',
+    location: 'Lankathilaka, Kandy, Sri Lanka',
+    image: 'assets/images/lankathilaka_vihara.jpg',
+  ),
+];
+
+// ============================================================
+// DAMBULLA
+// ============================================================
+
+final Destination dambulla = Destination(
+  name: 'Dambulla',
+  location: 'Central Province',
+  description:
+      'Dambulla is a historic city in Sri Lanka, famous for the UNESCO World Heritage Site Dambulla Cave Temple. It is renowned for its ancient rock temples, rich cultural heritage, archaeological sites and natural beauty.',
+  image: 'assets/images/dambulla.png',
+  popularAttractions: [
+    'Dambulla Cave Temple',
+    'Sigiriya Rock Fortress',
+    'Ibbankatuwa Megalithic Tombs',
+  ],
+);
+
+final List<HistoricalPlace> dambullaPlaces = [
+  HistoricalPlace(
+    name: 'Dambulla Cave Temple',
+    destination: 'Dambulla',
+    description:
+        'Dambulla Cave Temple is a UNESCO World Heritage Site and the largest, best-preserved cave temple complex in Sri Lanka, featuring 153 Buddha statues and ancient murals spanning 2,100 square metres.',
+    location: 'Dambulla, Sri Lanka',
+    image: 'assets/images/dambulla_cave_temple.jpg',
+  ),
+
+  HistoricalPlace(
+    name: 'Sigiriya Rock Fortress',
+    destination: 'Dambulla',
+    description:
+        'Sigiriya is an ancient rock fortress and palace ruin built by King Kashyapa. Rising 200 metres above the surrounding jungle, it is a UNESCO World Heritage Site and one of the best-preserved examples of ancient urban planning.',
+    location: 'Sigiriya, Sri Lanka',
+    image: 'assets/images/sigiriya_rock_fortress.jpg',
+  ),
+
+  HistoricalPlace(
+    name: 'Ibbankatuwa Megalithic Tombs',
+    destination: 'Dambulla',
+    description:
+        'Ibbankatuwa Megalithic Tombs is a prehistoric burial site near Dambulla, containing ancient megalithic tombs dating back to the Iron Age. It is an important archaeological site that reveals early human settlements in Sri Lanka.',
+    location: 'Dambulla, Sri Lanka',
+    image: 'assets/images/ibbankatuwa_megalithic_tombs.jpg',
+  ),
+];
+
+// ============================================================
 // ALL DESTINATIONS
 // ============================================================
 
-final List<Destination> destinations = [polonnaruwa, jaffna, downSouth];
+final List<Destination> destinations = [anuradhapura, polonnaruwa, jaffna, downSouth, kandy, dambulla];
+

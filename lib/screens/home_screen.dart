@@ -3,7 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../data/historical_places_data.dart';
 import '../destinations/destination_page.dart';
+import '../widgets/app_navigation_bar.dart';
+import 'notification_settings_screen.dart';
 import 'profile_screen.dart';
+import 'services/services_screen.dart';
 
 class PlaceItem {
   final String title;
@@ -31,8 +34,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   static const Color backgroundColor = Color(0xFFF6EADA);
   static const Color primaryColor = Color(0xFF17452F);
-  static const Color cardColor = Color(0xFFF0DDC3);
-  static const Color accentColor = Color(0xFF9F5625);
   static const Color secondaryTextColor = Color(0xFF5F625D);
 
   int _selectedIndex = 0;
@@ -68,19 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
       imagePath: 'assets/images/kandy.png',
     ),
     PlaceItem(
-      title: 'Galle',
-      subtitle: 'Dutch Heritage',
-      imagePath: 'assets/images/galle.png',
-    ),
-    PlaceItem(
-      title: 'Sigiriya',
-      subtitle: 'Rock Fortress',
-      imagePath: 'assets/images/sigiriya.png',
-    ),
-    PlaceItem(
-      title: 'Yapahuwa',
-      subtitle: 'Hill Fortress',
-      imagePath: 'assets/images/yapahuwa.png',
+      title: 'Dambulla',
+      subtitle: 'Royal Cave Temple',
+      imagePath: 'assets/images/dambulla.png',
     ),
   ];
 
@@ -94,58 +85,87 @@ class _HomeScreenState extends State<HomeScreen> {
       backgroundColor: backgroundColor,
       body: SafeArea(
         bottom: false,
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // ==================================================
-                    // HEADER
-                    // ==================================================
-
-                    _buildHeader(),
-
-                    // ==================================================
-                    // SEARCH
-                    // ==================================================
-                    _buildSearchBar(),
-
-                    const SizedBox(height: 18),
-
-                    // ==================================================
-                    // DESTINATION CARDS
-                    // ==================================================
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: _places.length,
-                        separatorBuilder: (context, index) =>
-                            const SizedBox(height: 14),
-                        itemBuilder: (context, index) {
-                          final place = _places[index];
-
-                          return _buildPlaceCard(context, place);
-                        },
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ==================================================
+              // TOP SECTION WITH BACKGROUND SKETCH BEHIND
+              // ==================================================
+              Stack(
+                children: [
+                  // Heritage background sketch illustration fading downwards
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    height: 190,
+                    child: ShaderMask(
+                      shaderCallback: (Rect bounds) {
+                        return const LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.white,
+                            Colors.white,
+                            Colors.transparent,
+                          ],
+                          stops: [0.0, 0.50, 1.0],
+                        ).createShader(bounds);
+                      },
+                      blendMode: BlendMode.dstIn,
+                      child: Opacity(
+                        opacity: 0.38,
+                        child: Image.asset(
+                          'assets/images/Abackg.png',
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              'assets/images/heritage_sketch_bg.jpg',
+                              fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
+                            );
+                          },
+                        ),
                       ),
                     ),
+                  ),
 
-                    const SizedBox(height: 28),
-                  ],
+                  // Header Content
+                  _buildHeader(),
+                ],
+              ),
+
+              const SizedBox(height: 8),
+
+              // ==================================================
+              // DESTINATION CARDS
+              // ==================================================
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: ListView.separated(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: _places.length,
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 14),
+                  itemBuilder: (context, index) {
+                    final place = _places[index];
+
+                    return _buildPlaceCard(context, place);
+                  },
                 ),
               ),
-            ),
-
-            // ============================================================
-            // BOTTOM NAVIGATION
-            // ============================================================
-            _buildBottomNavigationBar(),
-          ],
+              const SizedBox(height: 28),
+            ],
+          ),
         ),
+      ),
+      bottomNavigationBar: AppNavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _handleNavigation,
       ),
     );
   }
@@ -155,172 +175,76 @@ class _HomeScreenState extends State<HomeScreen> {
   // ============================================================
 
   Widget _buildHeader() {
-    return SizedBox(
-      height: 180,
-      child: Stack(
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 14),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ------------------------------------------------------------
-          // HERITAGE BACKGROUND SKETCH
-          // ------------------------------------------------------------
-
-          Positioned.fill(
-            child: ShaderMask(
-              shaderCallback: (rect) {
-                return LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.black.withValues(alpha: 0.30),
-                    Colors.black.withValues(alpha: 0.08),
-                    Colors.transparent,
-                  ],
-                  stops: const [0.0, 0.60, 1.0],
-                ).createShader(rect);
-              },
-              blendMode: BlendMode.dstOut,
-              child: Image.asset(
-                'assets/images/heritage_sketch_bg.jpg',
-                fit: BoxFit.cover,
-                opacity: const AlwaysStoppedAnimation(0.42),
-                errorBuilder: (context, error, stackTrace) {
-                  return const SizedBox();
-                },
-              ),
-            ),
-          ),
-
-          // ------------------------------------------------------------
-          // HEADER CONTENT
-          // ------------------------------------------------------------
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 22, 20, 12),
-            child: Row(
+          Expanded(
+            child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Welcome back!',
-                        style: GoogleFonts.playfairDisplay(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: primaryColor,
-                          height: 1.15,
-                        ),
-                      ),
-                      const SizedBox(height: 7),
-                      Text(
-                        'Where will you explore today?',
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: secondaryTextColor,
-                          height: 1.4,
-                        ),
-                      ),
-                    ],
+                Text(
+                  'Welcome back!',
+                  style: GoogleFonts.playfairDisplay(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: primaryColor,
+                    height: 1.15,
                   ),
                 ),
-
-                const SizedBox(width: 12),
-
-                // ------------------------------------------------------
-                // NOTIFICATION BUTTON
-                // ------------------------------------------------------
-                Container(
-                  width: 46,
-                  height: 46,
-                  decoration: BoxDecoration(
-                    color: backgroundColor.withValues(alpha: 0.94),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: primaryColor.withValues(alpha: 0.08),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    tooltip: 'Notifications',
-                    onPressed: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Notifications tapped',
-                            style: GoogleFonts.inter(),
-                          ),
-                          backgroundColor: primaryColor,
-                          duration: const Duration(seconds: 1),
-                        ),
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.notifications_none_rounded,
-                      color: primaryColor,
-                      size: 24,
-                    ),
+                const SizedBox(height: 7),
+                Text(
+                  'Where will you explore today?',
+                  style: GoogleFonts.inter(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: secondaryTextColor,
+                    height: 1.4,
                   ),
                 ),
               ],
             ),
           ),
+
+          const SizedBox(width: 12),
+
+          // ------------------------------------------------------
+          // NOTIFICATION BUTTON
+          // ------------------------------------------------------
+          Container(
+            width: 46,
+            height: 46,
+            decoration: BoxDecoration(
+              color: backgroundColor.withValues(alpha: 0.94),
+              shape: BoxShape.circle,
+              border: Border.all(color: primaryColor.withValues(alpha: 0.08)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: IconButton(
+              tooltip: 'Notifications',
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const NotificationSettingsScreen(),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.notifications_none_rounded,
+                color: primaryColor,
+                size: 24,
+              ),
+            ),
+          ),
         ],
-      ),
-    );
-  }
-
-  // ============================================================
-  // SEARCH BAR
-  // ============================================================
-
-  Widget _buildSearchBar() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Container(
-        height: 54,
-        decoration: BoxDecoration(
-          color: cardColor,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: accentColor.withValues(alpha: 0.10)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.035),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
-            ),
-          ],
-        ),
-        child: TextField(
-          cursorColor: primaryColor,
-          style: GoogleFonts.inter(
-            color: primaryColor,
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-          ),
-          decoration: InputDecoration(
-            hintText: 'Search places, routes...',
-            hintStyle: GoogleFonts.inter(
-              color: secondaryTextColor.withValues(alpha: 0.75),
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-            prefixIcon: const Padding(
-              padding: EdgeInsets.only(left: 16, right: 10),
-              child: Icon(Icons.search_rounded, color: primaryColor, size: 22),
-            ),
-            prefixIconConstraints: const BoxConstraints(minWidth: 48),
-            border: InputBorder.none,
-            enabledBorder: InputBorder.none,
-            focusedBorder: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          ),
-        ),
       ),
     );
   }
@@ -356,7 +280,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 // ------------------------------------------------------
                 // DESTINATION IMAGE
                 // ------------------------------------------------------
-
                 Image.asset(
                   place.imagePath,
                   fit: BoxFit.cover,
@@ -470,7 +393,19 @@ class _HomeScreenState extends State<HomeScreen> {
   void _openDestination(BuildContext context, PlaceItem place) {
     // Keep the navigation that already exists in the project.
 
-    if (place.title == 'Polonnaruwa') {
+    final title = place.title.trim().toLowerCase();
+
+    if (title == 'anuradhapura') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DestinationPage(destination: anuradhapura),
+        ),
+      );
+      return;
+    }
+
+    if (title == 'polonnaruwa') {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -481,7 +416,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    if (place.title == 'Jaffna') {
+    if (title == 'jaffna') {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -492,11 +427,33 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
-    if (place.title == 'Down South') {
+    if (title == 'down south') {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => DestinationPage(destination: downSouth),
+        ),
+      );
+
+      return;
+    }
+
+    if (title == 'kandy') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DestinationPage(destination: kandy),
+        ),
+      );
+
+      return;
+    }
+
+    if (title == 'dambulla') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DestinationPage(destination: dambulla),
         ),
       );
 
@@ -516,160 +473,47 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // ============================================================
-  // BOTTOM NAVIGATION
+  // NAVIGATION HANDLER
   // ============================================================
 
-  Widget _buildBottomNavigationBar() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
-            blurRadius: 12,
-            offset: const Offset(0, -3),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        top: false,
-        child: Row(
-          children: [
-            Expanded(
-              child: _buildNavItem(
-                index: 0,
-                icon: Icons.home_outlined,
-                activeIcon: Icons.home_outlined,
-                label: 'Home',
-              ),
-            ),
-            Expanded(
-              child: _buildNavItem(
-                index: 1,
-                icon: Icons.grid_view_outlined,
-                activeIcon: Icons.grid_view_outlined,
-                label: 'Services',
-              ),
-            ),
-            Expanded(
-              child: _buildNavItem(
-                index: 2,
-                icon: Icons.favorite_border_rounded,
-                activeIcon: Icons.favorite_rounded,
-                label: 'Saved',
-              ),
-            ),
-            Expanded(
-              child: _buildNavItem(
-                index: 3,
-                icon: Icons.person_outline,
-                activeIcon: Icons.person_outline,
-                label: 'Profile',
-              ),
-            ),
-          ],
+  void _handleNavigation(int index) {
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ServicesScreen()),
+      );
+      return;
+    }
+
+    if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+      );
+      return;
+    }
+
+    if (index == 0) {
+      setState(() {
+        _selectedIndex = 0;
+      });
+      return;
+    }
+
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          index == 1
+              ? 'Services will be connected next.'
+              : 'Saved will be connected next.',
+          style: GoogleFonts.inter(),
         ),
-      ),
-    );
-  }
-
-  // ============================================================
-  // BOTTOM NAV ITEM
-  // ============================================================
-
-  Widget _buildNavItem({
-    required int index,
-    required IconData icon,
-    required IconData activeIcon,
-    required String label,
-  }) {
-    final bool isSelected = _selectedIndex == index;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 3),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(18),
-        onTap: () {
-          // ------------------------------------------------------------
-          // PROFILE
-          // ------------------------------------------------------------
-
-          if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfileScreen()),
-            );
-
-            return;
-          }
-
-          // ------------------------------------------------------------
-          // HOME
-          // ------------------------------------------------------------
-
-          if (index == 0) {
-            setState(() {
-              _selectedIndex = 0;
-            });
-
-            return;
-          }
-
-          // ------------------------------------------------------------
-          // SERVICES / SAVED
-          // These will be connected when those screens are styled.
-          // ------------------------------------------------------------
-
-          setState(() {
-            _selectedIndex = index;
-          });
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                index == 1
-                    ? 'Services will be connected next.'
-                    : 'Saved will be connected next.',
-                style: GoogleFonts.inter(),
-              ),
-              backgroundColor: primaryColor,
-              duration: const Duration(seconds: 1),
-            ),
-          );
-        },
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          height: 68,
-          decoration: BoxDecoration(
-            color: isSelected ? primaryColor : Colors.transparent,
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                isSelected ? activeIcon : icon,
-                size: 25,
-                color: isSelected
-                    ? backgroundColor
-                    : primaryColor.withValues(alpha: 0.78),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                label,
-                maxLines: 1,
-                style: GoogleFonts.inter(
-                  fontSize: 12,
-                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
-                  color: isSelected
-                      ? backgroundColor
-                      : primaryColor.withValues(alpha: 0.78),
-                ),
-              ),
-            ],
-          ),
-        ),
+        backgroundColor: primaryColor,
+        duration: const Duration(seconds: 1),
       ),
     );
   }

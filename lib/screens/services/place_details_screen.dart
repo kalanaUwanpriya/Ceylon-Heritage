@@ -618,86 +618,84 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                       ],
                     ),
 
-                    const SizedBox(height: 24),
+                    if (place.galleryImages.isNotEmpty) ...[
+                      const SizedBox(height: 24),
 
-                    // =====================================================
+                      // =====================================================
+                      // GALLERY
+                      // =====================================================
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-                    // GALLERY
+                        children: [
+                          Text(
+                            'Gallery',
 
-                    // =====================================================
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            style: GoogleFonts.playfairDisplay(
+                              fontSize: 18,
 
-                      children: [
-                        Text(
-                          'Gallery',
+                              fontWeight: FontWeight.w700,
 
-                          style: GoogleFonts.playfairDisplay(
-                            fontSize: 18,
-
-                            fontWeight: FontWeight.w700,
-
-                            color: primaryGreen,
-                          ),
-                        ),
-
-                        TextButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    PlaceGalleryScreen(place: place),
-                              ),
-                            );
-                          },
-                          style: TextButton.styleFrom(
-                            foregroundColor: primaryGreen,
-                            padding: EdgeInsets.zero,
-                            minimumSize: Size.zero,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                          ),
-                          child: Text(
-                            'See All >',
-                            style: GoogleFonts.inter(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
                               color: primaryGreen,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
 
-                    const SizedBox(height: 10),
-
-                    // For now use the available place image.
-
-                    // Later we can add 3 separate gallery images.
-                    SizedBox(
-                      height: 90,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: _buildMockGalleryImage(
-                              'assets/images/services/anuradhapura/Heritage Hotel Anuradhapura.jpg',
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PlaceGalleryScreen(place: place),
+                                ),
+                              );
+                            },
+                            style: TextButton.styleFrom(
+                              foregroundColor: primaryGreen,
+                              padding: EdgeInsets.zero,
+                              minimumSize: Size.zero,
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: _buildMockGalleryImage(
-                              'assets/images/services/anuradhapura/Hotel Alakamanda.jpg',
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: _buildMockGalleryImage(
-                              'assets/images/services/anuradhapura/The Lake Forest Hotel.jpg',
+                            child: Text(
+                              'See All >',
+                              style: GoogleFonts.inter(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                                color: primaryGreen,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                    ),
+
+                      const SizedBox(height: 10),
+
+                      // For now use the available place image.
+
+                      // Later we can add 3 separate gallery images.
+                      SizedBox(
+                        height: 90,
+                        child: Row(
+                          children: List.generate(
+                            place.galleryImages.length > 3
+                                ? 3
+                                : place.galleryImages.length,
+                            (index) {
+                              return Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    right: index < 2 ? 8 : 0,
+                                  ),
+                                  child: _buildGalleryImage(
+                                    place.galleryImages[index],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),
@@ -735,11 +733,11 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
 
   // =========================================================
 
-  Widget _buildMockGalleryImage(String imagePath) {
+  Widget _buildGalleryImage(String imageUrl) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
-      child: Image.asset(
-        imagePath,
+      child: Image.network(
+        imageUrl,
         width: double.infinity,
         height: double.infinity,
         fit: BoxFit.cover,

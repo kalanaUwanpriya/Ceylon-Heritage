@@ -9,6 +9,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../services/user_service.dart';
+import '../widgets/app_navigation_bar.dart';
+import 'home_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -855,134 +857,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   // ============================================================
 
-  // BOTTOM NAV ITEM
-
-  // ============================================================
-
-  Widget _buildBottomItem({
-    required IconData icon,
-
-    required String label,
-
-    required bool selected,
-  }) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-
-        child: Material(
-          color: selected ? primaryColor : Colors.transparent,
-
-          borderRadius: BorderRadius.circular(22),
-
-          child: InkWell(
-            borderRadius: BorderRadius.circular(22),
-
-            onTap: () {
-              if (!selected) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('$label page will be connected later.'),
-                  ),
-                );
-              }
-            },
-
-            child: SizedBox(
-              height: 72,
-
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-
-                children: [
-                  Icon(
-                    icon,
-
-                    size: 26,
-
-                    color: selected ? backgroundColor : primaryColor,
-                  ),
-
-                  const SizedBox(height: 5),
-
-                  Text(
-                    label,
-
-                    style: TextStyle(
-                      fontSize: 13,
-
-                      color: selected ? backgroundColor : primaryColor,
-
-                      fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  // ============================================================
-
-  // BOTTOM NAVIGATION
-
-  // ============================================================
-
-  Widget _buildBottomNavigation() {
-    return Container(
-      height: 88,
-
-      padding: const EdgeInsets.symmetric(horizontal: 10),
-
-      decoration: const BoxDecoration(
-        color: backgroundColor,
-
-        border: Border(top: BorderSide(color: Color(0xFFD8C4A8), width: 0.8)),
-      ),
-
-      child: Row(
-        children: [
-          _buildBottomItem(
-            icon: Icons.home_outlined,
-
-            label: 'Home',
-
-            selected: false,
-          ),
-
-          _buildBottomItem(
-            icon: Icons.grid_view_outlined,
-
-            label: 'Services',
-
-            selected: false,
-          ),
-
-          _buildBottomItem(
-            icon: Icons.favorite_border,
-
-            label: 'Saved',
-
-            selected: false,
-          ),
-
-          _buildBottomItem(
-            icon: Icons.person_outline,
-
-            label: 'Profile',
-
-            selected: true,
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ============================================================
-
   // BUILD
 
   // ============================================================
@@ -997,11 +871,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ? const Center(
                 child: CircularProgressIndicator(color: Color(0xFF15543A)),
               )
-            : Column(
-                children: [
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(),
+            : SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
 
                       child: Column(
                         children: [
@@ -1413,12 +1284,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                         ],
                       ),
                     ),
-                  ),
-
-                  _buildBottomNavigation(),
-                ],
-              ),
       ),
+      bottomNavigationBar: _isLoading
+          ? null
+          : AppNavigationBar(
+              selectedIndex: 3,
+              onDestinationSelected: (index) {
+                if (index == 3) {
+                  Navigator.pop(context);
+                  return;
+                }
+                if (index == 0) {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const HomeScreen()),
+                    (route) => false,
+                  );
+                  return;
+                }
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      index == 1
+                          ? 'Services will be connected next.'
+                          : 'Saved will be connected next.',
+                    ),
+                    backgroundColor: primaryColor,
+                    duration: const Duration(seconds: 1),
+                  ),
+                );
+              },
+            ),
     );
   }
 

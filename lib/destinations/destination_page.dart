@@ -9,6 +9,8 @@ import '../models/destination.dart';
 import '../data/place_information_data.dart';
 
 import '../screens/profile_screen.dart';
+import '../screens/plan/walking_plan_page.dart';
+import '../widgets/app_navigation_bar.dart';
 
 class DestinationPage extends StatefulWidget {
   final Destination destination;
@@ -52,6 +54,16 @@ class _DestinationPageState extends State<DestinationPage> {
 
   List<String> get _destinationImages {
     switch (widget.destination.name) {
+      case 'Anuradhapura':
+        return [
+          'assets/images/anuradhapura.png',
+          'assets/images/Auradapura 2.png',
+          'assets/images/anuradapuraya 3.png',
+          'assets/images/anuradapuraya 4.png',
+          'assets/images/anurapura 5.png',
+          'assets/images/anuradapuraya 6.png',
+        ];
+
       case 'Polonnaruwa':
         return [
           'assets/images/polonnaruwa.png',
@@ -95,6 +107,29 @@ class _DestinationPageState extends State<DestinationPage> {
           'assets/images/star_fort.png',
 
           'assets/images/ariyapala_masks.png',
+        ];
+
+      case 'Kandy':
+        return [
+          'assets/images/kandy_main.jpg',
+          'assets/images/kandy.png',
+          'assets/images/bahirawakanda_buddha.jpg',
+          'assets/images/ehalepola_wax_museum.jpg',
+          'assets/images/gadaladeniya_vihara.jpg',
+          'assets/images/lankathilaka_vihara.jpg',
+        ];
+
+      // =====================================================
+      // DAMBULLA — 6 slider images
+      // =====================================================
+      case 'Dambulla':
+        return [
+          'assets/images/dambulla_cave_temple.jpg',
+          'assets/images/sigiriya_rock_fortress.jpg',
+          'assets/images/ibbankatuwa_megalithic_tombs.jpg',
+          'assets/images/dambulla_cave_temple_exterior.jpg',
+          'assets/images/sigiriya_frescoes.jpg',
+          'assets/images/sigiriya_lion_paw.jpg',
         ];
 
       default:
@@ -544,7 +579,11 @@ class _DestinationPageState extends State<DestinationPage> {
                                 const SizedBox(height: 3),
 
                                 Text(
-                                  'Narrated by Heritage Walks',
+                                  (widget.destination.name == 'Anuradhapura' ||
+                                          widget.destination.name ==
+                                              'Dambulla')
+                                      ? 'Narrated by Dr. Sensaka Bandara'
+                                      : 'Narrated by Heritage Walks',
 
                                   style: GoogleFonts.inter(
                                     fontSize: 11,
@@ -799,36 +838,38 @@ class _DestinationPageState extends State<DestinationPage> {
 
               // =================================================
 
-              // MORE PLACES
+              // MORE PLACES (hidden for Dambulla)
 
               // =================================================
-              const SizedBox(height: 10),
+              if (widget.destination.name != 'Dambulla') ...[
+                const SizedBox(height: 10),
 
-              Center(
-                child: TextButton.icon(
-                  onPressed: () {},
+                Center(
+                  child: TextButton.icon(
+                    onPressed: () {},
 
-                  icon: const Icon(
-                    Icons.keyboard_arrow_down_rounded,
-
-                    color: darkGreen,
-
-                    size: 22,
-                  ),
-
-                  label: Text(
-                    'More places',
-
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-
-                      fontWeight: FontWeight.w600,
+                    icon: const Icon(
+                      Icons.keyboard_arrow_down_rounded,
 
                       color: darkGreen,
+
+                      size: 22,
+                    ),
+
+                    label: Text(
+                      'More places',
+
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+
+                        fontWeight: FontWeight.w600,
+
+                        color: darkGreen,
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
 
               // =================================================
 
@@ -846,7 +887,14 @@ class _DestinationPageState extends State<DestinationPage> {
                   height: 58,
 
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const WalkingPlanPage(),
+                        ),
+                      );
+                    },
 
                     icon: const Icon(Icons.directions_walk_rounded, size: 27),
 
@@ -890,69 +938,34 @@ class _DestinationPageState extends State<DestinationPage> {
       // Home | Services | Saved | Profile
 
       // =====================================================
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: 0,
-
-        onTap: (index) {
+      bottomNavigationBar: AppNavigationBar(
+        selectedIndex: 0,
+        onDestinationSelected: (index) {
+          if (index == 0) {
+            Navigator.pop(context);
+            return;
+          }
           if (index == 3) {
             Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const ProfileScreen()),
             );
+            return;
           }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                index == 1
+                    ? 'Services will be connected next.'
+                    : 'Saved will be connected next.',
+                style: GoogleFonts.inter(),
+              ),
+              backgroundColor: darkGreen,
+              duration: const Duration(seconds: 1),
+            ),
+          );
         },
 
-        type: BottomNavigationBarType.fixed,
-
-        backgroundColor: backgroundColor,
-
-        selectedItemColor: darkGreen,
-
-        unselectedItemColor: greyText,
-
-        selectedFontSize: 12,
-
-        unselectedFontSize: 12,
-
-        selectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
-
-        unselectedLabelStyle: GoogleFonts.inter(fontWeight: FontWeight.w500),
-
-        elevation: 0,
-
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined, size: 27),
-
-            activeIcon: Icon(Icons.home, size: 27),
-
-            label: 'Home',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.grid_view_outlined, size: 27),
-
-            activeIcon: Icon(Icons.grid_view_outlined, size: 27),
-
-            label: 'Services',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite_border_rounded, size: 27),
-
-            activeIcon: Icon(Icons.favorite_rounded, size: 27),
-
-            label: 'Saved',
-          ),
-
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline_rounded, size: 27),
-
-            activeIcon: Icon(Icons.person_rounded, size: 27),
-
-            label: 'Profile',
-          ),
-        ],
       ),
     );
   }
@@ -1009,6 +1022,30 @@ class _DestinationPageState extends State<DestinationPage> {
     Widget? page;
 
     switch (attraction) {
+      // =====================================================
+      // ANURADHAPURA
+      // =====================================================
+
+      case 'Ruwanwelisaya':
+        page = ruwanwelisayaInformation;
+        break;
+
+      case 'Sri Maha Bodhi':
+        page = sriMahaBodhiInformation;
+        break;
+
+      case 'Thuparamaya':
+        page = thuparamayaInformation;
+        break;
+
+      case 'Abhayagiri':
+        page = abhayagiriInformation;
+        break;
+
+      case 'Jetavanaramaya':
+        page = jetavanaramayaInformation;
+        break;
+
       // =====================================================
 
       // POLONNARUWA
@@ -1101,6 +1138,50 @@ class _DestinationPageState extends State<DestinationPage> {
         page = ariyapalaMasksInformation;
 
         break;
+
+      // =====================================================
+
+      // KANDY
+
+      // =====================================================
+
+      case 'Sri Dalada Maligawa':
+        // Kandy attraction detail pages to be implemented.
+        break;
+
+      case 'Bahirawakanda Buddha Statue':
+        // Kandy attraction detail pages to be implemented.
+        break;
+
+      case 'Ehalepola Wax Museum':
+        // Kandy attraction detail pages to be implemented.
+        break;
+
+      case 'Gadaladeniya Vihara':
+        // Kandy attraction detail pages to be implemented.
+        break;
+
+      case 'Lankathilaka Vihara':
+        // Kandy attraction detail pages to be implemented.
+        break;
+
+      // =====================================================
+
+      // DAMBULLA
+
+      // =====================================================
+
+      case 'Dambulla Cave Temple':
+        // Dambulla attraction detail pages to be implemented.
+        break;
+
+      case 'Sigiriya Rock Fortress':
+        // Dambulla attraction detail pages to be implemented.
+        break;
+
+      case 'Ibbankatuwa Megalithic Tombs':
+        // Dambulla attraction detail pages to be implemented.
+        break;
     }
 
     if (page != null) {
@@ -1116,6 +1197,9 @@ class _DestinationPageState extends State<DestinationPage> {
 
   String _getProvince() {
     switch (widget.destination.name) {
+      case 'Anuradhapura':
+        return 'North Central Province';
+
       case 'Polonnaruwa':
         return 'North Central Province';
 
@@ -1124,6 +1208,12 @@ class _DestinationPageState extends State<DestinationPage> {
 
       case 'Down South':
         return 'Southern Province';
+
+      case 'Kandy':
+        return 'Central Province';
+
+      case 'Dambulla':
+        return 'Central Province';
 
       default:
         return widget.destination.location;
@@ -1138,6 +1228,27 @@ class _DestinationPageState extends State<DestinationPage> {
 
   String _getAttractionImage(String attraction) {
     switch (attraction) {
+      // =====================================================
+
+      // ANURADHAPURA
+
+      // =====================================================
+
+      case 'Ruwanwelisaya':
+        return 'assets/images/anuradhapura.png';
+
+      case 'Sri Maha Bodhi':
+        return 'assets/images/Auradapura 2.png';
+
+      case 'Thuparamaya':
+        return 'assets/images/thuparamaya.png';
+
+      case 'Abhayagiri':
+        return 'assets/images/anurapura 5.png';
+
+      case 'Jetavanaramaya':
+        return 'assets/images/jetavanaramaya.png';
+
       // =====================================================
 
       // POLONNARUWA
@@ -1200,6 +1311,42 @@ class _DestinationPageState extends State<DestinationPage> {
 
       case 'Ariyapala Masks Museum':
         return 'assets/images/ariyapala_masks.png';
+
+      // =====================================================
+
+      // KANDY
+
+      // =====================================================
+
+      case 'Sri Dalada Maligawa':
+        return 'assets/images/kandy.png';
+
+      case 'Bahirawakanda Buddha Statue':
+        return 'assets/images/bahirawakanda_buddha.jpg';
+
+      case 'Ehalepola Wax Museum':
+        return 'assets/images/ehalepola_wax_museum.jpg';
+
+      case 'Gadaladeniya Vihara':
+        return 'assets/images/gadaladeniya_vihara.jpg';
+
+      case 'Lankathilaka Vihara':
+        return 'assets/images/lankathilaka_vihara.jpg';
+
+      // =====================================================
+
+      // DAMBULLA
+
+      // =====================================================
+
+      case 'Dambulla Cave Temple':
+        return 'assets/images/dambulla_cave_temple.jpg';
+
+      case 'Sigiriya Rock Fortress':
+        return 'assets/images/sigiriya_rock_fortress.jpg';
+
+      case 'Ibbankatuwa Megalithic Tombs':
+        return 'assets/images/ibbankatuwa_megalithic_tombs.jpg';
 
       // =====================================================
 

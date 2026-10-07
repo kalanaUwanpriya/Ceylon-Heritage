@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'onboarding_screen_3.dart';
+import '../login_screen.dart';
 
 class OnboardingScreen2 extends StatelessWidget {
   const OnboardingScreen2({super.key});
@@ -33,13 +35,13 @@ class OnboardingScreen2 extends StatelessWidget {
                   top: h * 0.65,
                   left: 22,
                   right: 20,
-                  child: const Text(
+                  child: Text(
                     'Plan Your Journey',
-                    style: TextStyle(
-                      fontSize: 37,
-                      fontWeight: FontWeight.w900,
-                      color: Color(0xFF294D1C),
-                      height: 1.05,
+                    style: GoogleFonts.playfairDisplay(
+                      fontSize: 36,
+                      fontWeight: FontWeight.w800,
+                      color: const Color(0xFF17452F),
+                      height: 1.10,
                     ),
                   ),
                 ),
@@ -49,16 +51,15 @@ class OnboardingScreen2 extends StatelessWidget {
                   top: h * 0.74,
                   left: 22,
                   right: 20,
-                  child: const Text(
+                  child: Text(
                     'Choose the best walking route\n'
                     'based on your time and\n'
                     'interests.',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'serif',
-                      color: Color(0xFF111111),
-                      height: 1.25,
+                    style: GoogleFonts.inter(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFF17452F),
+                      height: 1.35,
                     ),
                   ),
                 ),
@@ -91,15 +92,19 @@ class OnboardingScreen2 extends StatelessWidget {
                       // SKIP
                       TextButton(
                         onPressed: () {
-                          // Skip navigation later
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const LoginScreen(),
+                            ),
+                          );
                         },
-                        child: const Text(
+                        child: Text(
                           'Skip',
-                          style: TextStyle(
-                            fontSize: 16,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            fontFamily: 'serif',
-                            color: Color(0xFF294D1C),
+                            color: const Color(0xFF17452F),
                           ),
                         ),
                       ),
@@ -115,7 +120,7 @@ class OnboardingScreen2 extends StatelessWidget {
                           );
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF536B35),
+                          backgroundColor: const Color(0xFF17452F),
                           foregroundColor: Colors.white,
                           elevation: 0,
                           padding: const EdgeInsets.symmetric(
@@ -126,12 +131,11 @@ class OnboardingScreen2 extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                        child: const Text(
+                        child: Text(
                           'Next',
-                          style: TextStyle(
-                            fontSize: 16,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
                             fontWeight: FontWeight.w500,
-                            fontFamily: 'serif',
                           ),
                         ),
                       ),
@@ -152,7 +156,7 @@ class OnboardingScreen2 extends StatelessWidget {
       height: 13,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: active ? const Color(0xFF4B5427) : Colors.white,
+        color: active ? const Color(0xFF17452F) : const Color(0xFFE8C99F),
       ),
     );
   }

@@ -4,14 +4,16 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'firebase_options.dart';
-import 'screens/login_screen.dart';
+// TEMPORARY DEVELOPMENT BYPASS
+// Restore login_screen.dart before final submission.
+// import 'screens/login_screen.dart';
+
+import 'screens/splash_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -138,10 +140,7 @@ class CeylonHeritageApp extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
-            borderSide: const BorderSide(
-              color: primaryColor,
-              width: 1.5,
-            ),
+            borderSide: const BorderSide(color: primaryColor, width: 1.5),
           ),
         ),
 
@@ -189,7 +188,8 @@ class CeylonHeritageApp extends StatelessWidget {
         ),
       ),
 
-      home: const LoginScreen(),
+      // Splash screen is displayed first when the app launches
+      home: const SplashScreen(),
     );
   }
 }
