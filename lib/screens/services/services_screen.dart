@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'city_services_screen.dart';
+import 'suggest_service_screen.dart';
 
 class ServiceCity {
   final String name;
@@ -178,6 +179,9 @@ class _ServicesScreenState extends State<ServicesScreen> {
                           return _buildCityCard(_cities[index]);
                         },
                       ),
+                      const SizedBox(height: 18),
+
+                      _buildSuggestServiceCard(),
                     ],
                   ),
                 ),
@@ -197,6 +201,103 @@ class _ServicesScreenState extends State<ServicesScreen> {
   // ============================================================
   // CITY CARD
   // ============================================================
+  Widget _buildSuggestServiceCard() {
+    return Container(
+      width: double.infinity,
+      height: 115,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: primaryGreen.withValues(alpha: 0.08),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(18),
+        child: Stack(
+          children: [
+            // Background image
+            Positioned.fill(
+              child: Image.asset(
+                'assets/images/services/service_bottom.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+
+            // Text
+            Positioned(
+              left: 105,
+              top: 14,
+              right: 14,
+              child: Text(
+                'Suggest a Service',
+                style: GoogleFonts.playfairDisplay(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                  color: primaryGreen,
+                ),
+              ),
+            ),
+
+            Positioned(
+              left: 105,
+              top: 40,
+              right: 15,
+              child: Text(
+                'Know a useful place? Help other\ntravellers discover it.',
+                style: GoogleFonts.inter(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w400,
+                  color: primaryGreen.withValues(alpha: 0.82),
+                  height: 1.25,
+                ),
+              ),
+            ),
+
+            // Suggest button
+            Positioned(
+              right: 14,
+              bottom: 10,
+              child: SizedBox(
+                height: 34,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const SuggestServiceScreen(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryGreen,
+                    foregroundColor: backgroundColor,
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                  ),
+                  icon: const Icon(Icons.add_rounded, size: 17),
+                  label: Text(
+                    'Suggest Service',
+                    style: GoogleFonts.inter(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildCityCard(ServiceCity city) {
     return Container(
       decoration: BoxDecoration(
