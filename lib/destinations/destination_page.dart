@@ -18,6 +18,9 @@ import 'abhayagiriya_detail_page.dart';
 import 'jetavanaramaya_detail_page.dart';
 import 'gadaladeniya_detail_page.dart';
 import 'lankathilaka_detail_page.dart';
+import 'dambulla_detail_page.dart';
+import 'sigiriya_detail_page.dart';
+import 'ibbankatuwa_detail_page.dart';
 
 class DestinationPage extends StatefulWidget {
   final Destination destination;
@@ -1182,15 +1185,15 @@ class _DestinationPageState extends State<DestinationPage> {
       // =====================================================
 
       case 'Dambulla Cave Temple':
-        // Dambulla attraction detail pages to be implemented.
+        page = const DambullaDetailPage();
         break;
 
       case 'Sigiriya Rock Fortress':
-        // Dambulla attraction detail pages to be implemented.
+        page = const SigiriyaDetailPage();
         break;
 
       case 'Ibbankatuwa Megalithic Tombs':
-        // Dambulla attraction detail pages to be implemented.
+        page = const IbbankatuwaDetailPage();
         break;
     }
 

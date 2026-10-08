@@ -5,3 +5,6 @@ export 'abhayagiriya_detail_page.dart';
 export 'jetavanaramaya_detail_page.dart';
 export 'gadaladeniya_detail_page.dart';
 export 'lankathilaka_detail_page.dart';
+export 'dambulla_detail_page.dart';
+export 'sigiriya_detail_page.dart';
+export 'ibbankatuwa_detail_page.dart';

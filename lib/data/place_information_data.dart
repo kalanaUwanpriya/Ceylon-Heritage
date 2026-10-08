@@ -965,3 +965,98 @@ final lankathilakaViharaInformation = PlaceInformationPage(
   ],
   nearbyDistances: ['3 km', '13 km', '13 km', '15 km'],
 );
+
+// =========================================================
+// DAMBULLA INFORMATION PAGES
+// =========================================================
+
+final dambullaCaveTempleInformation = PlaceInformationPage(
+  placeName: 'Dambulla Cave Temple',
+  destinationName: 'Dambulla',
+  subtitle: 'UNESCO World Heritage Cave Temple Complex',
+  description:
+      'Dambulla Cave Temple is a UNESCO World Heritage Site and the largest, best-preserved cave temple complex in Sri Lanka, featuring 153 Buddha statues and ancient murals spanning 2,100 square metres.',
+  location: 'Dambulla, Sri Lanka',
+  rating: '4.8',
+  reviews: '3,420',
+  openingHours: 'Daily from 7:00 AM to 7:00 PM',
+  bestTime: 'Early morning or late afternoon',
+  entranceFee: 'Local: Free\nForeign Tourists: Rs. 3,000',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/dambulla_cave_temple.jpg',
+    'assets/images/dambulla_cave_temple_exterior.jpg',
+    'assets/images/dambulla.png',
+    'assets/images/dambulla_cave_temple_4.png',
+  ],
+  nearbyNames: [
+    'Sigiriya Rock Fortress',
+    'Ibbankatuwa Megalithic Tombs',
+  ],
+  nearbyImages: [
+    'assets/images/sigiriya_rock_fortress.jpg',
+    'assets/images/ibbankatuwa_megalithic_tombs.jpg',
+  ],
+  nearbyDistances: ['19 km', '5 km'],
+);
+
+final sigiriyaRockFortressInformation = PlaceInformationPage(
+  placeName: 'Sigiriya Rock Fortress',
+  destinationName: 'Dambulla',
+  subtitle: 'Ancient Rock Fortress and Palace Ruin',
+  description:
+      'Sigiriya is an ancient rock fortress and palace ruin built by King Kashyapa. Rising 200 metres above the surrounding jungle, it is a UNESCO World Heritage Site and one of the best-preserved examples of ancient urban planning.',
+  location: 'Sigiriya, Sri Lanka',
+  rating: '4.9',
+  reviews: '8,950',
+  openingHours: 'Daily from 7:00 AM to 7:00 PM',
+  bestTime: 'Early morning or late afternoon',
+  entranceFee:
+      'Local:\n• Adult: Rs. 120\n• Child: Rs. 60\n\nForeign Tourists (Non-SAARC):\n• Adult: Rs. 11,600\n• Child: Rs. 6,600\n\nSAARC Nationals:\n• Adult: Rs. 6,600\n• Child: Rs. 6,600',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/sigiriya_rock_fortress.jpg',
+    'assets/images/sigiriya_lion_paw.jpg',
+    'assets/images/sigiriya_frescoes.jpg',
+    'assets/images/sigiriya_4.jpg',
+  ],
+  nearbyNames: [
+    'Dambulla Cave Temple',
+    'Ibbankatuwa Megalithic Tombs',
+  ],
+  nearbyImages: [
+    'assets/images/dambulla_cave_temple.jpg',
+    'assets/images/ibbankatuwa_megalithic_tombs.jpg',
+  ],
+  nearbyDistances: ['19 km', '5 km'],
+);
+
+final ibbankatuwaMegalithicTombsInformation = PlaceInformationPage(
+  placeName: 'Ibbankatuwa Megalithic Tombs',
+  destinationName: 'Dambulla',
+  subtitle: 'Prehistoric Iron Age Burial Site & Ancient Cemetery',
+  description:
+      'Ibbankatuwa Megalithic Tombs is a prehistoric burial site near Dambulla, containing ancient megalithic tombs dating back to the Iron Age. It is an important archaeological site that reveals early human settlements in Sri Lanka.',
+  location: 'Dambulla, Sri Lanka',
+  rating: '4.5',
+  reviews: '1,240',
+  openingHours: 'Open daily from 7:00 AM to 5:00 PM',
+  bestTime: 'Morning or late afternoon',
+  entranceFee: 'Local: Rs. 20 to Rs. 120\nForeign Tourists: Rs. 1,400–1,500',
+  dressCode: 'Comfortable walking attire and sun protection',
+  heroImages: [
+    'assets/images/ibbankatuwa_megalithic_tombs.jpg',
+    'assets/images/ibbankatuwa_2.jpg',
+    'assets/images/ibbankatuwa_3.jpg',
+    'assets/images/ibbankatuwa_4.jpg',
+  ],
+  nearbyNames: [
+    'Dambulla Cave Temple',
+    'Sigiriya Rock Fortress',
+  ],
+  nearbyImages: [
+    'assets/images/dambulla_cave_temple.jpg',
+    'assets/images/sigiriya_rock_fortress.jpg',
+  ],
+  nearbyDistances: ['3 km', '20 km'],
+);
