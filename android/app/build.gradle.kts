@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.ceylonheritage.ceylon_heritage"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

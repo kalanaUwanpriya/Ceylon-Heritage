@@ -6,6 +6,7 @@ import '../destinations/destination_page.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'notification_settings_screen.dart';
 import 'profile_screen.dart';
+import 'saved_places_screen.dart';
 import 'services/services_screen.dart';
 
 class PlaceItem {
@@ -485,6 +486,14 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SavedPlacesScreen()),
+      );
+      return;
+    }
+
     if (index == 3) {
       Navigator.push(
         context,
@@ -507,9 +516,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          index == 1
-              ? 'Services will be connected next.'
-              : 'Saved will be connected next.',
+          'Services will be connected next.',
           style: GoogleFonts.inter(),
         ),
         backgroundColor: primaryColor,

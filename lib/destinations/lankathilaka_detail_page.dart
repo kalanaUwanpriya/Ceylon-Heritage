@@ -5,9 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 import '../data/lankathilaka_places.dart';
 import '../data/place_information_data.dart';
 import '../screens/profile_screen.dart';
+import '../screens/saved_places_screen.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'gadaladeniya_detail_page.dart';
 import '../Reviews/widgets/visitor_rating_card.dart';
+import '../widgets/save_place_button.dart';
 
 class LankathilakaDetailPage extends StatefulWidget {
   const LankathilakaDetailPage({super.key});
@@ -94,6 +96,15 @@ class _LankathilakaDetailPageState extends State<LankathilakaDetailPage> {
             Navigator.pop(context);
             return;
           }
+          if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SavedPlacesScreen(),
+              ),
+            );
+            return;
+          }
           if (index == 3) {
             Navigator.push(
               context,
@@ -104,9 +115,7 @@ class _LankathilakaDetailPageState extends State<LankathilakaDetailPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                index == 1
-                    ? 'Services will be connected next.'
-                    : 'Saved will be connected next.',
+                'Services will be connected next.',
                 style: GoogleFonts.inter(),
               ),
               backgroundColor: darkGreen,
@@ -141,14 +150,7 @@ class _LankathilakaDetailPageState extends State<LankathilakaDetailPage> {
       ),
       centerTitle: true,
       actions: [
-        IconButton(
-          icon: const Icon(
-            Icons.favorite_border_rounded,
-            color: darkGreen,
-            size: 28,
-          ),
-          onPressed: () {},
-        ),
+        SavePlaceButton(placeId: LankathilakaData.placeName),
         const SizedBox(width: 5),
       ],
     );

@@ -4,9 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../data/sigiriya_places.dart';
 import '../screens/profile_screen.dart';
+import '../screens/saved_places_screen.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'dambulla_detail_page.dart';
 import 'ibbankatuwa_detail_page.dart';
+import '../widgets/save_place_button.dart';
 
 class SigiriyaDetailPage extends StatefulWidget {
   const SigiriyaDetailPage({super.key});
@@ -93,6 +95,15 @@ class _SigiriyaDetailPageState extends State<SigiriyaDetailPage> {
             Navigator.pop(context);
             return;
           }
+          if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SavedPlacesScreen(),
+              ),
+            );
+            return;
+          }
           if (index == 3) {
             Navigator.push(
               context,
@@ -103,9 +114,7 @@ class _SigiriyaDetailPageState extends State<SigiriyaDetailPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                index == 1
-                    ? 'Services will be connected next.'
-                    : 'Saved will be connected next.',
+                'Services will be connected next.',
                 style: GoogleFonts.inter(),
               ),
               backgroundColor: darkGreen,
@@ -140,14 +149,7 @@ class _SigiriyaDetailPageState extends State<SigiriyaDetailPage> {
       ),
       centerTitle: true,
       actions: [
-        IconButton(
-          icon: const Icon(
-            Icons.favorite_border_rounded,
-            color: darkGreen,
-            size: 28,
-          ),
-          onPressed: () {},
-        ),
+        SavePlaceButton(placeId: SigiriyaData.placeName),
         const SizedBox(width: 5),
       ],
     );

@@ -4,12 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../data/jetavanaramaya_places.dart';
 import '../screens/profile_screen.dart';
+import '../screens/saved_places_screen.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'abhayagiriya_detail_page.dart';
 import 'ruwanwelisaya_detail_page.dart';
 import 'sri_maha_bodhi_detail_page.dart';
 import 'thuparamaya_detail_page.dart';
 import '../Reviews/widgets/visitor_rating_card.dart';
+import '../widgets/save_place_button.dart';
 
 class JetavanaramayaDetailPage extends StatefulWidget {
   const JetavanaramayaDetailPage({super.key});
@@ -97,6 +99,15 @@ class _JetavanaramayaDetailPageState extends State<JetavanaramayaDetailPage> {
             Navigator.pop(context);
             return;
           }
+          if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SavedPlacesScreen(),
+              ),
+            );
+            return;
+          }
           if (index == 3) {
             Navigator.push(
               context,
@@ -107,9 +118,7 @@ class _JetavanaramayaDetailPageState extends State<JetavanaramayaDetailPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                index == 1
-                    ? 'Services will be connected next.'
-                    : 'Saved will be connected next.',
+                'Services will be connected next.',
                 style: GoogleFonts.inter(),
               ),
               backgroundColor: darkGreen,
@@ -144,14 +153,7 @@ class _JetavanaramayaDetailPageState extends State<JetavanaramayaDetailPage> {
       ),
       centerTitle: true,
       actions: [
-        IconButton(
-          icon: const Icon(
-            Icons.favorite_border_rounded,
-            color: darkGreen,
-            size: 28,
-          ),
-          onPressed: () {},
-        ),
+        SavePlaceButton(placeId: JetavanaramayaData.placeName),
         const SizedBox(width: 5),
       ],
     );
