@@ -37,7 +37,8 @@ class _WalkingTourMapScreenState extends State<WalkingTourMapScreen> {
   static const Color accentColor = Color(0xFF9F5625);
   static const Color secondaryTextColor = Color(0xFF5F625D);
   static const Color borderColor = Color(0xFFE5D7C5);
-  static const Color starGoldColor = Color(0xFFE5A93C);
+  static const Color cardColor = Color(0xFFF0DDC3);
+  static const Color starGoldColor = Color(0xFF9F5625);
 
   final MapController _mapController = MapController();
   late final WalkingRouteService _routeService;
@@ -484,7 +485,7 @@ class _WalkingTourMapScreenState extends State<WalkingTourMapScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: borderColor, width: 1.2),
         boxShadow: [
