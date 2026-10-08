@@ -9,6 +9,7 @@ import '../models/destination.dart';
 import '../data/place_information_data.dart';
 
 import '../screens/profile_screen.dart';
+import '../screens/saved_places_screen.dart';
 import '../screens/plan/walking_plan_page.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'ruwanwelisaya_detail_page.dart';
@@ -236,14 +237,6 @@ class _DestinationPageState extends State<DestinationPage> {
 
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite_border, color: darkGreen, size: 29),
-
-            onPressed: () {
-              // Saved Places belongs to another group member.
-            },
-          ),
-
-          IconButton(
             icon: const Icon(Icons.share_outlined, color: darkGreen, size: 27),
 
             onPressed: () {},
@@ -459,7 +452,7 @@ class _DestinationPageState extends State<DestinationPage> {
 
               // =================================================
 
-              // INFORMATION / SHARE / SERVICES
+              // INFORMATION / SERVICES
 
               // =================================================
               const SizedBox(height: 18),
@@ -485,18 +478,6 @@ class _DestinationPageState extends State<DestinationPage> {
                           icon: Icons.info_outline,
 
                           label: 'Information',
-
-                          onTap: () {},
-                        ),
-                      ),
-
-                      Container(width: 1, height: 36, color: borderColor),
-
-                      Expanded(
-                        child: _mainAction(
-                          icon: Icons.share_outlined,
-
-                          label: 'Share',
 
                           onTap: () {},
                         ),
@@ -955,6 +936,15 @@ class _DestinationPageState extends State<DestinationPage> {
             Navigator.pop(context);
             return;
           }
+          if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SavedPlacesScreen(),
+              ),
+            );
+            return;
+          }
           if (index == 3) {
             Navigator.push(
               context,
@@ -965,9 +955,7 @@ class _DestinationPageState extends State<DestinationPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                index == 1
-                    ? 'Services will be connected next.'
-                    : 'Saved will be connected next.',
+                'Services will be connected next.',
                 style: GoogleFonts.inter(),
               ),
               backgroundColor: darkGreen,
@@ -982,7 +970,7 @@ class _DestinationPageState extends State<DestinationPage> {
 
   // =========================================================
 
-  // INFORMATION / SHARE / SERVICES ACTION
+  // INFORMATION / SERVICES ACTION
 
   // =========================================================
 

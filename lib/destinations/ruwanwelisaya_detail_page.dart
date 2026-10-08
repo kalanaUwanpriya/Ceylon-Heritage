@@ -4,12 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../data/ruwanwelisaya_places.dart';
 import '../screens/profile_screen.dart';
+import '../screens/saved_places_screen.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'sri_maha_bodhi_detail_page.dart';
 import 'thuparamaya_detail_page.dart';
 import 'abhayagiriya_detail_page.dart';
 import 'jetavanaramaya_detail_page.dart';
 import '../Reviews/widgets/visitor_rating_card.dart';
+import '../widgets/save_place_button.dart';
 
 class RuwanwelisayaDetailPage extends StatefulWidget {
   const RuwanwelisayaDetailPage({super.key});
@@ -96,6 +98,15 @@ class _RuwanwelisayaDetailPageState extends State<RuwanwelisayaDetailPage> {
             Navigator.pop(context);
             return;
           }
+          if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SavedPlacesScreen(),
+              ),
+            );
+            return;
+          }
           if (index == 3) {
             Navigator.push(
               context,
@@ -106,9 +117,7 @@ class _RuwanwelisayaDetailPageState extends State<RuwanwelisayaDetailPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                index == 1
-                    ? 'Services will be connected next.'
-                    : 'Saved will be connected next.',
+                'Services will be connected next.',
                 style: GoogleFonts.inter(),
               ),
               backgroundColor: darkGreen,
@@ -143,14 +152,7 @@ class _RuwanwelisayaDetailPageState extends State<RuwanwelisayaDetailPage> {
       ),
       centerTitle: true,
       actions: [
-        IconButton(
-          icon: const Icon(
-            Icons.favorite_border_rounded,
-            color: darkGreen,
-            size: 28,
-          ),
-          onPressed: () {},
-        ),
+        SavePlaceButton(placeId: RuwanwelisayaData.placeName),
         const SizedBox(width: 5),
       ],
     );

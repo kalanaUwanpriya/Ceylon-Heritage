@@ -4,9 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../data/ibbankatuwa_places.dart';
 import '../screens/profile_screen.dart';
+import '../screens/saved_places_screen.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'dambulla_detail_page.dart';
 import 'sigiriya_detail_page.dart';
+import '../widgets/save_place_button.dart';
 
 class IbbankatuwaDetailPage extends StatefulWidget {
   const IbbankatuwaDetailPage({super.key});
@@ -93,6 +95,15 @@ class _IbbankatuwaDetailPageState extends State<IbbankatuwaDetailPage> {
             Navigator.pop(context);
             return;
           }
+          if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SavedPlacesScreen(),
+              ),
+            );
+            return;
+          }
           if (index == 3) {
             Navigator.push(
               context,
@@ -103,9 +114,7 @@ class _IbbankatuwaDetailPageState extends State<IbbankatuwaDetailPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                index == 1
-                    ? 'Services will be connected next.'
-                    : 'Saved will be connected next.',
+                'Services will be connected next.',
                 style: GoogleFonts.inter(),
               ),
               backgroundColor: darkGreen,
@@ -140,14 +149,7 @@ class _IbbankatuwaDetailPageState extends State<IbbankatuwaDetailPage> {
       ),
       centerTitle: true,
       actions: [
-        IconButton(
-          icon: const Icon(
-            Icons.favorite_border_rounded,
-            color: darkGreen,
-            size: 28,
-          ),
-          onPressed: () {},
-        ),
+        SavePlaceButton(placeId: IbbankatuwaData.placeName),
         const SizedBox(width: 5),
       ],
     );
