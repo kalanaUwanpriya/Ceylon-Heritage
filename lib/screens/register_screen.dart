@@ -508,6 +508,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                           const SizedBox(height: 10),
 
+                          // TEMPORARY DEVELOPMENT SKIP BUTTON
+                          Center(
+                            child: TextButton(
+                              onPressed: _isLoading
+                                  ? null
+                                  : () {
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomeScreen(),
+                                        ),
+                                        (route) => false,
+                                      );
+                                    },
+                              child: const Text(
+                                'Skip for Now →',
+                                style: TextStyle(
+                                  color: primaryColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(height: 10),
+
                           // =====================================
 
                           // TERMS
