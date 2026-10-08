@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../models/destination.dart';
 import '../../widgets/app_navigation_bar.dart';
 import '../profile_screen.dart';
+import 'walking_tour_route_page.dart';
 
 class WalkingPlanPage extends StatefulWidget {
-  const WalkingPlanPage({super.key});
+  final Destination? destination;
+
+  const WalkingPlanPage({super.key, this.destination});
 
   @override
   State<WalkingPlanPage> createState() => _WalkingPlanPageState();
@@ -24,7 +28,7 @@ class _WalkingPlanPageState extends State<WalkingPlanPage> {
   // Selected dropdown values
   String _selectedTempo = 'Moderate';
   String _selectedTime = '1 Day';
-  String _selectedRating = '3 Star';
+  String _selectedRating = 'Any';
 
   // Option lists
   final List<String> _tempoOptions = const [
@@ -43,7 +47,7 @@ class _WalkingPlanPageState extends State<WalkingPlanPage> {
   final List<String> _ratingOptions = const [
     '1 Star',
     '2 Star',
-    '3 Star',
+    'Any',
   ];
 
   @override
@@ -137,21 +141,15 @@ class _WalkingPlanPageState extends State<WalkingPlanPage> {
                           height: 56,
                           child: ElevatedButton.icon(
                             onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Starting Walking Tour: $_selectedTempo • $_selectedTime • $_selectedRating',
-                                    style: GoogleFonts.inter(
-                                      color: backgroundColor,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => WalkingTourRoutePage(
+                                    tempo: _selectedTempo,
+                                    timeAvailable: _selectedTime,
+                                    ratingFilter: _selectedRating,
+                                    destination: widget.destination,
                                   ),
-                                  backgroundColor: primaryColor,
-                                  behavior: SnackBarBehavior.floating,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  duration: const Duration(seconds: 2),
                                 ),
                               );
                             },

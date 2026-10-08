@@ -233,4 +233,99 @@ class ReviewService {
     final sum = reviews.fold<int>(0, (prev, r) => prev + r.rating);
     return sum / reviews.length;
   }
+
+  // ============================================================
+  // GET REVIEWS FOR A PLACE ONCE (FUTURE)
+  // ============================================================
+  Future<List<Review>> getPlaceReviewsOnce(String placeId) async {
+    try {
+      final query =
+          await _reviewsRef.where('placeId', isEqualTo: placeId).get();
+      return query.docs.map((doc) => Review.fromFirestore(doc)).toList();
+    } catch (_) {
+      return [];
+    }
+  }
+
+  // ============================================================
+  // GET REAL DATABASE AVERAGE RATING FOR A PLACE
+  // ============================================================
+  Future<PlaceReviewStats> getRealPlaceStats(String placeId) async {
+    var reviews = await getPlaceReviewsOnce(placeId);
+
+    if (reviews.isEmpty) {
+      final normalized =
+          placeId.toLowerCase().trim().replaceAll('-', '_');
+      if (normalized != placeId) {
+        reviews = await getPlaceReviewsOnce(normalized);
+      }
+      if (reviews.isEmpty) {
+        if (placeId.endsWith('a')) {
+          reviews = await getPlaceReviewsOnce(
+              placeId.substring(0, placeId.length - 1));
+        } else {
+          reviews = await getPlaceReviewsOnce('${placeId}a');
+        }
+      }
+    }
+
+    if (reviews.isEmpty) {
+      return const PlaceReviewStats(count: 0, average: 0.0);
+    }
+
+    final sum = reviews.fold<int>(0, (prev, r) => prev + r.rating);
+    final avg = sum / reviews.length;
+    return PlaceReviewStats(count: reviews.length, average: avg);
+  }
+
+  // ============================================================
+  // GET REAL DATABASE STATS FOR MULTIPLE PLACES (BATCH)
+  // ============================================================
+  Future<Map<String, PlaceReviewStats>> getBatchRealPlaceStats(
+      List<String> placeIds) async {
+    final Map<String, PlaceReviewStats> results = {};
+    try {
+      final allSnap = await _reviewsRef.get();
+      final Map<String, List<int>> ratingsMap = {};
+      for (final doc in allSnap.docs) {
+        final data = doc.data();
+        final pId = (data['placeId'] as String? ?? '')
+            .toLowerCase()
+            .trim()
+            .replaceAll('-', '_');
+        final r = (data['rating'] as num?)?.toInt();
+        if (pId.isNotEmpty && r != null && r > 0) {
+          ratingsMap.putIfAbsent(pId, () => []).add(r.clamp(1, 3));
+        }
+      }
+
+      for (final id in placeIds) {
+        final normalized =
+            id.toLowerCase().trim().replaceAll('-', '_');
+        List<int>? ratings = ratingsMap[normalized];
+        if (ratings == null || ratings.isEmpty) {
+          if (normalized.endsWith('a')) {
+            ratings =
+                ratingsMap[normalized.substring(0, normalized.length - 1)];
+          } else {
+            ratings = ratingsMap['${normalized}a'];
+          }
+        }
+
+        if (ratings != null && ratings.isNotEmpty) {
+          final sum = ratings.reduce((a, b) => a + b);
+          final avg = sum / ratings.length;
+          results[id] =
+              PlaceReviewStats(count: ratings.length, average: avg);
+        } else {
+          results[id] = const PlaceReviewStats(count: 0, average: 0.0);
+        }
+      }
+    } catch (_) {
+      for (final id in placeIds) {
+        results[id] = await getRealPlaceStats(id);
+      }
+    }
+    return results;
+  }
 }
