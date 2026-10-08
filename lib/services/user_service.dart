@@ -39,4 +39,48 @@ class UserService {
       'updatedAt': FieldValue.serverTimestamp(),
     });
   }
+
+  // Delete a user's Firestore profile
+  Future<void> deleteUserProfile(String uid) async {
+    await _firestore.collection('users').doc(uid).delete();
+  }
+
+  // Delete personal Firestore data belonging to this user.
+  Future<void> deleteAllUserData(String uid) async {
+    final collections = [
+      'saved_places',
+      'visited_history',
+      'reviews',
+      'saved_routes',
+      'user_route_plans',
+      'service_suggestions',
+    ];
+
+    // Delete documents owned by the user.
+    for (final collectionName in collections) {
+      while (true) {
+        final snapshot = await _firestore
+            .collection(collectionName)
+            .where('userId', isEqualTo: uid)
+            .limit(100)
+            .get();
+
+        if (snapshot.docs.isEmpty) break;
+
+        final batch = _firestore.batch();
+
+        for (final doc in snapshot.docs) {
+          batch.delete(doc.reference);
+        }
+
+        await batch.commit();
+      }
+    }
+
+    // Delete notification preferences.
+    await _firestore.collection('notification_preferences').doc(uid).delete();
+
+    // Delete user profile last.
+    await deleteUserProfile(uid);
+  }
 }
