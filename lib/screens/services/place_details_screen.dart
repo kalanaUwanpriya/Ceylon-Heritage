@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'service_data.dart';
 import 'place_gallery_screen.dart';
-import '../saved_places_service.dart';
 
 class PlaceDetailsScreen extends StatefulWidget {
   final ServicePlace place;
@@ -22,25 +21,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
 
   bool isSaved = false;
 
-  final SavedPlacesService _savedPlacesService = SavedPlacesService();
-
   ServicePlace get place => widget.place;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSavedStatus();
-  }
-
-  Future<void> _loadSavedStatus() async {
-    final saved = await _savedPlacesService.isPlaceSaved(place.name);
-
-    if (!mounted) return;
-
-    setState(() {
-      isSaved = saved;
-    });
-  }
 
   static const Color backgroundColor = Color(0xFFF6EADA);
 
@@ -59,23 +40,16 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
   Future<void> _openMap(BuildContext context) async {
     final Uri uri = Uri.parse(place.mapUrl);
 
-    try {
-      final bool opened = await launchUrl(
-        uri,
-        mode: LaunchMode.inAppBrowserView,
-      );
+    final bool opened = await launchUrl(
+      uri,
 
-      if (!opened && context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Unable to open Google Maps')),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Unable to open Google Maps')),
-        );
-      }
+      mode: LaunchMode.externalApplication,
+    );
+
+    if (!opened && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to open Google Maps')),
+      );
     }
   }
 
@@ -523,56 +497,27 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                             height: 47,
 
                             child: OutlinedButton.icon(
-                              onPressed: () async {
-                                try {
-                                  if (isSaved) {
-                                    await _savedPlacesService.removeSavedPlace(
-                                      place.name,
-                                    );
-                                  } else {
-                                    await _savedPlacesService.savePlace(
-                                      place.name,
-                                    );
-                                  }
+                              onPressed: () {
+                                setState(() {
+                                  isSaved = !isSaved;
+                                });
 
-                                  if (!context.mounted) return;
+                                ScaffoldMessenger.of(
+                                  context,
+                                ).hideCurrentSnackBar();
 
-                                  setState(() {
-                                    isSaved = !isSaved;
-                                  });
-
-                                  ScaffoldMessenger.of(
-                                    context,
-                                  ).hideCurrentSnackBar();
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        isSaved
-                                            ? '${place.name} saved successfully'
-                                            : '${place.name} removed from saved',
-                                      ),
-                                      duration: const Duration(seconds: 2),
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: const Color(0xFF303533),
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      isSaved
+                                          ? '${place.name} saved successfully'
+                                          : '${place.name} removed from saved',
                                     ),
-                                  );
-                                } catch (e) {
-                                  if (!context.mounted) return;
-
-                                  ScaffoldMessenger.of(
-                                    context,
-                                  ).hideCurrentSnackBar();
-
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text('Unable to save place: $e'),
-                                      duration: const Duration(seconds: 3),
-                                      behavior: SnackBarBehavior.floating,
-                                      backgroundColor: const Color(0xFF303533),
-                                    ),
-                                  );
-                                }
+                                    duration: const Duration(seconds: 2),
+                                    behavior: SnackBarBehavior.floating,
+                                    backgroundColor: const Color(0xFF303533),
+                                  ),
+                                );
                               },
 
                               style: OutlinedButton.styleFrom(
