@@ -304,7 +304,7 @@ final List<HistoricalPlace> kandyPlaces = [
   ),
 
   HistoricalPlace(
-    name: 'Gadaladeniya Viharaya',
+    name: 'Gadaladeniya Vihara',
     destination: 'Kandy',
     description:
         'Gadaladeniya Vihara is an ancient Buddhist temple built in the 14th century. It features a unique blend of South Indian and Sri Lankan architectural styles and is one of the remarkable medieval temples near Kandy.',
@@ -313,7 +313,7 @@ final List<HistoricalPlace> kandyPlaces = [
   ),
 
   HistoricalPlace(
-    name: 'Lankathilaka Viharaya',
+    name: 'Lankathilaka Vihara',
     destination: 'Kandy',
     description:
         'Lankathilaka Vihara is a magnificent ancient Buddhist temple built in the 14th century during the reign of King Bhuvanekabahu IV. It stands on a rock and is known for its impressive multi-storey structure and ancient carvings.',
