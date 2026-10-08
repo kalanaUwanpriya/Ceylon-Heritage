@@ -16,6 +16,8 @@ import 'sri_maha_bodhi_detail_page.dart';
 import 'thuparamaya_detail_page.dart';
 import 'abhayagiriya_detail_page.dart';
 import 'jetavanaramaya_detail_page.dart';
+import 'gadaladeniya_detail_page.dart';
+import 'lankathilaka_detail_page.dart';
 
 class DestinationPage extends StatefulWidget {
   final Destination destination;
@@ -1164,11 +1166,13 @@ class _DestinationPageState extends State<DestinationPage> {
         break;
 
       case 'Gadaladeniya Vihara':
-        // Kandy attraction detail pages to be implemented.
+      case 'Gadaladeniya Viharaya':
+        page = const GadaladeniyaDetailPage();
         break;
 
       case 'Lankathilaka Vihara':
-        // Kandy attraction detail pages to be implemented.
+      case 'Lankathilaka Viharaya':
+        page = const LankathilakaDetailPage();
         break;
 
       // =====================================================

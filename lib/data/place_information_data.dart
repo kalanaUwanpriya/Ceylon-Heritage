@@ -889,3 +889,79 @@ final ahalepolaWalawwaInformation = PlaceInformationPage(
   ],
   nearbyDistances: ['~1.2 km', '~2 km', '~11 km', '~14 km'],
 );
+
+// ---------------------------------------------------------
+// 4. GADALADENIYA VIHARA
+// ---------------------------------------------------------
+
+final gadaladeniyaInformation = PlaceInformationPage(
+  placeName: 'Gadaladeniya Vihara',
+  destinationName: 'Gadaladeniya Vihara',
+  subtitle: 'Ancient Buddhist Temple with South Indian Architecture',
+  description:
+      'Gadaladeniya Vihara is an ancient Buddhist temple built in the 14th century. It features a unique blend of South Indian and Sri Lankan architectural styles and is one of the remarkable medieval temples near Kandy.',
+  location: 'Gadaladeniya, Kandy, Sri Lanka',
+  rating: '3.0',
+  reviews: '1,842',
+  openingHours: 'Daily from 7:00 AM to 7:00 PM',
+  bestTime: 'Early morning or afternoon',
+  entranceFee: 'Local: Free\nForeign Tourists: Rs. 500',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/gadaladeniya_vihara.jpg',
+    'assets/images/gadaladeniya_2.png',
+    'assets/images/gadaladeniya_3.png',
+    'assets/images/gadaladeniya_4.png',
+  ],
+  nearbyNames: [
+    'Sri Dalada Maligawa',
+    'Bahirawakanda Buddha Statue',
+    'Ehalepola Wax Museum',
+    'Lankathilaka Vihara',
+  ],
+  nearbyImages: [
+    'assets/images/kandy.png',
+    'assets/images/bahirawakanda_buddha.jpg',
+    'assets/images/ehalepola_wax_museum.jpg',
+    'assets/images/lankathilaka_vihara.jpg',
+  ],
+  nearbyDistances: ['~11 km', '~12 km', '~11 km', '~3 km'],
+);
+
+// ---------------------------------------------------------
+// 5. LANKATHILAKA VIHARA
+// ---------------------------------------------------------
+
+final lankathilakaViharaInformation = PlaceInformationPage(
+  placeName: 'Lankathilaka Vihara',
+  destinationName: 'Lankathilaka Vihara',
+  subtitle: 'The Majestic Medieval Rock Temple of Kandy',
+  description:
+      'Lankathilaka Vihara is a magnificent ancient Buddhist temple built in the 14th century during the reign of King Bhuvanekabahu IV. It stands on a rock and is known for its impressive multi-storey structure and ancient carvings.',
+  location: 'Lankathilaka, Kandy, Sri Lanka',
+  rating: '3.0',
+  reviews: '1,620',
+  openingHours: 'Daily from 7:00 AM to 7:00 PM',
+  bestTime: 'Early morning or afternoon',
+  entranceFee: 'Local: Free\nForeign Tourists: Rs. 500',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/lankathilaka_vihara.jpg',
+    'assets/images/lankathilaka_2.png',
+    'assets/images/lankathilaka_3.png',
+    'assets/images/lankathilaka_4.png',
+  ],
+  nearbyNames: [
+    'Gadaladeniya Vihara',
+    'Sri Dalada Maligawa',
+    'Ehelepola Wax Museum',
+    'Bahirawakanda Buddha Statue',
+  ],
+  nearbyImages: [
+    'assets/images/gadaladeniya_vihara.jpg',
+    'assets/images/kandy.png',
+    'assets/images/ehalepola_wax_museum.jpg',
+    'assets/images/bahirawakanda_buddha.jpg',
+  ],
+  nearbyDistances: ['3 km', '13 km', '13 km', '15 km'],
+);
