@@ -36,8 +36,8 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
   static const Color secondaryTextColor = Color(0xFF5F625D);
   static const Color pillBadgeColor = Color(0xFFDCE8E1);
   static const Color borderColor = Color(0xFFE5D7C5);
-  static const Color starActiveColor = Color(0xFFE5A93C);
-  static const Color starInactiveColor = Color(0xFFD8C7B3);
+  static const Color starActiveColor = Color(0xFF9F5625);
+  static const Color starInactiveColor = Color(0x559F5625);
 
   final RouteGenerationService _routeService = RouteGenerationService();
 
@@ -214,6 +214,39 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
 
     return Stack(
       children: [
+        // Background illustration from assets/images/Abackg.png fading downwards
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          height: 250,
+          child: ShaderMask(
+            shaderCallback: (Rect bounds) {
+              return const LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.white,
+                  Colors.white,
+                  Colors.transparent,
+                ],
+                stops: [0.0, 0.45, 0.98],
+              ).createShader(bounds);
+            },
+            blendMode: BlendMode.dstIn,
+            child: Opacity(
+              opacity: 0.38,
+              child: Image.asset(
+                'assets/images/Abackg.png',
+                fit: BoxFit.cover,
+                alignment: Alignment.topCenter,
+                errorBuilder: (context, error, stackTrace) =>
+                    const SizedBox.shrink(),
+              ),
+            ),
+          ),
+        ),
+
         SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.only(bottom: 24),
@@ -223,7 +256,7 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
               // Top Bar
               _buildTopBar(context),
 
-              // Hero section with sketch background
+              // Hero section
               _buildHeroSection(tour),
 
               const SizedBox(height: 16),
@@ -301,7 +334,7 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
           IconButton(
             icon: Icon(
               _isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-              color: _isFavorite ? Colors.redAccent : primaryColor,
+              color: accentColor,
               size: 24,
             ),
             onPressed: () {
@@ -317,97 +350,60 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
   // HERO SECTION
   // ============================================================
   Widget _buildHeroSection(GeneratedWalkingTour tour) {
-    return SizedBox(
-      width: double.infinity,
-      child: Stack(
-        alignment: Alignment.topCenter,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
         children: [
-          // Background sketch illustration fading downwards
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 180,
-            child: ShaderMask(
-              shaderCallback: (Rect bounds) {
-                return const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.white,
-                    Colors.white,
-                    Colors.transparent,
-                  ],
-                  stops: [0.0, 0.4, 0.95],
-                ).createShader(bounds);
-              },
-              blendMode: BlendMode.dstIn,
-              child: Image.asset(
-                'assets/images/Abackg.png',
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+          const SizedBox(height: 8),
+
+          // Pill Badge: CURATED HISTORICAL CIRCUIT
+          Container(
+            padding:
+                const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            decoration: BoxDecoration(
+              color: pillBadgeColor,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: primaryColor.withValues(alpha: 0.18),
+                width: 1,
+              ),
+            ),
+            child: Text(
+              tour.circuitTitle,
+              style: GoogleFonts.inter(
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 0.8,
+                color: primaryColor,
               ),
             ),
           ),
 
-          // Content
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 8),
+          const SizedBox(height: 12),
 
-                // Pill Badge: CURATED HISTORICAL CIRCUIT
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: pillBadgeColor,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: primaryColor.withValues(alpha: 0.18),
-                      width: 1,
-                    ),
-                  ),
-                  child: Text(
-                    tour.circuitTitle,
-                    style: GoogleFonts.inter(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                      letterSpacing: 0.8,
-                      color: primaryColor,
-                    ),
-                  ),
-                ),
+          // Hero Headline
+          Text(
+            tour.headline,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 26,
+              fontWeight: FontWeight.w700,
+              color: primaryColor,
+              height: 1.15,
+            ),
+          ),
 
-                const SizedBox(height: 12),
+          const SizedBox(height: 8),
 
-                // Hero Headline
-                Text(
-                  tour.headline,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.playfairDisplay(
-                    fontSize: 26,
-                    fontWeight: FontWeight.w700,
-                    color: primaryColor,
-                    height: 1.15,
-                  ),
-                ),
-
-                const SizedBox(height: 8),
-
-                // Subtitle
-                Text(
-                  tour.description,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.inter(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: secondaryTextColor,
-                    height: 1.35,
-                  ),
-                ),
-              ],
+          // Subtitle
+          Text(
+            tour.description,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.inter(
+              fontSize: 13,
+              fontWeight: FontWeight.w400,
+              color: secondaryTextColor,
+              height: 1.35,
             ),
           ),
         ],
@@ -426,7 +422,7 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: borderColor, width: 1),
         boxShadow: [
@@ -442,8 +438,8 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
           Container(
             width: 40,
             height: 40,
-            decoration: BoxDecoration(
-              color: pillBadgeColor,
+            decoration: const BoxDecoration(
+              color: backgroundColor,
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -581,7 +577,7 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: cardColor,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(color: borderColor, width: 1),
         boxShadow: [
@@ -898,7 +894,7 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
                   ),
                 ),
                 style: OutlinedButton.styleFrom(
-                  backgroundColor: Colors.white,
+                  backgroundColor: cardColor,
                   foregroundColor: primaryColor,
                   side: BorderSide(
                     color: primaryColor.withValues(alpha: 0.35),
