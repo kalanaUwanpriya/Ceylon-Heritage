@@ -71,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
     PlaceItem(
       title: 'Dambulla',
       subtitle: 'Royal Cave Temple',
-      imagePath: 'assets/images/dambulla.png',
+      imagePath: 'assets/images/ADambulla.png',
     ),
   ];
 

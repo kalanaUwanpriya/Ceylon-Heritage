@@ -7,6 +7,7 @@ import '../data/place_information_data.dart';
 import '../screens/profile_screen.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'lankathilaka_detail_page.dart';
+import '../Reviews/widgets/visitor_rating_card.dart';
 
 class GadaladeniyaDetailPage extends StatefulWidget {
   const GadaladeniyaDetailPage({super.key});
@@ -320,63 +321,11 @@ class _GadaladeniyaDetailPageState extends State<GadaladeniyaDetailPage> {
 
   // Visitor Rating
   Widget _buildVisitorRating() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: borderColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Visitor Rating',
-            style: GoogleFonts.playfairDisplay(
-              fontSize: 19,
-              fontWeight: FontWeight.w700,
-              color: darkGreen,
-            ),
-          ),
-          const SizedBox(height: 9),
-          Row(
-            children: [
-              Row(
-                children: List.generate(4, (index) {
-                  return const Padding(
-                    padding: EdgeInsets.only(right: 3),
-                    child: Icon(
-                      Icons.star_rounded,
-                      color: accentColor,
-                      size: 26,
-                    ),
-                  );
-                }),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(right: 3),
-                child: Icon(
-                  Icons.star_half_rounded,
-                  color: accentColor,
-                  size: 26,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  '${GadaladeniyaData.visitorRating} (${GadaladeniyaData.reviewCount})',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: secondaryTextColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+    return const VisitorRatingCard(
+      placeId: 'gadaladeniya',
+      placeName: GadaladeniyaData.placeName,
+      placeImage: 'assets/images/gadaladeniya_vihara.jpg',
+      location: GadaladeniyaData.location,
     );
   }
 

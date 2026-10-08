@@ -25,6 +25,7 @@ import 'notification_settings_screen.dart';
 import 'privacy_policy_screen.dart';
 
 import 'visited_history_screen.dart';
+import '../Reviews/pages/my_reviews.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -716,7 +717,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               title: 'My Reviews',
 
               onTap: () {
-                _showComingSoon('My Reviews');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyReviewsPage(),
+                  ),
+                );
               },
             ),
 
