@@ -28,6 +28,12 @@ abstract class ReviewRepository {
   Future<bool> hasUserReviewedPlace(String placeId, {String? userId});
 
   double calculateAverageRating(List<Review> reviews);
+
+  Future<List<Review>> getPlaceReviewsOnce(String placeId);
+
+  Future<PlaceReviewStats> getRealPlaceStats(String placeId);
+
+  Future<Map<String, PlaceReviewStats>> getBatchRealPlaceStats(List<String> placeIds);
 }
 
 class FirestoreReviewRepository implements ReviewRepository {
@@ -98,5 +104,20 @@ class FirestoreReviewRepository implements ReviewRepository {
   @override
   double calculateAverageRating(List<Review> reviews) {
     return _service.calculateAverageRating(reviews);
+  }
+
+  @override
+  Future<List<Review>> getPlaceReviewsOnce(String placeId) {
+    return _service.getPlaceReviewsOnce(placeId);
+  }
+
+  @override
+  Future<PlaceReviewStats> getRealPlaceStats(String placeId) {
+    return _service.getRealPlaceStats(placeId);
+  }
+
+  @override
+  Future<Map<String, PlaceReviewStats>> getBatchRealPlaceStats(List<String> placeIds) {
+    return _service.getBatchRealPlaceStats(placeIds);
   }
 }
