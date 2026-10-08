@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 
 import '../../models/destination.dart';
 import '../../services/route_generation_service.dart';
 import '../services/services_screen.dart';
+import 'walking_tour_map_screen.dart';
 
 /// Screen displaying the Walking Tour Route Details, strictly constructed
 /// by filtering places using real ratings from the database review system.
@@ -832,11 +833,14 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
       elevation: 4,
       shape: const CircleBorder(),
       child: InkWell(
-        onTap: () async {
-          final uri = Uri.parse(
-              'https://www.google.com/maps/search/?api=1&query=Anuradhapura+Sacred+City');
-          if (await canLaunchUrl(uri)) {
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
+        onTap: () {
+          if (_tour != null && _tour!.stops.isNotEmpty) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => WalkingTourMapScreen(tour: _tour!),
+              ),
+            );
           }
         },
         customBorder: const CircleBorder(),
