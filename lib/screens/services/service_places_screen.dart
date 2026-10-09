@@ -5,6 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'service_data.dart';
 
 import 'place_details_screen.dart';
+import '../home_screen.dart';
+import '../profile_screen.dart';
+import '../saved_places_screen.dart';
+import 'services_screen.dart';
 
 class ServicePlacesScreen extends StatefulWidget {
   final String cityName;
@@ -721,6 +725,35 @@ class _ServicePlacesScreenState extends State<ServicePlacesScreen> {
   // BOTTOM NAVIGATION
 
   // =========================================================
+  void _navigateToBottomPage(String label) {
+    Widget? page;
+
+    switch (label) {
+      case 'Home':
+        page = const HomeScreen();
+        break;
+
+      case 'Services':
+        page = const ServicesScreen();
+        break;
+
+      case 'Saved':
+        page = const SavedPlacesScreen();
+        break;
+
+      case 'Profile':
+        page = const ProfileScreen();
+        break;
+    }
+
+    if (page != null) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => page!),
+        (route) => route.isFirst,
+      );
+    }
+  }
 
   Widget _buildBottomNavigation() {
     return Container(
@@ -758,7 +791,7 @@ class _ServicePlacesScreenState extends State<ServicePlacesScreen> {
             ),
 
             _navItem(
-              icon: Icons.bookmark_border_rounded,
+              icon: Icons.favorite_border_rounded,
 
               label: 'Saved',
 
@@ -780,46 +813,48 @@ class _ServicePlacesScreenState extends State<ServicePlacesScreen> {
 
   Widget _navItem({
     required IconData icon,
-
     required String label,
-
     required bool selected,
   }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
+    return InkWell(
+      onTap: () => _navigateToBottomPage(label),
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
 
-      decoration: BoxDecoration(
-        color: selected ? primaryGreen : Colors.transparent,
+        decoration: BoxDecoration(
+          color: selected ? primaryGreen : Colors.transparent,
 
-        borderRadius: BorderRadius.circular(15),
-      ),
+          borderRadius: BorderRadius.circular(15),
+        ),
 
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
 
-        children: [
-          Icon(
-            icon,
+          children: [
+            Icon(
+              icon,
 
-            size: 20,
-
-            color: selected ? backgroundColor : primaryGreen,
-          ),
-
-          const SizedBox(height: 3),
-
-          Text(
-            label,
-
-            style: GoogleFonts.inter(
-              fontSize: 10,
-
-              fontWeight: FontWeight.w600,
+              size: 20,
 
               color: selected ? backgroundColor : primaryGreen,
             ),
-          ),
-        ],
+
+            const SizedBox(height: 3),
+
+            Text(
+              label,
+
+              style: GoogleFonts.inter(
+                fontSize: 10,
+
+                fontWeight: FontWeight.w600,
+
+                color: selected ? backgroundColor : primaryGreen,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'city_services_screen.dart';
 import 'suggest_service_screen.dart';
+import '../home_screen.dart';
+import '../profile_screen.dart';
+import '../saved_places_screen.dart';
 
 class ServiceCity {
   final String name;
@@ -23,8 +26,7 @@ class ServicesScreen extends StatefulWidget {
 }
 
 class _ServicesScreenState extends State<ServicesScreen> {
-  int _selectedIndex = 1;
-
+  final int _selectedIndex = 1;
   // ================= DESIGN SYSTEM COLORS =================
   static const Color backgroundColor = Color(0xFFF6EADA);
   static const Color primaryGreen = Color(0xFF17452F);
@@ -551,11 +553,29 @@ class _ServicesScreenState extends State<ServicesScreen> {
 
     return InkWell(
       onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
+        if (index == 1) return;
 
-        // Actual page navigation connect later.
+        Widget? page;
+
+        switch (index) {
+          case 0:
+            page = const HomeScreen();
+            break;
+          case 2:
+            page = const SavedPlacesScreen();
+            break;
+          case 3:
+            page = const ProfileScreen();
+            break;
+        }
+
+        if (page != null) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => page!),
+            (route) => route.isFirst,
+          );
+        }
       },
 
       borderRadius: BorderRadius.circular(18),
