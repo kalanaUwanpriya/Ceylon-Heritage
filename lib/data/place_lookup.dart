@@ -54,6 +54,18 @@ class PlaceLookup {
   static PlaceDetails lookup(String rawIdOrName) {
     final norm = normalizeId(rawIdOrName);
 
+    // Guard: service IDs should never be treated as historical destinations
+    if (norm.startsWith('service_')) {
+      return PlaceDetails(
+        id: norm,
+        name: rawIdOrName,
+        destinationName: 'Service',
+        location: 'Sri Lanka',
+        description: 'Service in Sri Lanka.',
+        image: 'assets/images/sigiriya_rock_fortress.jpg',
+      );
+    }
+
     // 1. Sigiriya
     if (norm.contains('sigiriya')) {
       return PlaceDetails(

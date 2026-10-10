@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
@@ -10,6 +11,8 @@ import '../home_screen.dart';
 import '../profile_screen.dart';
 import '../saved_places_screen.dart';
 import 'services_screen.dart';
+import '../../services/saved_places_service.dart';
+import '../../widgets/save_place_button.dart';
 
 class PlaceDetailsScreen extends StatefulWidget {
   final ServicePlace place;
@@ -21,11 +24,98 @@ class PlaceDetailsScreen extends StatefulWidget {
 }
 
 class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
-  bool isFavorite = false;
-
-  bool isSaved = false;
-
   ServicePlace get place => widget.place;
+  final SavedPlacesService _savedPlacesService = SavedPlacesService();
+  bool _isSaveProcessing = false;
+
+  Future<void> _toggleServiceSave(bool isCurrentlySaved) async {
+    if (_isSaveProcessing) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            'Please log in to save services.',
+            style: GoogleFonts.inter(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          backgroundColor: primaryGreen,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isSaveProcessing = true);
+
+    try {
+      if (isCurrentlySaved) {
+        await _savedPlacesService.removeSavedPlace(place.id);
+        if (!mounted) return;
+        messenger.hideCurrentSnackBar();
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              '${place.name} removed from saved places.',
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            backgroundColor: primaryGreen,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      } else {
+        await _savedPlacesService.saveService(
+          serviceId: place.id,
+          serviceName: place.name,
+          serviceImage: place.imagePath,
+          location: place.location,
+          description: place.description.isNotEmpty
+              ? place.description
+              : place.type,
+          category: place.type,
+          serviceData: place.toMap(),
+        );
+        if (!mounted) return;
+        messenger.hideCurrentSnackBar();
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(
+              '${place.name} saved successfully.',
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            backgroundColor: primaryGreen,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+      messenger.hideCurrentSnackBar();
+      messenger.showSnackBar(
+        SnackBar(
+          content: Text(
+            'Action failed: $e',
+            style: GoogleFonts.inter(color: Colors.white),
+          ),
+          backgroundColor: Colors.red.shade800,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } finally {
+      if (mounted) setState(() => _isSaveProcessing = false);
+    }
+  }
 
   static const Color backgroundColor = Color(0xFFF6EADA);
 
@@ -150,35 +240,19 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                           ),
                         ),
 
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isFavorite = !isFavorite;
-                            });
-
-                            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  isFavorite
-                                      ? '${place.name} added to favorites'
-                                      : '${place.name} removed from favorites',
-                                ),
-                                duration: const Duration(seconds: 2),
-                                behavior: SnackBarBehavior.floating,
-                                backgroundColor: const Color(0xFF303533),
-                              ),
-                            );
-                          },
-
-                          icon: Icon(
-                            isFavorite
-                                ? Icons.favorite_rounded
-                                : Icons.favorite_border_rounded,
-
-                            color: primaryGreen,
-                          ),
+                        SavePlaceButton(
+                          placeId: place.id,
+                          placeName: place.name,
+                          location: place.location,
+                          description: place.description.isNotEmpty
+                              ? place.description
+                              : place.type,
+                          image: place.imagePath,
+                          itemType: 'service',
+                          category: place.type,
+                          extraData: place.toMap(),
+                          darkGreen: primaryGreen,
+                          iconSize: 24,
                         ),
                       ],
                     ),
@@ -499,68 +573,48 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                         Expanded(
                           child: SizedBox(
                             height: 47,
-
-                            child: OutlinedButton.icon(
-                              onPressed: () {
-                                setState(() {
-                                  isSaved = !isSaved;
-                                });
-
-                                ScaffoldMessenger.of(
-                                  context,
-                                ).hideCurrentSnackBar();
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      isSaved
-                                          ? '${place.name} saved successfully'
-                                          : '${place.name} removed from saved',
+                            child: StreamBuilder<bool>(
+                              stream: _savedPlacesService
+                                  .watchIsPlaceSaved(place.id),
+                              initialData: false,
+                              builder: (context, snapshot) {
+                                final isSaved = snapshot.data ?? false;
+                                return OutlinedButton.icon(
+                                  onPressed: _isSaveProcessing
+                                      ? null
+                                      : () => _toggleServiceSave(isSaved),
+                                  style: OutlinedButton.styleFrom(
+                                    backgroundColor: isSaved
+                                        ? primaryGreen
+                                        : Colors.transparent,
+                                    foregroundColor: isSaved
+                                        ? backgroundColor
+                                        : primaryGreen,
+                                    side: BorderSide(
+                                      color: primaryGreen.withValues(
+                                        alpha: isSaved ? 1.0 : 0.30,
+                                      ),
                                     ),
-                                    duration: const Duration(seconds: 2),
-                                    behavior: SnackBarBehavior.floating,
-                                    backgroundColor: const Color(0xFF303533),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(13),
+                                    ),
+                                  ),
+                                  icon: Icon(
+                                    isSaved
+                                        ? Icons.bookmark_rounded
+                                        : Icons.bookmark_border_rounded,
+                                    size: 18,
+                                  ),
+                                  label: Text(
+                                    isSaved ? 'Saved' : 'Save',
+                                    style: GoogleFonts.inter(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 );
                               },
-
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: isSaved
-                                    ? primaryGreen
-                                    : Colors.transparent,
-
-                                foregroundColor: isSaved
-                                    ? backgroundColor
-                                    : primaryGreen,
-
-                                side: BorderSide(
-                                  color: primaryGreen.withValues(
-                                    alpha: isSaved ? 1.0 : 0.30,
-                                  ),
-                                ),
-
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(13),
-                                ),
-                              ),
-
-                              icon: Icon(
-                                isSaved
-                                    ? Icons.bookmark_rounded
-                                    : Icons.bookmark_border_rounded,
-
-                                size: 18,
-                              ),
-
-                              label: Text(
-                                isSaved ? 'Saved' : 'Save',
-
-                                style: GoogleFonts.inter(
-                                  fontSize: 12,
-
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
                             ),
                           ),
                         ),

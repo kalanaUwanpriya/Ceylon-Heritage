@@ -12,7 +12,12 @@ class SavePlaceButton extends StatefulWidget {
   final String? location;
   final String? description;
   final String? image;
+  /// 'place' for historical places, 'service' for individual services.
+  final String itemType;
+  final String? category;
+  final Map<String, dynamic>? extraData;
   final Color darkGreen;
+  final double iconSize;
 
   const SavePlaceButton({
     super.key,
@@ -22,7 +27,11 @@ class SavePlaceButton extends StatefulWidget {
     this.location,
     this.description,
     this.image,
+    this.itemType = 'place',
+    this.category,
+    this.extraData,
     this.darkGreen = const Color(0xFF17452F),
+    this.iconSize = 28,
   });
 
   @override
@@ -33,17 +42,20 @@ class _SavePlaceButtonState extends State<SavePlaceButton> {
   final SavedPlacesService _service = SavedPlacesService();
   bool _isProcessing = false;
 
+  bool get _isService => widget.itemType == 'service';
+
   Future<void> _toggleSave(bool isCurrentlySaved) async {
     if (_isProcessing) return;
 
     final messenger = ScaffoldMessenger.of(context);
     final user = FirebaseAuth.instance.currentUser;
     if (user == null) {
+      final itemLabel = _isService ? 'services' : 'places';
       messenger.hideCurrentSnackBar();
       messenger.showSnackBar(
         SnackBar(
           content: Text(
-            'Please log in to save places.',
+            'Please log in to save $itemLabel.',
             style: GoogleFonts.inter(
               color: Colors.white,
               fontWeight: FontWeight.w500,
@@ -64,11 +76,12 @@ class _SavePlaceButtonState extends State<SavePlaceButton> {
       if (isCurrentlySaved) {
         await _service.removeSavedPlace(widget.placeId);
         if (!mounted) return;
+        final itemLabel = _isService ? 'Service' : 'Place';
         messenger.hideCurrentSnackBar();
         messenger.showSnackBar(
           SnackBar(
             content: Text(
-              'Place removed from saved places.',
+              '$itemLabel removed from saved places.',
               style: GoogleFonts.inter(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
@@ -79,27 +92,40 @@ class _SavePlaceButtonState extends State<SavePlaceButton> {
           ),
         );
       } else {
-        // Resolve place details
-        final lookup = PlaceLookup.lookup(widget.placeId);
-        final name = widget.placeName ?? lookup.name;
-        final location = widget.location ?? lookup.location;
-        final description = widget.description ?? lookup.description;
-        final image = widget.image ?? lookup.image;
+        if (_isService) {
+          await _service.saveService(
+            serviceId: widget.placeId,
+            serviceName: widget.placeName ?? '',
+            serviceImage: widget.image ?? '',
+            location: widget.location ?? '',
+            description: widget.description ?? '',
+            category: widget.category ?? '',
+            serviceData: widget.extraData,
+          );
+        } else {
+          // Resolve place details
+          final lookup = PlaceLookup.lookup(widget.placeId);
+          final name = widget.placeName ?? lookup.name;
+          final location = widget.location ?? lookup.location;
+          final description = widget.description ?? lookup.description;
+          final image = widget.image ?? lookup.image;
 
-        await _service.savePlace(
-          destinationId: widget.placeId,
-          destinationName: name,
-          destinationImage: image,
-          location: location,
-          description: description,
-        );
+          await _service.savePlace(
+            destinationId: widget.placeId,
+            destinationName: name,
+            destinationImage: image,
+            location: location,
+            description: description,
+          );
+        }
 
         if (!mounted) return;
+        final itemLabel = _isService ? 'Service' : 'Place';
         messenger.hideCurrentSnackBar();
         messenger.showSnackBar(
           SnackBar(
             content: Text(
-              'Place saved successfully.',
+              '$itemLabel saved successfully.',
               style: GoogleFonts.inter(
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
@@ -164,11 +190,11 @@ class _SavePlaceButtonState extends State<SavePlaceButton> {
 
         // UNSAVED STATE: Original outlined heart appearance unchanged
         return IconButton(
-          tooltip: 'Save Place',
+          tooltip: _isService ? 'Save Service' : 'Save Place',
           icon: Icon(
             Icons.favorite_border_rounded,
             color: widget.darkGreen,
-            size: 28,
+            size: widget.iconSize,
           ),
           onPressed: () => _toggleSave(false),
         );
