@@ -452,57 +452,6 @@ class _DestinationPageState extends State<DestinationPage> {
 
               // =================================================
 
-              // INFORMATION / SERVICES
-
-              // =================================================
-              const SizedBox(height: 18),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-
-                child: Container(
-                  height: 66,
-
-                  decoration: BoxDecoration(
-                    color: cardColor,
-
-                    borderRadius: BorderRadius.circular(18),
-
-                    border: Border.all(color: borderColor),
-                  ),
-
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _mainAction(
-                          icon: Icons.info_outline,
-
-                          label: 'Information',
-
-                          onTap: () {},
-                        ),
-                      ),
-
-                      Container(width: 1, height: 36, color: borderColor),
-
-                      Expanded(
-                        child: _mainAction(
-                          icon: Icons.grid_view_outlined,
-
-                          label: 'Services',
-
-                          onTap: () {
-                            // Services belongs to another group member.
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // =================================================
-
               // AUDIO GUIDE
 
               // =================================================
@@ -674,6 +623,60 @@ class _DestinationPageState extends State<DestinationPage> {
                         ],
                       ),
                     ],
+                  ),
+                ),
+              ),
+
+              // =================================================
+
+              // START WALKING TOUR
+
+              // =================================================
+              const SizedBox(height: 14),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+
+                child: SizedBox(
+                  width: double.infinity,
+
+                  height: 58,
+
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const WalkingPlanPage(),
+                        ),
+                      );
+                    },
+
+                    icon: const Icon(Icons.directions_walk_rounded, size: 27),
+
+                    label: Text(
+                      'START WALKING TOUR',
+
+                      style: GoogleFonts.inter(
+                        fontSize: 15,
+
+                        fontWeight: FontWeight.w700,
+
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: darkGreen,
+
+                      foregroundColor: backgroundColor,
+
+                      elevation: 0,
+
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -862,60 +865,6 @@ class _DestinationPageState extends State<DestinationPage> {
                 ),
               ],
 
-              // =================================================
-
-              // START WALKING TOUR
-
-              // =================================================
-              const SizedBox(height: 8),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-
-                child: SizedBox(
-                  width: double.infinity,
-
-                  height: 58,
-
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const WalkingPlanPage(),
-                        ),
-                      );
-                    },
-
-                    icon: const Icon(Icons.directions_walk_rounded, size: 27),
-
-                    label: Text(
-                      'START WALKING TOUR',
-
-                      style: GoogleFonts.inter(
-                        fontSize: 15,
-
-                        fontWeight: FontWeight.w700,
-
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: darkGreen,
-
-                      foregroundColor: backgroundColor,
-
-                      elevation: 0,
-
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
               const SizedBox(height: 20),
             ],
           ),
@@ -968,47 +917,7 @@ class _DestinationPageState extends State<DestinationPage> {
     );
   }
 
-  // =========================================================
 
-  // INFORMATION / SERVICES ACTION
-
-  // =========================================================
-
-  Widget _mainAction({
-    required IconData icon,
-
-    required String label,
-
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-
-      borderRadius: BorderRadius.circular(16),
-
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-
-        children: [
-          Icon(icon, size: 23, color: darkGreen),
-
-          const SizedBox(height: 4),
-
-          Text(
-            label,
-
-            style: GoogleFonts.inter(
-              fontSize: 11,
-
-              color: darkGreen,
-
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // =========================================================
 
