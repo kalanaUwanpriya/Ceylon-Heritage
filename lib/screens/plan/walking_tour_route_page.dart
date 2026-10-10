@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-
 import '../../models/destination.dart';
 import '../../services/route_generation_service.dart';
+import '../../services/saved_places_service.dart';
 import '../services/services_screen.dart';
 import 'walking_tour_map_screen.dart';
 
@@ -40,15 +41,128 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
   static const Color starInactiveColor = Color(0x559F5625);
 
   final RouteGenerationService _routeService = RouteGenerationService();
+  final SavedPlacesService _savedPlacesService = SavedPlacesService();
 
   bool _isLoading = true;
   GeneratedWalkingTour? _tour;
-  bool _isFavorite = false;
+  bool _isSaveProcessing = false;
 
   @override
   void initState() {
     super.initState();
     _loadTour();
+  }
+
+  // ============================================================
+  // DETERMINISTIC TOUR ID
+  // Combines destination + tempo + time + rating so the same
+  // parameter combination always maps to the same Firestore doc.
+  // ============================================================
+  String get _tourId {
+    final dest = SavedPlacesService.normalizeId(
+        widget.destination?.name ?? 'anuradhapura');
+    final tempo = SavedPlacesService.normalizeId(widget.tempo);
+    final time  = SavedPlacesService.normalizeId(widget.timeAvailable);
+    final rat   = SavedPlacesService.normalizeId(widget.ratingFilter);
+    return 'walking_tour_${dest}_${tempo}_${time}_$rat';
+  }
+
+  // ============================================================
+  // TOGGLE TOUR SAVED STATE (save or remove)
+  // ============================================================
+  Future<void> _toggleTourSaved(bool isCurrentlySaved) async {
+    if (_isSaveProcessing || _tour == null) return;
+
+    final messenger = ScaffoldMessenger.of(context);
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(
+          content: Text(
+            'Please log in to save tours.',
+            style: GoogleFonts.inter(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          backgroundColor: primaryColor,
+          duration: const Duration(seconds: 2),
+        ));
+      return;
+    }
+
+    setState(() => _isSaveProcessing = true);
+
+    try {
+      if (isCurrentlySaved) {
+        await _savedPlacesService.removeSavedPlace(_tourId);
+        if (!mounted) return;
+        messenger
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(
+            content: Text(
+              'Tour removed from saved places.',
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            backgroundColor: primaryColor,
+            duration: const Duration(seconds: 2),
+          ));
+      } else {
+        final tour = _tour!;
+        final firstImage = tour.stops.isNotEmpty
+            ? tour.stops.first.place.image
+            : 'assets/images/anuradhapura.png';
+        final summary =
+            '${tour.stops.length} stops · ${tour.totalDurationLabel} · ${tour.totalDistanceLabel}';
+        final destName = widget.destination?.name ?? 'Anuradhapura';
+
+        await _savedPlacesService.saveTour(
+          tourId: _tourId,
+          tourTitle: tour.headline,
+          tourImage: firstImage,
+          location: destName,
+          description: summary,
+          tourParams: {
+            'tempo': widget.tempo,
+            'timeAvailable': widget.timeAvailable,
+            'ratingFilter': widget.ratingFilter,
+            'destinationName': destName,
+          },
+        );
+        if (!mounted) return;
+        messenger
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(
+            content: Text(
+              'Tour saved successfully.',
+              style: GoogleFonts.inter(
+                color: Colors.white,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            backgroundColor: primaryColor,
+            duration: const Duration(seconds: 2),
+          ));
+      }
+    } catch (e) {
+      if (!mounted) return;
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(
+          content: Text(
+            'Action failed: $e',
+            style: GoogleFonts.inter(color: Colors.white),
+          ),
+          backgroundColor: Colors.red.shade800,
+          duration: const Duration(seconds: 2),
+        ));
+    } finally {
+      if (mounted) setState(() => _isSaveProcessing = false);
+    }
   }
 
   Future<void> _loadTour() async {
@@ -331,14 +445,48 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
               fontWeight: FontWeight.w600,
             ),
           ),
-          IconButton(
-            icon: Icon(
-              _isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-              color: accentColor,
-              size: 24,
-            ),
-            onPressed: () {
-              setState(() => _isFavorite = !_isFavorite);
+          // Heart icon: saves / removes the entire walking tour
+          StreamBuilder<bool>(
+            stream: _savedPlacesService.watchIsPlaceSaved(_tourId),
+            initialData: false,
+            builder: (context, snapshot) {
+              final isSaved = snapshot.data ?? false;
+
+              if (isSaved) {
+                // SAVED state: dark green circle + white heart
+                return IconButton(
+                  tooltip: 'Remove from Saved',
+                  icon: Container(
+                    width: 36,
+                    height: 36,
+                    decoration: const BoxDecoration(
+                      color: primaryColor,
+                      shape: BoxShape.circle,
+                    ),
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.favorite_border_rounded,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  ),
+                  onPressed:
+                      _isSaveProcessing ? null : () => _toggleTourSaved(true),
+                );
+              }
+
+              // UNSAVED state: outlined heart in dark green
+              return IconButton(
+                tooltip: 'Save Tour',
+                icon: Icon(
+                  Icons.favorite_border_rounded,
+                  color: _tour == null ? Colors.grey : primaryColor,
+                  size: 24,
+                ),
+                onPressed: (_tour == null || _isSaveProcessing)
+                    ? null
+                    : () => _toggleTourSaved(false),
+              );
             },
           ),
         ],
