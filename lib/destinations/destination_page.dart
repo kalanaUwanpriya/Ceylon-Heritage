@@ -585,8 +585,7 @@ class _DestinationPageState extends State<DestinationPage> {
 
                                 Text(
                                   (widget.destination.name == 'Anuradhapura' ||
-                                          widget.destination.name ==
-                                              'Dambulla')
+                                          widget.destination.name == 'Dambulla')
                                       ? 'Narrated by Dr. Sensaka Bandara'
                                       : 'Narrated by Heritage Walks',
 
@@ -970,7 +969,6 @@ class _DestinationPageState extends State<DestinationPage> {
             ),
           );
         },
-
       ),
     );
   }
@@ -1103,10 +1101,8 @@ class _DestinationPageState extends State<DestinationPage> {
         page = jaffnaLibraryInformation;
 
         break;
-
-      case 'Casuarina Beach':
-        page = casuarinaBeachInformation;
-
+      case 'Nagadeepa Purana Viharaya':
+        page = nagadeepaInformation;
         break;
 
       case 'Delft Island':
@@ -1291,8 +1287,8 @@ class _DestinationPageState extends State<DestinationPage> {
       case 'Jaffna Public Library':
         return 'assets/images/jaffna_library.png';
 
-      case 'Casuarina Beach':
-        return 'assets/images/casuarina_beach.png';
+      case 'Nagadeepa Purana Viharaya':
+        return 'assets/images/nagadeepa_1.jpg';
 
       case 'Delft Island':
         return 'assets/images/delft_island.png';

@@ -29,6 +29,19 @@ class UserService {
     return await _firestore.collection('users').doc(uid).get();
   }
 
+  // Check whether a user account is active.
+  Future<bool> isUserActive(String uid) async {
+    final profile = await getUserProfile(uid);
+
+    if (!profile.exists) {
+      return false;
+    }
+
+    final data = profile.data();
+
+    return data?['accountStatus'] == 'active';
+  }
+
   // Update a user's profile
   Future<void> updateUserProfile({
     required String uid,

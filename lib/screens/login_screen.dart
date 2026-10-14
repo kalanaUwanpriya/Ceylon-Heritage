@@ -56,7 +56,30 @@ class _LoginScreenState extends State<LoginScreen> {
         email: _emailController.text.trim(),
         password: _passwordController.text,
       );
+      final user = _authService.currentUser;
 
+      if (user == null) {
+        throw Exception('Unable to verify your account.');
+      }
+
+      final isActive = await _userService.isUserActive(user.uid);
+
+      if (!isActive) {
+        await _authService.logout();
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Your account is inactive. Please contact the administrator.',
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+
+        return;
+      }
       if (!mounted) return;
 
       ScaffoldMessenger.of(
@@ -161,6 +184,25 @@ class _LoginScreenState extends State<LoginScreen> {
           email: user.email ?? '',
           phone: '',
         );
+      }
+      // Check the account status before opening Home.
+      final isActive = await _userService.isUserActive(user.uid);
+
+      if (!isActive) {
+        await _authService.logout();
+
+        if (!mounted) return;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Your account is inactive. Please contact the administrator.',
+            ),
+            backgroundColor: Colors.red,
+          ),
+        );
+
+        return;
       }
 
       if (!mounted) return;
