@@ -81,7 +81,7 @@ final Destination jaffna = Destination(
     'Nallur Kandaswamy Kovil',
     'Jaffna Fort',
     'Jaffna Public Library',
-    'Casuarina Beach',
+    'Nagadeepa Purana Viharaya',
     'Delft Island',
   ],
 );
@@ -115,14 +115,13 @@ final List<HistoricalPlace> jaffnaPlaces = [
   ),
 
   HistoricalPlace(
-    name: 'Casuarina Beach',
+    name: 'Nagadeepa Purana Viharaya',
     destination: 'Jaffna',
     description:
-        'Casuarina Beach is a peaceful coastal destination known for its clear waters, sandy shoreline, and relaxed atmosphere.',
-    location: 'Karainagar, Jaffna, Sri Lanka',
-    image: 'assets/images/casuarina_beach.png',
+        'Nagadeepa Purana Viharaya is a sacred Buddhist temple located on Nainativu Island in Jaffna. It is an important religious and historical destination, traditionally associated with a visit by Lord Buddha.',
+    location: 'Nainativu Island, Jaffna, Sri Lanka',
+    image: 'assets/images/nagadeepa.jpeg',
   ),
-
   HistoricalPlace(
     name: 'Delft Island',
     destination: 'Jaffna',
@@ -222,14 +221,16 @@ final List<HistoricalPlace> anuradhapuraPlaces = [
   HistoricalPlace(
     name: 'Ruwanwelisaya',
     destination: 'Anuradhapura',
-    description: 'A magnificent stupa and one of the world\'s tallest ancient monuments.',
+    description:
+        'A magnificent stupa and one of the world\'s tallest ancient monuments.',
     location: 'Anuradhapura, Sri Lanka',
     image: 'assets/images/anuradhapura.png',
   ),
   HistoricalPlace(
     name: 'Sri Maha Bodhi',
     destination: 'Anuradhapura',
-    description: 'The sacred fig tree, said to be a sapling from the historical Bodhi tree under which Buddha became enlightened.',
+    description:
+        'The sacred fig tree, said to be a sapling from the historical Bodhi tree under which Buddha became enlightened.',
     location: 'Anuradhapura, Sri Lanka',
     image: 'assets/images/Auradapura 2.png',
   ),
@@ -243,14 +244,16 @@ final List<HistoricalPlace> anuradhapuraPlaces = [
   HistoricalPlace(
     name: 'Abhayagiri',
     destination: 'Anuradhapura',
-    description: 'A major monastery site of Mahayana, Theravada and Vajrayana Buddhism.',
+    description:
+        'A major monastery site of Mahayana, Theravada and Vajrayana Buddhism.',
     location: 'Anuradhapura, Sri Lanka',
     image: 'assets/images/anurapura 5.png',
   ),
   HistoricalPlace(
     name: 'Jetavanaramaya',
     destination: 'Anuradhapura',
-    description: 'A prominent ancient stupa in the ruins of Jetavana monastery.',
+    description:
+        'A prominent ancient stupa in the ruins of Jetavana monastery.',
     location: 'Anuradhapura, Sri Lanka',
     image: 'assets/images/jetavanaramaya.png',
   ),
@@ -372,5 +375,11 @@ final List<HistoricalPlace> dambullaPlaces = [
 // ALL DESTINATIONS
 // ============================================================
 
-final List<Destination> destinations = [anuradhapura, polonnaruwa, jaffna, downSouth, kandy, dambulla];
-
+final List<Destination> destinations = [
+  anuradhapura,
+  polonnaruwa,
+  jaffna,
+  downSouth,
+  kandy,
+  dambulla,
+];

@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../services/user_service.dart';
+import '../services/auth_service.dart';
 import '../widgets/app_navigation_bar.dart';
 
 import 'about_app_screen.dart';
@@ -53,6 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   static const Color secondaryTextColor = Color(0xFF5F625D);
 
   final UserService _userService = UserService();
+  final AuthService _authService = AuthService();
 
   bool _isLoading = true;
 
@@ -246,7 +248,225 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     await _loadProfile();
   }
+  // ============================================================
+  // VERIFY ACCOUNT BEFORE DELETION
+  // ============================================================
 
+  Future<bool> _verifyAccountBeforeDeletion() async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      if (!mounted) return false;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please log in before deleting an account.'),
+        ),
+      );
+
+      return false;
+    }
+
+    final providers = user.providerData.map((p) => p.providerId).toList();
+
+    // Google account verification
+    if (providers.contains('google.com')) {
+      try {
+        return await _authService.reauthenticateWithGoogle();
+      } on FirebaseAuthException catch (e) {
+        if (!mounted) return false;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? 'Google verification failed.')),
+        );
+
+        return false;
+      } catch (e) {
+        if (!mounted) return false;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Unable to verify Google account.')),
+        );
+
+        return false;
+      }
+    }
+
+    // Email/password account verification
+    if (providers.contains('password')) {
+      final passwordController = TextEditingController();
+
+      try {
+        final password = await showDialog<String>(
+          context: context,
+          builder: (dialogContext) {
+            return AlertDialog(
+              backgroundColor: backgroundColor,
+              title: const Text('Verify Your Password'),
+              content: TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: const InputDecoration(
+                  labelText: 'Current Password',
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(dialogContext),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(dialogContext, passwordController.text);
+                  },
+                  child: const Text('Verify'),
+                ),
+              ],
+            );
+          },
+        );
+
+        if (password == null || password.isEmpty) return false;
+
+        await _authService.reauthenticateWithPassword(password);
+        return true;
+      } on FirebaseAuthException catch (e) {
+        if (!mounted) return false;
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? 'Password verification failed.')),
+        );
+
+        return false;
+      } finally {
+        // Dispose after the dialog has finished its closing animation.
+        // The controller is no longer needed.
+      }
+    }
+
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('This login method is not supported for deletion.'),
+        ),
+      );
+    }
+
+    return false;
+  }
+
+  Future<void> _showDeleteAccountDialog() async {
+    final bool? confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          backgroundColor: backgroundColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          title: Text(
+            'Delete Account',
+            style: GoogleFonts.playfairDisplay(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.red,
+            ),
+          ),
+          content: Text(
+            'Are you sure you want to permanently delete your account? '
+            'This action cannot be undone.',
+            style: GoogleFonts.inter(fontSize: 14, color: secondaryTextColor),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+                foregroundColor: Colors.white,
+              ),
+              child: const Text('Delete Account'),
+            ),
+          ],
+        );
+      },
+    );
+    if (confirmed != true || !mounted) return;
+
+    // Verify the user's identity before continuing.
+    final bool verified = await _verifyAccountBeforeDeletion();
+
+    if (!mounted) return;
+
+    if (!verified) {
+      return;
+    }
+    // Get the verified Firebase user.
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('No logged-in account found.')),
+      );
+      return;
+    }
+
+    final uid = user.uid;
+
+    try {
+      // Delete the user's personal Firestore data first.
+      await _userService.deleteAllUserData(uid);
+
+      // Delete the Firebase Authentication account last.
+      await _authService.deleteCurrentAccount();
+
+      if (!mounted) return;
+
+      if (!mounted) return;
+
+      // Show success message after opening the Login Screen.
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (route) => false,
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Your account has been deleted successfully.'),
+          backgroundColor: Color(0xFF17452F),
+          duration: Duration(seconds: 4),
+        ),
+      );
+    } on FirebaseAuthException catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            e.code == 'requires-recent-login'
+                ? 'Please log in again and retry account deletion.'
+                : 'Account deletion failed: ${e.message ?? e.code}',
+          ),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Account deletion could not be completed. '
+            'Some personal data may already have been removed. '
+            'Please retry or contact support.',
+          ),
+        ),
+      );
+    }
+  }
   // ============================================================
 
   // LOGOUT
@@ -845,6 +1065,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
 
             const SizedBox(height: 20),
+            // DELETE ACCOUNT
+            _buildMenuCard(
+              icon: Icons.delete_outline,
+              title: 'Delete Account',
+              onTap: _showDeleteAccountDialog,
+            ),
+
+            const SizedBox(height: 10),
 
             // ==================================================
 

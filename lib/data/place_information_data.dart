@@ -17,9 +17,7 @@ final ruwanwelisayaInformation = PlaceInformationPage(
   bestTime: 'Early morning or late afternoon',
   entranceFee: 'Free',
   dressCode: 'Modest attire (shoulders and knees covered, white preferred)',
-  heroImages: [
-    'assets/images/anuradhapura.png',
-  ],
+  heroImages: ['assets/images/anuradhapura.png'],
   nearbyNames: [
     'Sri Maha Bodhi',
     'Thuparamaya',
@@ -48,15 +46,8 @@ final sriMahaBodhiInformation = PlaceInformationPage(
   bestTime: 'Early morning or evening',
   entranceFee: 'Free',
   dressCode: 'Modest attire (shoulders and knees covered, white preferred)',
-  heroImages: [
-    'assets/images/Auradapura 2.png',
-  ],
-  nearbyNames: [
-    'Ruwanwelisaya',
-    'Thuparamaya',
-    'Abhayagiri',
-    'Jetavanaramaya',
-  ],
+  heroImages: ['assets/images/Auradapura 2.png'],
+  nearbyNames: ['Ruwanwelisaya', 'Thuparamaya', 'Abhayagiri', 'Jetavanaramaya'],
   nearbyImages: [
     'assets/images/anuradhapura.png',
     'assets/images/thuparamaya.png',
@@ -79,9 +70,7 @@ final thuparamayaInformation = PlaceInformationPage(
   bestTime: 'Early morning or late afternoon',
   entranceFee: 'Free',
   dressCode: 'Modest attire (shoulders and knees covered)',
-  heroImages: [
-    'assets/images/thuparamaya.png',
-  ],
+  heroImages: ['assets/images/thuparamaya.png'],
   nearbyNames: [
     'Ruwanwelisaya',
     'Sri Maha Bodhi',
@@ -110,9 +99,7 @@ final abhayagiriInformation = PlaceInformationPage(
   bestTime: 'Early morning or late afternoon',
   entranceFee: 'Site entrance fee may apply',
   dressCode: 'Modest attire (shoulders and knees covered)',
-  heroImages: [
-    'assets/images/anurapura 5.png',
-  ],
+  heroImages: ['assets/images/anurapura 5.png'],
   nearbyNames: [
     'Ruwanwelisaya',
     'Sri Maha Bodhi',
@@ -141,15 +128,8 @@ final jetavanaramayaInformation = PlaceInformationPage(
   bestTime: 'Early morning or late afternoon',
   entranceFee: 'Site entrance fee may apply',
   dressCode: 'Modest attire (shoulders and knees covered)',
-  heroImages: [
-    'assets/images/jetavanaramaya.png',
-  ],
-  nearbyNames: [
-    'Ruwanwelisaya',
-    'Sri Maha Bodhi',
-    'Thuparamaya',
-    'Abhayagiri',
-  ],
+  heroImages: ['assets/images/jetavanaramaya.png'],
+  nearbyNames: ['Ruwanwelisaya', 'Sri Maha Bodhi', 'Thuparamaya', 'Abhayagiri'],
   nearbyImages: [
     'assets/images/anuradhapura.png',
     'assets/images/Auradapura 2.png',
@@ -408,7 +388,7 @@ final nallurKandaswamyInformation = PlaceInformationPage(
   nearbyNames: [
     'Jaffna Fort',
     'Jaffna Public Library',
-    'Casuarina Beach',
+    'Nagadeepa Purana Viharaya',
     'Delft Island',
   ],
   nearbyImages: [
@@ -446,7 +426,7 @@ final jaffnaFortInformation = PlaceInformationPage(
   nearbyNames: [
     'Nallur Kandaswamy Kovil',
     'Jaffna Public Library',
-    'Casuarina Beach',
+    'Nagadeepa Purana Viharaya',
     'Delft Island',
   ],
   nearbyImages: [
@@ -485,7 +465,7 @@ final jaffnaLibraryInformation = PlaceInformationPage(
   nearbyNames: [
     'Jaffna Fort',
     'Nallur Kandaswamy Kovil',
-    'Casuarina Beach',
+    'Nagadeepa Purana Viharaya',
     'Delft Island',
   ],
   nearbyImages: [
@@ -498,44 +478,54 @@ final jaffnaLibraryInformation = PlaceInformationPage(
 );
 
 // ---------------------------------------------------------
-// 4. CASUARINA BEACH
+// 4. NAGADEEPA PURANA VIHARAYA
 // ---------------------------------------------------------
 
-final casuarinaBeachInformation = PlaceInformationPage(
-  placeName: 'Casuarina Beach',
+final nagadeepaInformation = PlaceInformationPage(
+  placeName: 'Nagadeepa Purana Viharaya',
   destinationName: 'Jaffna',
-  subtitle: 'A Peaceful Beach on the Jaffna Peninsula',
+  subtitle: 'A Sacred Buddhist Temple on Nainativu Island',
   description:
-      'Casuarina Beach is a beautiful coastal destination on the Jaffna Peninsula, known for its sandy shoreline, shallow waters and peaceful atmosphere. The beach is surrounded by casuarina trees and offers a relaxing escape from the busy city.',
-  location: 'Karainagar, Jaffna, Northern Province',
+      'Nagadeepa Purana Viharaya is an important Buddhist temple located on '
+      'Nainativu Island in the Jaffna District of Sri Lanka. According to '
+      'Buddhist tradition, the temple is associated with the second visit '
+      'of Lord Buddha to Sri Lanka, when he helped settle a dispute between '
+      'two Naga kings. Today, Nagadeepa is a peaceful religious destination '
+      'visited by pilgrims and tourists. Visitors can experience its '
+      'spiritual atmosphere, beautiful temple architecture and island surroundings.',
+  location: 'Nainativu Island, Jaffna, Northern Province',
   rating: '3.0',
-  reviews: '1,256',
-  openingHours: 'Open throughout the day',
-  bestTime: 'Late afternoon or sunset',
-  entranceFee: 'Free',
-  dressCode: 'Comfortable beach attire',
+  reviews: '0',
+  openingHours: 'Confirm locally before visiting',
+  bestTime: 'Morning or late afternoon',
+  entranceFee: 'Confirm locally',
+  dressCode: 'Modest clothing; cover shoulders and knees',
   heroImages: [
-    'assets/images/casuarina_beach_1.jpg',
-    'assets/images/casuarina_beach_2.jpg',
-    'assets/images/casuarina_beach_3.jpg',
-    'assets/images/casuarina_beach_4.PNG',
-    'assets/images/casuarina_beach_5.jpg',
+    'assets/images/nagadeepa_1.jpg',
+    'assets/images/nagadeepa_2.jpeg',
+    'assets/images/nagadeepa_3.jpeg',
+    'assets/images/nagadeepa_4.jpeg',
+    'assets/images/nagadeepa_5.jpeg',
   ],
   nearbyNames: [
-    'Nallur Kandaswamy Kovil',
+    'Nainativu Nagapooshani Amman Temple',
+    'Delft Island',
     'Jaffna Fort',
     'Jaffna Public Library',
-    'Delft Island',
   ],
   nearbyImages: [
-    'assets/images/nallur_kandaswamy.png',
+    'assets/images/nagapooshani_amman.png',
+    'assets/images/delft_island.png',
     'assets/images/jaffna_fort.png',
     'assets/images/jaffna_library.png',
-    'assets/images/delft_island.png',
   ],
-  nearbyDistances: ['20 km', '20 km', '20 km', '35 km'],
+  nearbyDistances: [
+    'On the same island',
+    'Nearby island',
+    'Jaffna mainland',
+    'Jaffna mainland',
+  ],
 );
-
 // ---------------------------------------------------------
 // 5. DELFT ISLAND
 // ---------------------------------------------------------
@@ -560,7 +550,7 @@ final delftIslandInformation = PlaceInformationPage(
     'assets/images/delft_island_4.jpg',
   ],
   nearbyNames: [
-    'Casuarina Beach',
+    'Nagadeepa Purana Viharaya',
     'Jaffna Fort',
     'Jaffna Public Library',
     'Nallur Kandaswamy Kovil',
@@ -849,7 +839,6 @@ final bahirawakandaBuddhaInformation = PlaceInformationPage(
   ],
   nearbyDistances: ['1.5 km', '0.9 km', '12 km', '14 km'],
 );
-
 
 // ---------------------------------------------------------
 // 3. AHALEPOLA WALAWWA (EHALEPOLA WAX MUSEUM)

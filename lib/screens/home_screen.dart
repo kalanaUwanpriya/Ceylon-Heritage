@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -6,8 +11,8 @@ import '../destinations/destination_page.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'notification_settings_screen.dart';
 import 'profile_screen.dart';
+import 'login_screen.dart';
 import 'saved_places_screen.dart';
-import 'services/services_screen.dart';
 
 class PlaceItem {
   final String title;
@@ -38,6 +43,72 @@ class _HomeScreenState extends State<HomeScreen> {
   static const Color secondaryTextColor = Color(0xFF5F625D);
 
   int _selectedIndex = 0;
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
+  _accountStatusSubscription;
+
+  bool _isSigningOut = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _listenToAccountStatus();
+  }
+
+  void _listenToAccountStatus() {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      return;
+    }
+
+    _accountStatusSubscription = FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .snapshots()
+        .listen(
+          (snapshot) async {
+            if (!mounted || _isSigningOut) return;
+
+            final status = snapshot.data()?['accountStatus'];
+
+            if (!snapshot.exists || status != 'active') {
+              _isSigningOut = true;
+
+              try {
+                await FirebaseAuth.instance.signOut();
+
+                if (!mounted) return;
+
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const LoginScreen()),
+                  (route) => false,
+                );
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Your account is inactive. Please contact the administrator.',
+                    ),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              } catch (error) {
+                _isSigningOut = false;
+                debugPrint('Account sign-out failed: $error');
+              }
+            }
+          },
+          onError: (Object error) {
+            debugPrint('Account status listener error: $error');
+          },
+        );
+  }
+
+  @override
+  void dispose() {
+    _accountStatusSubscription?.cancel();
+    super.dispose();
+  }
 
   // ============================================================
   // DESTINATIONS

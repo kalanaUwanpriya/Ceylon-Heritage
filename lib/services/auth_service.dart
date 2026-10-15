@@ -66,4 +66,68 @@ class AuthService {
       return null;
     }
   }
+
+  // Reauthenticate Email/Password user before account deletion.
+  Future<void> reauthenticateWithPassword(String password) async {
+    final user = _auth.currentUser;
+
+    if (user == null || user.email == null) {
+      throw FirebaseAuthException(
+        code: 'user-not-found',
+        message: 'No logged-in user found.',
+      );
+    }
+
+    final credential = EmailAuthProvider.credential(
+      email: user.email!,
+      password: password,
+    );
+
+    await user.reauthenticateWithCredential(credential);
+  }
+
+  // Reauthenticate Google user before account deletion.
+  Future<bool> reauthenticateWithGoogle() async {
+    final user = _auth.currentUser;
+
+    if (user == null) {
+      throw FirebaseAuthException(
+        code: 'user-not-found',
+        message: 'No logged-in user found.',
+      );
+    }
+
+    if (!_googleInitialized) {
+      await _googleSignIn.initialize();
+      _googleInitialized = true;
+    }
+
+    try {
+      final googleUser = await _googleSignIn.authenticate();
+      final googleAuth = googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+      );
+
+      await user.reauthenticateWithCredential(credential);
+      return true;
+    } on GoogleSignInException {
+      return false;
+    }
+  }
+
+  // Permanently delete the currently authenticated Firebase account.
+  Future<void> deleteCurrentAccount() async {
+    final user = _auth.currentUser;
+
+    if (user == null) {
+      throw FirebaseAuthException(
+        code: 'user-not-found',
+        message: 'No logged-in user found.',
+      );
+    }
+
+    await user.delete();
+  }
 }
