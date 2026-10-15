@@ -878,3 +878,174 @@ final ahalepolaWalawwaInformation = PlaceInformationPage(
   ],
   nearbyDistances: ['~1.2 km', '~2 km', '~11 km', '~14 km'],
 );
+
+// ---------------------------------------------------------
+// 4. GADALADENIYA VIHARA
+// ---------------------------------------------------------
+
+final gadaladeniyaInformation = PlaceInformationPage(
+  placeName: 'Gadaladeniya Vihara',
+  destinationName: 'Gadaladeniya Vihara',
+  subtitle: 'Ancient Buddhist Temple with South Indian Architecture',
+  description:
+      'Gadaladeniya Vihara is an ancient Buddhist temple built in the 14th century. It features a unique blend of South Indian and Sri Lankan architectural styles and is one of the remarkable medieval temples near Kandy.',
+  location: 'Gadaladeniya, Kandy, Sri Lanka',
+  rating: '3.0',
+  reviews: '1,842',
+  openingHours: 'Daily from 7:00 AM to 7:00 PM',
+  bestTime: 'Early morning or afternoon',
+  entranceFee: 'Local: Free\nForeign Tourists: Rs. 500',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/gadaladeniya_vihara.jpg',
+    'assets/images/gadaladeniya_2.png',
+    'assets/images/gadaladeniya_3.png',
+    'assets/images/gadaladeniya_4.png',
+  ],
+  nearbyNames: [
+    'Sri Dalada Maligawa',
+    'Bahirawakanda Buddha Statue',
+    'Ehalepola Wax Museum',
+    'Lankathilaka Vihara',
+  ],
+  nearbyImages: [
+    'assets/images/kandy.png',
+    'assets/images/bahirawakanda_buddha.jpg',
+    'assets/images/ehalepola_wax_museum.jpg',
+    'assets/images/lankathilaka_vihara.jpg',
+  ],
+  nearbyDistances: ['~11 km', '~12 km', '~11 km', '~3 km'],
+);
+
+// ---------------------------------------------------------
+// 5. LANKATHILAKA VIHARA
+// ---------------------------------------------------------
+
+final lankathilakaViharaInformation = PlaceInformationPage(
+  placeName: 'Lankathilaka Vihara',
+  destinationName: 'Lankathilaka Vihara',
+  subtitle: 'The Majestic Medieval Rock Temple of Kandy',
+  description:
+      'Lankathilaka Vihara is a magnificent ancient Buddhist temple built in the 14th century during the reign of King Bhuvanekabahu IV. It stands on a rock and is known for its impressive multi-storey structure and ancient carvings.',
+  location: 'Lankathilaka, Kandy, Sri Lanka',
+  rating: '3.0',
+  reviews: '1,620',
+  openingHours: 'Daily from 7:00 AM to 7:00 PM',
+  bestTime: 'Early morning or afternoon',
+  entranceFee: 'Local: Free\nForeign Tourists: Rs. 500',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/lankathilaka_vihara.jpg',
+    'assets/images/lankathilaka_2.png',
+    'assets/images/lankathilaka_3.png',
+    'assets/images/lankathilaka_4.png',
+  ],
+  nearbyNames: [
+    'Gadaladeniya Vihara',
+    'Sri Dalada Maligawa',
+    'Ehelepola Wax Museum',
+    'Bahirawakanda Buddha Statue',
+  ],
+  nearbyImages: [
+    'assets/images/gadaladeniya_vihara.jpg',
+    'assets/images/kandy.png',
+    'assets/images/ehalepola_wax_museum.jpg',
+    'assets/images/bahirawakanda_buddha.jpg',
+  ],
+  nearbyDistances: ['3 km', '13 km', '13 km', '15 km'],
+);
+
+// =========================================================
+// DAMBULLA INFORMATION PAGES
+// =========================================================
+
+final dambullaCaveTempleInformation = PlaceInformationPage(
+  placeName: 'Dambulla Cave Temple',
+  destinationName: 'Dambulla',
+  subtitle: 'UNESCO World Heritage Cave Temple Complex',
+  description:
+      'Dambulla Cave Temple is a UNESCO World Heritage Site and the largest, best-preserved cave temple complex in Sri Lanka, featuring 153 Buddha statues and ancient murals spanning 2,100 square metres.',
+  location: 'Dambulla, Sri Lanka',
+  rating: '4.8',
+  reviews: '3,420',
+  openingHours: 'Daily from 7:00 AM to 7:00 PM',
+  bestTime: 'Early morning or late afternoon',
+  entranceFee: 'Local: Free\nForeign Tourists: Rs. 3,000',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/dambulla_cave_temple.jpg',
+    'assets/images/dambulla_cave_temple_exterior.jpg',
+    'assets/images/dambulla.png',
+    'assets/images/dambulla_cave_temple_4.png',
+  ],
+  nearbyNames: [
+    'Sigiriya Rock Fortress',
+    'Ibbankatuwa Megalithic Tombs',
+  ],
+  nearbyImages: [
+    'assets/images/sigiriya_rock_fortress.jpg',
+    'assets/images/ibbankatuwa_megalithic_tombs.jpg',
+  ],
+  nearbyDistances: ['19 km', '5 km'],
+);
+
+final sigiriyaRockFortressInformation = PlaceInformationPage(
+  placeName: 'Sigiriya Rock Fortress',
+  destinationName: 'Dambulla',
+  subtitle: 'Ancient Rock Fortress and Palace Ruin',
+  description:
+      'Sigiriya is an ancient rock fortress and palace ruin built by King Kashyapa. Rising 200 metres above the surrounding jungle, it is a UNESCO World Heritage Site and one of the best-preserved examples of ancient urban planning.',
+  location: 'Sigiriya, Sri Lanka',
+  rating: '4.9',
+  reviews: '8,950',
+  openingHours: 'Daily from 7:00 AM to 7:00 PM',
+  bestTime: 'Early morning or late afternoon',
+  entranceFee:
+      'Local:\n• Adult: Rs. 120\n• Child: Rs. 60\n\nForeign Tourists (Non-SAARC):\n• Adult: Rs. 11,600\n• Child: Rs. 6,600\n\nSAARC Nationals:\n• Adult: Rs. 6,600\n• Child: Rs. 6,600',
+  dressCode: 'Modest attire (shoulders and knees covered)',
+  heroImages: [
+    'assets/images/sigiriya_rock_fortress.jpg',
+    'assets/images/sigiriya_lion_paw.jpg',
+    'assets/images/sigiriya_frescoes.jpg',
+    'assets/images/sigiriya_4.jpg',
+  ],
+  nearbyNames: [
+    'Dambulla Cave Temple',
+    'Ibbankatuwa Megalithic Tombs',
+  ],
+  nearbyImages: [
+    'assets/images/dambulla_cave_temple.jpg',
+    'assets/images/ibbankatuwa_megalithic_tombs.jpg',
+  ],
+  nearbyDistances: ['19 km', '5 km'],
+);
+
+final ibbankatuwaMegalithicTombsInformation = PlaceInformationPage(
+  placeName: 'Ibbankatuwa Megalithic Tombs',
+  destinationName: 'Dambulla',
+  subtitle: 'Prehistoric Iron Age Burial Site & Ancient Cemetery',
+  description:
+      'Ibbankatuwa Megalithic Tombs is a prehistoric burial site near Dambulla, containing ancient megalithic tombs dating back to the Iron Age. It is an important archaeological site that reveals early human settlements in Sri Lanka.',
+  location: 'Dambulla, Sri Lanka',
+  rating: '4.5',
+  reviews: '1,240',
+  openingHours: 'Open daily from 7:00 AM to 5:00 PM',
+  bestTime: 'Morning or late afternoon',
+  entranceFee: 'Local: Rs. 20 to Rs. 120\nForeign Tourists: Rs. 1,400–1,500',
+  dressCode: 'Comfortable walking attire and sun protection',
+  heroImages: [
+    'assets/images/ibbankatuwa_megalithic_tombs.jpg',
+    'assets/images/ibbankatuwa_2.jpg',
+    'assets/images/ibbankatuwa_3.jpg',
+    'assets/images/ibbankatuwa_4.jpg',
+  ],
+  nearbyNames: [
+    'Dambulla Cave Temple',
+    'Sigiriya Rock Fortress',
+  ],
+  nearbyImages: [
+    'assets/images/dambulla_cave_temple.jpg',
+    'assets/images/sigiriya_rock_fortress.jpg',
+  ],
+  nearbyDistances: ['3 km', '20 km'],
+);

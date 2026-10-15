@@ -9,6 +9,7 @@ import '../models/destination.dart';
 import '../data/place_information_data.dart';
 
 import '../screens/profile_screen.dart';
+import '../screens/saved_places_screen.dart';
 import '../screens/plan/walking_plan_page.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'ruwanwelisaya_detail_page.dart';
@@ -16,6 +17,11 @@ import 'sri_maha_bodhi_detail_page.dart';
 import 'thuparamaya_detail_page.dart';
 import 'abhayagiriya_detail_page.dart';
 import 'jetavanaramaya_detail_page.dart';
+import 'gadaladeniya_detail_page.dart';
+import 'lankathilaka_detail_page.dart';
+import 'dambulla_detail_page.dart';
+import 'sigiriya_detail_page.dart';
+import 'ibbankatuwa_detail_page.dart';
 
 class DestinationPage extends StatefulWidget {
   final Destination destination;
@@ -230,14 +236,6 @@ class _DestinationPageState extends State<DestinationPage> {
         centerTitle: true,
 
         actions: [
-          IconButton(
-            icon: const Icon(Icons.favorite_border, color: darkGreen, size: 29),
-
-            onPressed: () {
-              // Saved Places belongs to another group member.
-            },
-          ),
-
           IconButton(
             icon: const Icon(Icons.share_outlined, color: darkGreen, size: 27),
 
@@ -454,69 +452,6 @@ class _DestinationPageState extends State<DestinationPage> {
 
               // =================================================
 
-              // INFORMATION / SHARE / SERVICES
-
-              // =================================================
-              const SizedBox(height: 18),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-
-                child: Container(
-                  height: 66,
-
-                  decoration: BoxDecoration(
-                    color: cardColor,
-
-                    borderRadius: BorderRadius.circular(18),
-
-                    border: Border.all(color: borderColor),
-                  ),
-
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _mainAction(
-                          icon: Icons.info_outline,
-
-                          label: 'Information',
-
-                          onTap: () {},
-                        ),
-                      ),
-
-                      Container(width: 1, height: 36, color: borderColor),
-
-                      Expanded(
-                        child: _mainAction(
-                          icon: Icons.share_outlined,
-
-                          label: 'Share',
-
-                          onTap: () {},
-                        ),
-                      ),
-
-                      Container(width: 1, height: 36, color: borderColor),
-
-                      Expanded(
-                        child: _mainAction(
-                          icon: Icons.grid_view_outlined,
-
-                          label: 'Services',
-
-                          onTap: () {
-                            // Services belongs to another group member.
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              // =================================================
-
               // AUDIO GUIDE
 
               // =================================================
@@ -687,6 +622,60 @@ class _DestinationPageState extends State<DestinationPage> {
                         ],
                       ),
                     ],
+                  ),
+                ),
+              ),
+
+              // =================================================
+
+              // START WALKING TOUR
+
+              // =================================================
+              const SizedBox(height: 14),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+
+                child: SizedBox(
+                  width: double.infinity,
+
+                  height: 58,
+
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const WalkingPlanPage(),
+                        ),
+                      );
+                    },
+
+                    icon: const Icon(Icons.directions_walk_rounded, size: 27),
+
+                    label: Text(
+                      'START WALKING TOUR',
+
+                      style: GoogleFonts.inter(
+                        fontSize: 15,
+
+                        fontWeight: FontWeight.w700,
+
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: darkGreen,
+
+                      foregroundColor: backgroundColor,
+
+                      elevation: 0,
+
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -875,60 +864,6 @@ class _DestinationPageState extends State<DestinationPage> {
                 ),
               ],
 
-              // =================================================
-
-              // START WALKING TOUR
-
-              // =================================================
-              const SizedBox(height: 8),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-
-                child: SizedBox(
-                  width: double.infinity,
-
-                  height: 58,
-
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const WalkingPlanPage(),
-                        ),
-                      );
-                    },
-
-                    icon: const Icon(Icons.directions_walk_rounded, size: 27),
-
-                    label: Text(
-                      'START WALKING TOUR',
-
-                      style: GoogleFonts.inter(
-                        fontSize: 15,
-
-                        fontWeight: FontWeight.w700,
-
-                        letterSpacing: 0.3,
-                      ),
-                    ),
-
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: darkGreen,
-
-                      foregroundColor: backgroundColor,
-
-                      elevation: 0,
-
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
               const SizedBox(height: 20),
             ],
           ),
@@ -949,6 +884,15 @@ class _DestinationPageState extends State<DestinationPage> {
             Navigator.pop(context);
             return;
           }
+          if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SavedPlacesScreen(),
+              ),
+            );
+            return;
+          }
           if (index == 3) {
             Navigator.push(
               context,
@@ -959,9 +903,7 @@ class _DestinationPageState extends State<DestinationPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                index == 1
-                    ? 'Services will be connected next.'
-                    : 'Saved will be connected next.',
+                'Services will be connected next.',
                 style: GoogleFonts.inter(),
               ),
               backgroundColor: darkGreen,
@@ -973,47 +915,7 @@ class _DestinationPageState extends State<DestinationPage> {
     );
   }
 
-  // =========================================================
 
-  // INFORMATION / SHARE / SERVICES ACTION
-
-  // =========================================================
-
-  Widget _mainAction({
-    required IconData icon,
-
-    required String label,
-
-    required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-
-      borderRadius: BorderRadius.circular(16),
-
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-
-        children: [
-          Icon(icon, size: 23, color: darkGreen),
-
-          const SizedBox(height: 4),
-
-          Text(
-            label,
-
-            style: GoogleFonts.inter(
-              fontSize: 11,
-
-              color: darkGreen,
-
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   // =========================================================
 
@@ -1160,11 +1062,13 @@ class _DestinationPageState extends State<DestinationPage> {
         break;
 
       case 'Gadaladeniya Vihara':
-        // Kandy attraction detail pages to be implemented.
+      case 'Gadaladeniya Viharaya':
+        page = const GadaladeniyaDetailPage();
         break;
 
       case 'Lankathilaka Vihara':
-        // Kandy attraction detail pages to be implemented.
+      case 'Lankathilaka Viharaya':
+        page = const LankathilakaDetailPage();
         break;
 
       // =====================================================
@@ -1174,15 +1078,15 @@ class _DestinationPageState extends State<DestinationPage> {
       // =====================================================
 
       case 'Dambulla Cave Temple':
-        // Dambulla attraction detail pages to be implemented.
+        page = const DambullaDetailPage();
         break;
 
       case 'Sigiriya Rock Fortress':
-        // Dambulla attraction detail pages to be implemented.
+        page = const SigiriyaDetailPage();
         break;
 
       case 'Ibbankatuwa Megalithic Tombs':
-        // Dambulla attraction detail pages to be implemented.
+        page = const IbbankatuwaDetailPage();
         break;
     }
 

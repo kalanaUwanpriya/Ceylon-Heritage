@@ -4,11 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../data/thuparamaya_places.dart';
 import '../screens/profile_screen.dart';
+import '../screens/saved_places_screen.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'ruwanwelisaya_detail_page.dart';
 import 'sri_maha_bodhi_detail_page.dart';
 import 'abhayagiriya_detail_page.dart';
 import 'jetavanaramaya_detail_page.dart';
+import '../Reviews/widgets/visitor_rating_card.dart';
+import '../widgets/save_place_button.dart';
 
 class ThuparamayaDetailPage extends StatefulWidget {
   const ThuparamayaDetailPage({super.key});
@@ -95,6 +98,15 @@ class _ThuparamayaDetailPageState extends State<ThuparamayaDetailPage> {
             Navigator.pop(context);
             return;
           }
+          if (index == 2) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const SavedPlacesScreen(),
+              ),
+            );
+            return;
+          }
           if (index == 3) {
             Navigator.push(
               context,
@@ -105,9 +117,7 @@ class _ThuparamayaDetailPageState extends State<ThuparamayaDetailPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
-                index == 1
-                    ? 'Services will be connected next.'
-                    : 'Saved will be connected next.',
+                'Services will be connected next.',
                 style: GoogleFonts.inter(),
               ),
               backgroundColor: darkGreen,
@@ -142,14 +152,7 @@ class _ThuparamayaDetailPageState extends State<ThuparamayaDetailPage> {
       ),
       centerTitle: true,
       actions: [
-        IconButton(
-          icon: const Icon(
-            Icons.favorite_border_rounded,
-            color: darkGreen,
-            size: 28,
-          ),
-          onPressed: () {},
-        ),
+        SavePlaceButton(placeId: ThuparamayaData.placeName),
         const SizedBox(width: 5),
       ],
     );
@@ -322,71 +325,11 @@ class _ThuparamayaDetailPageState extends State<ThuparamayaDetailPage> {
 
   // Visitor Rating
   Widget _buildVisitorRating() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-      decoration: BoxDecoration(
-        color: cardColor,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: borderColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Visitor Rating',
-            style: GoogleFonts.playfairDisplay(
-              fontSize: 19,
-              fontWeight: FontWeight.w700,
-              color: darkGreen,
-            ),
-          ),
-          const SizedBox(height: 9),
-          Row(
-            children: [
-              Row(
-                children: List.generate(3, (index) {
-                  return const Padding(
-                    padding: EdgeInsets.only(right: 3),
-                    child: Icon(
-                      Icons.star_rounded,
-                      color: accentColor,
-                      size: 26,
-                    ),
-                  );
-                }),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(right: 3),
-                child: Icon(
-                  Icons.star_rounded,
-                  color: accentColor,
-                  size: 26,
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.only(right: 3),
-                child: Icon(
-                  Icons.star_outline_rounded,
-                  color: accentColor,
-                  size: 26,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  '${ThuparamayaData.visitorRating} (${ThuparamayaData.reviewCount})',
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    color: secondaryTextColor,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+    return const VisitorRatingCard(
+      placeId: 'thuparamaya',
+      placeName: ThuparamayaData.placeName,
+      placeImage: 'assets/images/thuparamaya.png',
+      location: ThuparamayaData.location,
     );
   }
 

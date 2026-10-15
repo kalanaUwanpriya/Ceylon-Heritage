@@ -30,9 +30,62 @@ class ServicePlace {
     this.description = '',
     this.galleryImages = const [],
   });
+
+  String get id => 'service_${ServiceData.normalizeId(name)}';
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'type': type,
+      if (rating != null) 'rating': rating,
+      'location': location,
+      'mapUrl': mapUrl,
+      'imagePath': imagePath,
+      'description': description,
+      'galleryImages': galleryImages,
+    };
+  }
+
+  factory ServicePlace.fromMap(Map<String, dynamic> map) {
+    return ServicePlace(
+      name: map['name'] as String? ?? '',
+      type: map['type'] as String? ?? '',
+      rating: (map['rating'] as num?)?.toDouble(),
+      location: map['location'] as String? ?? '',
+      mapUrl: map['mapUrl'] as String? ?? '',
+      imagePath: map['imagePath'] as String? ?? '',
+      description: map['description'] as String? ?? '',
+      galleryImages: (map['galleryImages'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
+          const [],
+    );
+  }
 }
 
 class ServiceData {
+  static String normalizeId(String input) {
+    return input
+        .toLowerCase()
+        .trim()
+        .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
+        .replaceAll(RegExp(r'^_+|_+$'), '');
+  }
+
+  static ServicePlace? findPlaceByName(String name) {
+    final target = normalizeId(name);
+    for (final cityMap in _places.values) {
+      for (final placeList in cityMap.values) {
+        for (final p in placeList) {
+          if (normalizeId(p.name) == target) {
+            return p;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
   static List<ServicePlace> getPlaces(String city, String category) {
     return _places[city]?[category] ?? [];
   }

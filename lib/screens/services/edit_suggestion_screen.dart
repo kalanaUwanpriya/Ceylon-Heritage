@@ -102,16 +102,14 @@ class _EditSuggestionScreenState extends State<EditSuggestionScreen> {
             'updatedAt': FieldValue.serverTimestamp(),
           });
 
-      if (!context.mounted) return;
-
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Suggestion updated successfully!')),
       );
 
       Navigator.pop(context);
     } catch (e) {
-      if (!context.mounted) return;
-
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to update suggestion: $e')),
       );
