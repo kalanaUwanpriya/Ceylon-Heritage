@@ -5,10 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../screens/profile_screen.dart';
+import '../screens/saved_places_screen.dart';
 import '../widgets/app_navigation_bar.dart';
-
+import '../widgets/save_place_button.dart';
+import '../Reviews/widgets/visitor_rating_card.dart';
 
 class PlaceInformationPage extends StatefulWidget {
+  final String? placeId;
   final String placeName;
 
   final String destinationName;
@@ -42,6 +45,7 @@ class PlaceInformationPage extends StatefulWidget {
   const PlaceInformationPage({
     super.key,
 
+    this.placeId,
     required this.placeName,
 
     required this.destinationName,
@@ -72,6 +76,14 @@ class PlaceInformationPage extends StatefulWidget {
 
     required this.nearbyDistances,
   });
+
+  String get effectivePlaceId =>
+      placeId ??
+      placeName
+          .toLowerCase()
+          .trim()
+          .replaceAll(RegExp(r'[^a-z0-9]+'), '_')
+          .replaceAll(RegExp(r'^_+|_+$'), '');
 
   @override
   State<PlaceInformationPage> createState() => _PlaceInformationPageState();
@@ -209,6 +221,15 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
               Navigator.pop(context);
               return;
             }
+            if (index == 2) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SavedPlacesScreen(),
+                ),
+              );
+              return;
+            }
             if (index == 3) {
               Navigator.push(
                 context,
@@ -219,9 +240,7 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
-                  index == 1
-                      ? 'Services will be connected next.'
-                      : 'Saved will be connected next.',
+                  'Services will be connected next.',
                   style: GoogleFonts.inter(),
                 ),
                 backgroundColor: darkGreen,
@@ -278,20 +297,14 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
       centerTitle: true,
 
       actions: [
-        IconButton(
-          icon: const Icon(
-            Icons.favorite_border_rounded,
-
-            color: darkGreen,
-
-            size: 28,
-          ),
-
-          onPressed: () {
-            // Saved Places belongs to another group member.
-          },
+        SavePlaceButton(
+          placeId: widget.placeId ?? widget.placeName,
+          placeName: widget.placeName,
+          destinationName: widget.destinationName,
+          location: widget.location,
+          description: widget.description,
+          image: widget.heroImages.isNotEmpty ? widget.heroImages.first : null,
         ),
-
         const SizedBox(width: 5),
       ],
     );
@@ -592,80 +605,13 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
   // =========================================================
 
   Widget _buildVisitorRating() {
-    return Container(
-      width: double.infinity,
-
-      padding: const EdgeInsets.fromLTRB(16, 15, 16, 15),
-
-      decoration: BoxDecoration(
-        color: cardColor,
-
-        border: Border.all(color: borderColor),
-
-        borderRadius: BorderRadius.circular(18),
-      ),
-
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: [
-          Text(
-            'Visitor Rating',
-
-            style: GoogleFonts.playfairDisplay(
-              fontSize: 19,
-
-              fontWeight: FontWeight.w700,
-
-              color: darkGreen,
-            ),
-          ),
-
-          const SizedBox(height: 9),
-
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-
-            children: [
-              Row(
-                children: List.generate(3, (_) {
-                  return const Padding(
-                    padding: EdgeInsets.only(right: 3),
-
-                    child: Icon(
-                      Icons.star_rounded,
-
-                      color: accentColor,
-
-                      size: 27,
-                    ),
-                  );
-                }),
-              ),
-
-              const SizedBox(width: 10),
-
-              Expanded(
-                child: Text(
-                  '${widget.rating} out of 3 (${widget.reviews} reviews)',
-
-                  maxLines: 1,
-
-                  overflow: TextOverflow.ellipsis,
-
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-
-                    color: secondaryTextColor,
-
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
+    return VisitorRatingCard(
+      placeId: widget.effectivePlaceId,
+      placeName: widget.placeName,
+      placeImage: widget.heroImages.isNotEmpty
+          ? widget.heroImages.first
+          : 'assets/images/anuradhapura.png',
+      location: widget.location,
     );
   }
 

@@ -33,6 +33,12 @@ dependencies:
   # Open Google Maps / URLs
   url_launcher: ^6.3.2
 
+  # Map & Routing
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
+  map_launcher: ^3.4.1
+  http: ^1.2.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -11,6 +11,7 @@ import 'package:path_provider/path_provider.dart';
 import '../services/user_service.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'home_screen.dart';
+import 'saved_places_screen.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -1302,12 +1303,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   );
                   return;
                 }
+                if (index == 2) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SavedPlacesScreen(),
+                    ),
+                  );
+                  return;
+                }
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      index == 1
-                          ? 'Services will be connected next.'
-                          : 'Saved will be connected next.',
+                      'Services will be connected next.',
                     ),
                     backgroundColor: primaryColor,
                     duration: const Duration(seconds: 1),

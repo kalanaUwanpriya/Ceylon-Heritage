@@ -9,10 +9,12 @@ import 'package:google_fonts/google_fonts.dart';
 import '../data/historical_places_data.dart';
 import '../destinations/destination_page.dart';
 import '../widgets/app_navigation_bar.dart';
-import 'notification_settings_screen.dart';
+
 import 'profile_screen.dart';
 import 'login_screen.dart';
+import 'saved_places_screen.dart';
 import 'services/services_screen.dart';
+import 'notifications_screen.dart';
 
 class PlaceItem {
   final String title;
@@ -143,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
     PlaceItem(
       title: 'Dambulla',
       subtitle: 'Royal Cave Temple',
-      imagePath: 'assets/images/dambulla.png',
+      imagePath: 'assets/images/ADambulla.png',
     ),
   ];
 
@@ -305,7 +307,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const NotificationSettingsScreen(),
+                    builder: (context) => const NotificationsScreen(),
                   ),
                 );
               },
@@ -557,6 +559,14 @@ class _HomeScreenState extends State<HomeScreen> {
       return;
     }
 
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SavedPlacesScreen()),
+      );
+      return;
+    }
+
     if (index == 3) {
       Navigator.push(
         context,
@@ -579,9 +589,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          index == 1
-              ? 'Services will be connected next.'
-              : 'Saved will be connected next.',
+          'Services will be connected next.',
           style: GoogleFonts.inter(),
         ),
         backgroundColor: primaryColor,
