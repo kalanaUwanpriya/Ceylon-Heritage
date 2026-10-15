@@ -3,8 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../models/destination.dart';
 import '../../widgets/app_navigation_bar.dart';
-import '../profile_screen.dart';
-import '../saved_places_screen.dart';
 import 'walking_tour_route_page.dart';
 
 class WalkingPlanPage extends StatefulWidget {
@@ -188,36 +186,7 @@ class _WalkingPlanPageState extends State<WalkingPlanPage> {
       bottomNavigationBar: AppNavigationBar(
         selectedIndex: 0,
         onDestinationSelected: (index) {
-          if (index == 0) {
-            Navigator.pop(context);
-            return;
-          }
-          if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SavedPlacesScreen(),
-              ),
-            );
-            return;
-          }
-          if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfileScreen()),
-            );
-            return;
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Services will be connected next.',
-                style: GoogleFonts.inter(),
-              ),
-              backgroundColor: primaryColor,
-              duration: const Duration(seconds: 1),
-            ),
-          );
+          AppNavigationBar.handleNavigation(context, index);
         },
       ),
     );

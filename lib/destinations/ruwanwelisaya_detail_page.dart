@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../data/ruwanwelisaya_places.dart';
-import '../screens/profile_screen.dart';
-import '../screens/saved_places_screen.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'sri_maha_bodhi_detail_page.dart';
 import 'thuparamaya_detail_page.dart';
@@ -94,36 +92,7 @@ class _RuwanwelisayaDetailPageState extends State<RuwanwelisayaDetailPage> {
       bottomNavigationBar: AppNavigationBar(
         selectedIndex: 0,
         onDestinationSelected: (index) {
-          if (index == 0) {
-            Navigator.pop(context);
-            return;
-          }
-          if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SavedPlacesScreen(),
-              ),
-            );
-            return;
-          }
-          if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfileScreen()),
-            );
-            return;
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Services will be connected next.',
-                style: GoogleFonts.inter(),
-              ),
-              backgroundColor: darkGreen,
-              duration: const Duration(seconds: 1),
-            ),
-          );
+          AppNavigationBar.handleNavigation(context, index);
         },
       ),
     );

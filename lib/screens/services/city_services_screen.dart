@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'service_places_screen.dart';
-import 'services_screen.dart';
-import '../home_screen.dart';
-import '../saved_places_screen.dart';
-import '../profile_screen.dart';
+import '../../widgets/app_navigation_bar.dart';
 
 class CityServicesScreen extends StatelessWidget {
   final String cityName;
@@ -365,118 +362,14 @@ class CityServicesScreen extends StatelessWidget {
     );
   }
 
-  // ============================================================
-  // BOTTOM NAVIGATION
-  // ============================================================
-  void _navigateToBottomPage(BuildContext context, String label) {
-    Widget? page;
-
-    switch (label) {
-      case 'Home':
-        page = const HomeScreen();
-        break;
-
-      case 'Services':
-        page = const ServicesScreen();
-        break;
-
-      case 'Saved':
-        page = const SavedPlacesScreen();
-        break;
-
-      case 'Profile':
-        page = const ProfileScreen();
-        break;
-    }
-
-    if (page != null) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => page!),
-        (route) => route.isFirst,
-      );
-    }
-  }
-
   Widget _buildBottomNavigationBar() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-
-      decoration: BoxDecoration(
-        color: backgroundColor,
-
-        boxShadow: [
-          BoxShadow(
-            color: primaryGreen.withValues(alpha: 0.07),
-            blurRadius: 10,
-            offset: const Offset(0, -3),
-          ),
-        ],
-      ),
-
-      child: SafeArea(
-        top: false,
-
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-          children: [
-            _buildNavItem(icon: Icons.home_outlined, label: 'Home'),
-
-            _buildNavItem(
-              icon: Icons.grid_view_rounded,
-              label: 'Services',
-              selected: true,
-            ),
-
-            _buildNavItem(icon: Icons.favorite_border_rounded, label: 'Saved'),
-
-            _buildNavItem(icon: Icons.person_outline_rounded, label: 'Profile'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ============================================================
-  // NAV ITEM
-  // ============================================================
-  Widget _buildNavItem({
-    required IconData icon,
-    required String label,
-    bool selected = false,
-  }) {
     return Builder(
       builder: (context) {
-        return InkWell(
-          onTap: () => _navigateToBottomPage(context, label),
-          borderRadius: BorderRadius.circular(18),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-            decoration: BoxDecoration(
-              color: selected ? primaryGreen : Colors.transparent,
-              borderRadius: BorderRadius.circular(18),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  icon,
-                  size: 24,
-                  color: selected ? backgroundColor : primaryGreen,
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  label,
-                  style: GoogleFonts.inter(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: selected ? backgroundColor : primaryGreen,
-                  ),
-                ),
-              ],
-            ),
-          ),
+        return AppNavigationBar(
+          selectedIndex: 1,
+          onDestinationSelected: (index) {
+            AppNavigationBar.handleNavigation(context, index, currentIndex: 1);
+          },
         );
       },
     );

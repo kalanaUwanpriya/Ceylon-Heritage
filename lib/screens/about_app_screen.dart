@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../widgets/app_navigation_bar.dart';
+
 class AboutAppScreen extends StatelessWidget {
   const AboutAppScreen({super.key});
 
@@ -45,54 +47,27 @@ class AboutAppScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                width: 92,
-                height: 92,
-                decoration: BoxDecoration(
-                  color: cardColor,
-                  borderRadius: BorderRadius.circular(25),
-                  border: Border.all(
-                    color: accentColor.withValues(alpha: 0.25),
-                  ),
-                ),
-                child: const Icon(
-                  Icons.account_balance_rounded,
-                  size: 48,
-                  color: primaryColor,
-                ),
+              Image.asset(
+                'assets/images/ALogo.png',
+                width: 170,
+                fit: BoxFit.contain,
               ),
-              const SizedBox(height: 16),
-              const Text(
-                'Heritage Walks',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: primaryColor,
-                  fontSize: 27,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(height: 4),
-              const Text(
-                'Discover Sri Lanka',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: accentColor,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               const Text(
                 'Version 1.0.0',
-                style: TextStyle(color: secondaryTextColor, fontSize: 12),
+                style: TextStyle(
+                  color: secondaryTextColor,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
               const SizedBox(height: 24),
 
               _buildSectionCard(
-                title: 'About Heritage Walks',
+                title: 'About Ceylon Heritage',
                 icon: Icons.explore_outlined,
                 child: const Text(
-                  'Heritage Walks is a mobile application designed to help users discover and explore the historical and cultural heritage of Sri Lanka.',
+                  'Ceylon Heritage is a mobile application designed to help users discover and explore the historical and cultural heritage of Sri Lanka.',
                   style: TextStyle(
                     color: secondaryTextColor,
                     fontSize: 14,
@@ -158,7 +133,7 @@ class AboutAppScreen extends StatelessWidget {
                 title: 'Developed For',
                 icon: Icons.school_outlined,
                 child: const Text(
-                  'Heritage Walks – Discover Sri Lanka is developed as a university group project with the aim of creating a digital platform for discovering Sri Lankan heritage.',
+                  'Ceylon Heritage – Discover Sri Lanka is developed as a university group project with the aim of creating a digital platform for discovering Sri Lankan heritage.',
                   style: TextStyle(
                     color: secondaryTextColor,
                     fontSize: 14,
@@ -189,13 +164,19 @@ class AboutAppScreen extends StatelessWidget {
               ),
               const SizedBox(height: 6),
               const Text(
-                '© 2026 Heritage Walks',
+                '© 2026 Ceylon Heritage',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: secondaryTextColor, fontSize: 12),
               ),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: AppNavigationBar(
+        selectedIndex: 3,
+        onDestinationSelected: (index) {
+          AppNavigationBar.handleNavigation(context, index, currentIndex: 3);
+        },
       ),
     );
   }

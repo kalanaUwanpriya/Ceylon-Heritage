@@ -11,7 +11,6 @@ import 'plan/walking_tour_route_page.dart';
 import 'profile_screen.dart';
 import 'services/place_details_screen.dart';
 import 'services/service_data.dart';
-import 'services/services_screen.dart';
 
 /// Categories for filtering saved items.
 enum SavedCategory { all, routes, places, services }
@@ -59,34 +58,7 @@ class _SavedPlacesScreenState extends State<SavedPlacesScreen> {
   }
 
   void _handleNavigation(int index) {
-    if (index == 2) {
-      return; // Already on Saved
-    }
-
-    if (index == 0) {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-        (route) => false,
-      );
-      return;
-    }
-
-    if (index == 1) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const ServicesScreen()),
-      );
-      return;
-    }
-
-    if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ProfileScreen()),
-      );
-      return;
-    }
+    AppNavigationBar.handleNavigation(context, index, currentIndex: 2);
   }
 
   Future<void> _removePlace(SavedPlaceModel place) async {
