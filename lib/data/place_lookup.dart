@@ -296,15 +296,15 @@ class PlaceLookup {
         pageBuilder: (context) => jaffnaLibraryInformation,
       );
     }
-    if (norm.contains('casuarina')) {
+    if (norm.contains('nagadeepa') || norm.contains('casuarina')) {
       return PlaceDetails(
-        id: 'casuarina_beach',
-        name: 'Casuarina Beach',
+        id: 'nagadeepa_purana_viharaya',
+        name: 'Nagadeepa Purana Viharaya',
         destinationName: 'Jaffna',
-        location: 'Karainagar, Jaffna, Sri Lanka',
-        description: casuarinaBeachInformation.description,
-        image: 'assets/images/casuarina_beach.png',
-        pageBuilder: (context) => casuarinaBeachInformation,
+        location: 'Nainativu Island, Jaffna, Northern Province',
+        description: nagadeepaInformation.description,
+        image: 'assets/images/nagadeepa.jpeg',
+        pageBuilder: (context) => nagadeepaInformation,
       );
     }
     if (norm.contains('delft')) {

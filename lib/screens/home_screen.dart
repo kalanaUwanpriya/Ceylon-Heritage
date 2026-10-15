@@ -10,9 +10,7 @@ import '../data/historical_places_data.dart';
 import '../destinations/destination_page.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'notification_settings_screen.dart';
-import 'profile_screen.dart';
 import 'login_screen.dart';
-import 'saved_places_screen.dart';
 
 class PlaceItem {
   final String title;
@@ -42,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const Color primaryColor = Color(0xFF17452F);
   static const Color secondaryTextColor = Color(0xFF5F625D);
 
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
   _accountStatusSubscription;
 
@@ -549,50 +547,6 @@ class _HomeScreenState extends State<HomeScreen> {
   // ============================================================
 
   void _handleNavigation(int index) {
-    if (index == 1) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ServicesScreen()),
-      );
-      return;
-    }
-
-    if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const SavedPlacesScreen()),
-      );
-      return;
-    }
-
-    if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ProfileScreen()),
-      );
-      return;
-    }
-
-    if (index == 0) {
-      setState(() {
-        _selectedIndex = 0;
-      });
-      return;
-    }
-
-    setState(() {
-      _selectedIndex = index;
-    });
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Services will be connected next.',
-          style: GoogleFonts.inter(),
-        ),
-        backgroundColor: primaryColor,
-        duration: const Duration(seconds: 1),
-      ),
-    );
+    AppNavigationBar.handleNavigation(context, index, currentIndex: 0);
   }
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../widgets/app_navigation_bar.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
@@ -29,19 +32,19 @@ class PrivacyPolicyScreen extends StatelessWidget {
             onPressed: () => Navigator.pop(context),
           ),
         ),
-        title: const Text(
+        title: Text(
           'Privacy Policy',
-          style: TextStyle(
+          style: GoogleFonts.playfairDisplay(
             color: primaryColor,
             fontSize: 20,
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w600,
           ),
         ),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 28),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -56,10 +59,10 @@ class PrivacyPolicyScreen extends StatelessWidget {
                     width: 1,
                   ),
                 ),
-                child: const Row(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 44,
                       height: 44,
                       child: Center(
@@ -70,23 +73,23 @@ class PrivacyPolicyScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(width: 11),
+                    const SizedBox(width: 11),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Your Privacy Matters',
-                            style: TextStyle(
+                            style: GoogleFonts.inter(
                               color: primaryColor,
                               fontSize: 18,
-                              fontWeight: FontWeight.w700,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                          SizedBox(height: 5),
+                          const SizedBox(height: 5),
                           Text(
                             'This Privacy Policy explains how Heritage Walks handles information when you use the application.',
-                            style: TextStyle(
+                            style: GoogleFonts.inter(
                               color: secondaryTextColor,
                               fontSize: 13,
                               height: 1.45,
@@ -101,26 +104,30 @@ class PrivacyPolicyScreen extends StatelessWidget {
 
               const SizedBox(height: 20),
 
-              const Text(
+              Text(
                 'Last Updated',
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   color: primaryColor,
                   fontSize: 16,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
               const SizedBox(height: 4),
-              const Row(
+              Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.calendar_today_outlined,
                     size: 14,
                     color: accentColor,
                   ),
-                  SizedBox(width: 6),
+                  const SizedBox(width: 6),
                   Text(
                     'September 2026',
-                    style: TextStyle(color: secondaryTextColor, fontSize: 13),
+                    style: GoogleFonts.inter(
+                      color: secondaryTextColor,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ],
               ),
@@ -131,7 +138,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 number: '1',
                 title: 'Information We Collect',
                 content:
-                    'When you use Heritage Walks, the application may store information needed to provide its features. This can include your name, email address, phone number, profile information and information related to your use of the application.',
+                    'When you use Ceylon Heritage, the application may store information needed to provide its features. This can include your name, email address, phone number, profile information and information related to your use of the application.',
               ),
               _buildPolicySection(
                 number: '2',
@@ -173,7 +180,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
                 number: '8',
                 title: 'Data Security',
                 content:
-                    'Heritage Walks uses Firebase services for authentication and cloud data storage. Access to application data is controlled using authentication and database security rules.',
+                    'Ceylon Heritage uses Firebase services for authentication and cloud data storage. Access to application data is controlled using authentication and database security rules.',
               ),
               _buildPolicySection(
                 number: '9',
@@ -200,38 +207,24 @@ class PrivacyPolicyScreen extends StatelessWidget {
                     'If you have questions about this Privacy Policy or the Heritage Walks application, please use the Help & Support section of the application.',
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
 
-              const Center(
+              Center(
                 child: Column(
                   children: [
-                    Icon(
-                      Icons.account_balance_rounded,
-                      color: accentColor,
-                      size: 28,
+                    Image.asset(
+                      'assets/images/ALogo.png',
+                      width: 140,
+                      fit: BoxFit.contain,
                     ),
-                    SizedBox(height: 7),
+                    const SizedBox(height: 8),
                     Text(
-                      'Heritage Walks',
-                      style: TextStyle(
-                        color: primaryColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
+                      '© 2026 Ceylon Heritage',
+                      style: GoogleFonts.inter(
+                        color: secondaryTextColor,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w400,
                       ),
-                    ),
-                    SizedBox(height: 3),
-                    Text(
-                      'Discover Sri Lanka',
-                      style: TextStyle(
-                        color: accentColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      '© 2026 Heritage Walks',
-                      style: TextStyle(color: secondaryTextColor, fontSize: 11),
                     ),
                   ],
                 ),
@@ -239,6 +232,12 @@ class PrivacyPolicyScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: AppNavigationBar(
+        selectedIndex: 3,
+        onDestinationSelected: (index) {
+          AppNavigationBar.handleNavigation(context, index, currentIndex: 3);
+        },
       ),
     );
   }
@@ -274,7 +273,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
             ),
             child: Text(
               number,
-              style: const TextStyle(
+              style: GoogleFonts.inter(
                 color: accentColor,
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
@@ -288,16 +287,16 @@ class PrivacyPolicyScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(
+                  style: GoogleFonts.inter(
                     color: primaryColor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 6),
                 Text(
                   content,
-                  style: const TextStyle(
+                  style: GoogleFonts.inter(
                     color: secondaryTextColor,
                     fontSize: 13,
                     height: 1.5,
