@@ -169,7 +169,15 @@ class AudioGuideService {
       if (_player.processingState == ProcessingState.completed) {
         await _player.seek(Duration.zero);
       }
-      await _player.play();
+      // Note: In just_audio, _player.play() returns a Future that completes only
+      // when playback completes, is paused, or is stopped.
+      // Do not await it synchronously so togglePlayPause can execute pause requests.
+      unawaited(
+        _player.play().catchError((e) {
+          _errorMessage = 'Playback error: $e';
+          debugPrint('AudioGuideService play error: $e');
+        }),
+      );
     } catch (e) {
       _errorMessage = 'Playback error: $e';
       debugPrint('AudioGuideService play error: $e');
@@ -178,7 +186,11 @@ class AudioGuideService {
 
   Future<void> pause() async {
     try {
-      await _player.pause();
+      unawaited(
+        _player.pause().catchError((e) {
+          debugPrint('AudioGuideService pause error: $e');
+        }),
+      );
     } catch (e) {
       debugPrint('AudioGuideService pause error: $e');
     }
