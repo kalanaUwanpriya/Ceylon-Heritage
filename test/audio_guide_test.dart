@@ -168,5 +168,33 @@ void main() {
         await service.stopIfLeaving('NonExistentDestination');
       },
     );
+
+    test('play and pause methods execute and return without deadlock', () async {
+      final service = AudioGuideService.instance;
+      // play() must complete immediately rather than awaiting full duration
+      await service.play().timeout(
+        const Duration(seconds: 1),
+        onTimeout: () => throw Exception('play() blocked unexpectedly'),
+      );
+      // pause() must also complete immediately
+      await service.pause().timeout(
+        const Duration(seconds: 1),
+        onTimeout: () => throw Exception('pause() blocked unexpectedly'),
+      );
+    });
+
+    test('togglePlayPause can be toggled and repressed without locking up', () async {
+      final service = AudioGuideService.instance;
+      // Repressing togglePlayPause should never hang or get blocked
+      await service.togglePlayPause('Anuradhapura').timeout(
+        const Duration(seconds: 2),
+      );
+      await service.togglePlayPause('Anuradhapura').timeout(
+        const Duration(seconds: 2),
+      );
+      await service.togglePlayPause('Anuradhapura').timeout(
+        const Duration(seconds: 2),
+      );
+    });
   });
 }
