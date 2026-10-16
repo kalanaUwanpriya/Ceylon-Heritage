@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'service_places_screen.dart';
+import 'firestore_services_repository.dart';
+import 'services_screen.dart';
+import '../home_screen.dart';
+import '../saved_places_screen.dart';
+import '../profile_screen.dart';
 import '../../widgets/app_navigation_bar.dart';
 
 class CityServicesScreen extends StatelessWidget {
   final String cityName;
   final String imagePath;
+  final bool isNetworkImage;
 
   const CityServicesScreen({
     super.key,
     required this.cityName,
     required this.imagePath,
+    this.isNetworkImage = false,
   });
 
   // ================= DESIGN SYSTEM COLORS =================
@@ -86,22 +93,19 @@ class CityServicesScreen extends StatelessWidget {
                         child: SizedBox(
                           width: double.infinity,
                           height: 185,
-                          child: Image.asset(
-                            imagePath,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                color: cardColor,
-                                child: const Center(
-                                  child: Icon(
-                                    Icons.image_outlined,
-                                    size: 45,
-                                    color: primaryGreen,
-                                  ),
+                          child: isNetworkImage
+                              ? Image.network(
+                                  imagePath,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      _buildCityImagePlaceholder(),
+                                )
+                              : Image.asset(
+                                  imagePath,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      _buildCityImagePlaceholder(),
                                 ),
-                              );
-                            },
-                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -140,92 +144,104 @@ class CityServicesScreen extends StatelessWidget {
 
                       const SizedBox(height: 18),
 
-                      // ==========================================
-                      // ACCOMMODATION
-                      // ==========================================
-                      _buildServiceCard(
-                        icon: Icons.hotel_outlined,
-                        title: 'Accommodation',
-                        description:
-                            'Find the best places to stay for a comfortable and memorable visit.',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ServicePlacesScreen(
-                                cityName: cityName,
-                                category: 'Accommodation',
-                              ),
+                      // Keep the four built-in categories and add new
+                      // active Firestore categories in real time.
+                      StreamBuilder<List<Map<String, dynamic>>>(
+                        stream: FirestoreServicesRepository.watchCategories(),
+                        builder: (context, snapshot) {
+                          final categories = <_ServiceCategory>[
+                            const _ServiceCategory(
+                              name: 'Accommodation',
+                              description:
+                                  'Find the best places to stay for a comfortable and memorable visit.',
+                              icon: Icons.hotel_outlined,
                             ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      // ==========================================
-                      // FOOD & RESTAURANTS
-                      // ==========================================
-                      _buildServiceCard(
-                        icon: Icons.restaurant_outlined,
-                        title: 'Food & Restaurants',
-                        description:
-                            'Discover local restaurants and enjoy a variety of delicious cuisines.',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ServicePlacesScreen(
-                                cityName: cityName,
-                                category: 'Food & Restaurants',
-                              ),
+                            const _ServiceCategory(
+                              name: 'Food & Restaurants',
+                              description:
+                                  'Discover local restaurants and enjoy a variety of delicious cuisines.',
+                              icon: Icons.restaurant_outlined,
                             ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      // ==========================================
-                      // PARKING
-                      // ==========================================
-                      _buildServiceCard(
-                        icon: Icons.local_parking_outlined,
-                        title: 'Parking',
-                        description:
-                            'Find convenient parking areas near popular attractions and your location.',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ServicePlacesScreen(
-                                cityName: cityName,
-                                category: 'Parking',
-                              ),
+                            const _ServiceCategory(
+                              name: 'Parking',
+                              description:
+                                  'Find convenient parking areas near popular attractions and your location.',
+                              icon: Icons.local_parking_outlined,
                             ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      // ==========================================
-                      // HEALTH SERVICES
-                      // ==========================================
-                      _buildServiceCard(
-                        icon: Icons.local_hospital_outlined,
-                        title: 'Health Services',
-                        description:
-                            'Access medical facilities and health services for a safe and worry-free visit.',
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ServicePlacesScreen(
-                                cityName: cityName,
-                                category: 'Health Services',
-                              ),
+                            const _ServiceCategory(
+                              name: 'Health Services',
+                              description:
+                                  'Access medical facilities and health services for a safe and worry-free visit.',
+                              icon: Icons.local_hospital_outlined,
                             ),
+                          ];
+
+                          if (snapshot.hasData) {
+                            for (final data in snapshot.data!) {
+                              // Show Firebase categories only in assigned cities.
+                              // Built-in categories above remain available everywhere.
+                              final assignedCities = data['cities'];
+                              final isAssigned =
+                                  assignedCities is List &&
+                                  assignedCities.any(
+                                    (city) =>
+                                        city.toString().trim().toLowerCase() ==
+                                        cityName.trim().toLowerCase(),
+                                  );
+                              if (!isAssigned) {
+                                continue;
+                              }
+
+                              final name = (data['name'] ?? '')
+                                  .toString()
+                                  .trim();
+                              if (name.isEmpty ||
+                                  categories.any(
+                                    (category) =>
+                                        category.name.toLowerCase() ==
+                                        name.toLowerCase(),
+                                  )) {
+                                continue;
+                              }
+
+                              final description = (data['description'] ?? '')
+                                  .toString()
+                                  .trim();
+                              categories.add(
+                                _ServiceCategory(
+                                  name: name,
+                                  description: description.isEmpty
+                                      ? 'Explore $name services in $cityName.'
+                                      : description,
+                                  icon: _iconForCategory(name),
+                                ),
+                              );
+                            }
+                          }
+
+                          return Column(
+                            children: [
+                              for (var i = 0; i < categories.length; i++) ...[
+                                if (i > 0) const SizedBox(height: 10),
+                                _buildServiceCard(
+                                  icon: categories[i].icon,
+                                  title: categories[i].name,
+                                  description: categories[i].description,
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            ServicePlacesScreen(
+                                              cityName: cityName,
+                                              category: categories[i].name,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ],
                           );
                         },
                       ),
@@ -243,6 +259,37 @@ class CityServicesScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _buildCityImagePlaceholder() {
+    return Container(
+      color: cardColor,
+      child: const Center(
+        child: Icon(Icons.image_outlined, size: 45, color: primaryGreen),
+      ),
+    );
+  }
+
+  static IconData _iconForCategory(String name) {
+    final value = name.toLowerCase();
+    if (value.contains('food') || value.contains('restaurant')) {
+      return Icons.restaurant_outlined;
+    }
+    if (value.contains('hotel') ||
+        value.contains('stay') ||
+        value.contains('accommodation')) {
+      return Icons.hotel_outlined;
+    }
+    if (value.contains('park')) return Icons.local_parking_outlined;
+    if (value.contains('health') ||
+        value.contains('medical') ||
+        value.contains('hospital')) {
+      return Icons.local_hospital_outlined;
+    }
+    if (value.contains('transport') || value.contains('taxi')) {
+      return Icons.directions_car_outlined;
+    }
+    return Icons.category_outlined;
   }
 
   // ============================================================
@@ -374,4 +421,17 @@ class CityServicesScreen extends StatelessWidget {
       },
     );
   }
+}
+
+// UI-only category data; existing Firestore repository remains unchanged.
+class _ServiceCategory {
+  final String name;
+  final String description;
+  final IconData icon;
+
+  const _ServiceCategory({
+    required this.name,
+    required this.description,
+    required this.icon,
+  });
 }

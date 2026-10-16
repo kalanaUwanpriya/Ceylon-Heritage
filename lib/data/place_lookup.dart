@@ -296,7 +296,8 @@ class PlaceLookup {
         pageBuilder: (context) => jaffnaLibraryInformation,
       );
     }
-    if (norm.contains('nagadeepa') || norm.contains('casuarina')) {
+    if (norm.contains('nagadeepa') ||
+        norm.contains('nainativu')) {
       return PlaceDetails(
         id: 'nagadeepa_purana_viharaya',
         name: 'Nagadeepa Purana Viharaya',

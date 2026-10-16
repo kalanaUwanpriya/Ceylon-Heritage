@@ -9,9 +9,12 @@ import 'package:google_fonts/google_fonts.dart';
 import '../data/historical_places_data.dart';
 import '../destinations/destination_page.dart';
 import '../widgets/app_navigation_bar.dart';
-import 'notification_settings_screen.dart';
+import 'profile_screen.dart';
 import 'login_screen.dart';
-
+import 'saved_places_screen.dart';
+import 'notifications_screen.dart';
+import 'services/services_screen.dart';
+import 'notification_settings_screen.dart';
 class PlaceItem {
   final String title;
   final String subtitle;
@@ -303,7 +306,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const NotificationSettingsScreen(),
+                    builder: (context) => const NotificationsScreen(),
                   ),
                 );
               },
@@ -547,6 +550,34 @@ class _HomeScreenState extends State<HomeScreen> {
   // ============================================================
 
   void _handleNavigation(int index) {
-    AppNavigationBar.handleNavigation(context, index, currentIndex: 0);
-  }
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => ServicesScreen()),
+      );
+      return;
+    }
+
+    if (index == 2) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SavedPlacesScreen()),
+      );
+      return;
+    }
+
+    if (index == 3) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+      );
+      return;
+    }
+
+    if (index == 0) {
+      setState(() {
+        _selectedIndex = 0;
+      });
+      return;
+    }
 }

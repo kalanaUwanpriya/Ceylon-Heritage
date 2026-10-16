@@ -53,9 +53,12 @@ class ServicePlace {
       rating: (map['rating'] as num?)?.toDouble(),
       location: map['location'] as String? ?? '',
       mapUrl: map['mapUrl'] as String? ?? '',
-      imagePath: map['imagePath'] as String? ?? '',
+      imagePath: (map['imageUrl'] as String?)?.trim().isNotEmpty == true
+          ? (map['imageUrl'] as String).trim()
+          : map['imagePath'] as String? ?? '',
       description: map['description'] as String? ?? '',
-      galleryImages: (map['galleryImages'] as List<dynamic>?)
+      galleryImages:
+          (map['galleryImages'] as List<dynamic>?)
               ?.map((e) => e.toString())
               .toList() ??
           const [],

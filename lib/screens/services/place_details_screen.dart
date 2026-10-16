@@ -273,15 +273,23 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                         height: 220,
 
                         child: place.imagePath.isNotEmpty
-                            ? Image.asset(
-                                place.imagePath,
-
-                                fit: BoxFit.cover,
-
-                                errorBuilder: (context, error, stackTrace) {
-                                  return _buildImagePlaceholder();
-                                },
-                              )
+                            ? (place.imagePath.startsWith('http')
+                                  ? Image.network(
+                                      place.imagePath,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return _buildImagePlaceholder();
+                                          },
+                                    )
+                                  : Image.asset(
+                                      place.imagePath,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return _buildImagePlaceholder();
+                                          },
+                                    ))
                             : _buildImagePlaceholder(),
                       ),
                     ),
@@ -574,8 +582,9 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                           child: SizedBox(
                             height: 47,
                             child: StreamBuilder<bool>(
-                              stream: _savedPlacesService
-                                  .watchIsPlaceSaved(place.id),
+                              stream: _savedPlacesService.watchIsPlaceSaved(
+                                place.id,
+                              ),
                               initialData: false,
                               builder: (context, snapshot) {
                                 final isSaved = snapshot.data ?? false;
@@ -596,8 +605,7 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
                                       ),
                                     ),
                                     shape: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(13),
+                                      borderRadius: BorderRadius.circular(13),
                                     ),
                                   ),
                                   icon: Icon(
