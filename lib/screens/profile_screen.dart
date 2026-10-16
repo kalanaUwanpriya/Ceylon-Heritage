@@ -11,8 +11,6 @@ import '../services/auth_service.dart';
 import '../widgets/app_navigation_bar.dart';
 
 import 'about_app_screen.dart';
-import 'home_screen.dart';
-import 'saved_places_screen.dart';
 
 import 'change_password_screen.dart';
 
@@ -587,42 +585,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       bottomNavigationBar: AppNavigationBar(
         selectedIndex: 3,
         onDestinationSelected: (index) {
-          if (index == 3) {
-            return;
-          }
-
-          if (index == 0) {
-            if (Navigator.canPop(context)) {
-              Navigator.pop(context);
-            } else {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const HomeScreen()),
-              );
-            }
-            return;
-          }
-
-          if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SavedPlacesScreen(),
-              ),
-            );
-            return;
-          }
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Services will be connected next.',
-                style: GoogleFonts.inter(),
-              ),
-              backgroundColor: primaryColor,
-              duration: const Duration(seconds: 1),
-            ),
-          );
+          AppNavigationBar.handleNavigation(context, index, currentIndex: 3);
         },
       ),
     );
@@ -910,17 +873,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildSectionHeading('My Account'),
 
             const SizedBox(height: 12),
-
-            // SAVED PLACES
-            _buildMenuCard(
-              icon: Icons.bookmark_outline,
-
-              title: 'Saved Places',
-
-              onTap: () {
-                _showComingSoon('Saved Places');
-              },
-            ),
 
             // VISITED HISTORY
             _buildMenuCard(
@@ -1260,25 +1212,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // ============================================================
-
-  // COMING SOON
-
-  // ============================================================
-
-  void _showComingSoon(String featureName) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          '$featureName will be connected next.',
-
-          style: GoogleFonts.inter(),
-        ),
-
-        backgroundColor: primaryColor,
-
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
 }

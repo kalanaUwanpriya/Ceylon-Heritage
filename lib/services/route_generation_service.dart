@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import '../models/historical_place.dart';
 import '../Reviews/models/review.dart';
 import '../Reviews/services/review_service.dart';
@@ -69,7 +71,14 @@ class GeneratedWalkingTour {
   final String description;
   final String totalDurationLabel; // e.g. "7h 45m", "8h 0m"
   final String totalDistanceLabel; // e.g. "12.6 km"
+  final String totalVisitTimeLabel; // e.g. "4h 25m"
+  final String totalWalkTimeLabel; // e.g. "1h 15m"
+  final String totalBreakTimeLabel; // e.g. "50m"
+  final int totalVisitMinutes;
+  final int totalWalkMinutes;
+  final int totalBreakMinutes;
   final String tempo;
+  final String timeAvailable;
   final String ratingFilter;
   final List<WalkingRouteStop> stops;
 
@@ -80,7 +89,14 @@ class GeneratedWalkingTour {
     required this.description,
     required this.totalDurationLabel,
     required this.totalDistanceLabel,
+    this.totalVisitTimeLabel = '0m',
+    this.totalWalkTimeLabel = '0m',
+    this.totalBreakTimeLabel = '0m',
+    this.totalVisitMinutes = 0,
+    this.totalWalkMinutes = 0,
+    this.totalBreakMinutes = 0,
     required this.tempo,
+    this.timeAvailable = '1 Day',
     required this.ratingFilter,
     required this.stops,
   });
@@ -109,8 +125,8 @@ class RouteGenerationService {
   /// 4. Calculate/use the real average star rating for that place.
   /// 5. Apply the user's selected filter:
   ///    - Any → no rating restriction
-  ///    - 1 Star → average rating >= 1.0
-  ///    - 2 Star → average rating >= 2.0
+  ///    - 1 Star → average rating >= 1.0 (from real reviews)
+  ///    - 2 Star → average rating >= 2.0 (from real reviews)
   /// 6. Only after this filtering, send remaining places to the route-generation algorithm.
   Future<GeneratedWalkingTour> generateTour({
     required String tempo,
@@ -173,10 +189,11 @@ class RouteGenerationService {
   ) {
     return places.where((item) {
       if (ratingFilter == '1 Star') {
-        return item.realAverageRating >= 1.0;
+        return item.reviewCount > 0 && item.realAverageRating >= 1.0;
       } else if (ratingFilter == '2 Star') {
-        return item.realAverageRating >= 2.0;
+        return item.reviewCount > 0 && item.realAverageRating >= 2.0;
       }
+      // 'Any' allows all places, including unreviewed
       return true;
     }).toList();
   }
@@ -184,38 +201,86 @@ class RouteGenerationService {
   /// Calculates the realistic visit duration for a place based strictly on pace:
   ///
   /// 1. QUICK: Spend LESS THAN 30 minutes at each place (15–29 min).
-  ///    Examples: Ruwanwelisaya → 25 min, Sri Maha Bodhi → 20 min, Next place → 28 min.
   /// 2. MODERATE: Spend BETWEEN 30 minutes and 1 hour at each place (30–60 min).
-  ///    Examples: Ruwanwelisaya → 50 min, Sri Maha Bodhi → 45 min, Next place → 40 min.
-  /// 3. LEISURELY: Spend MORE THAN 1 hour at each place (60–90 min).
-  ///    Examples: Ruwanwelisaya → 75 min (1h 15m), Sri Maha Bodhi → 70 min (1h 10m), Next place → 80 min (1h 20m).
+  /// 3. LEISURELY: Spend MORE THAN 1 hour at each place (65–90 min).
   static int getVisitDurationMinutes(String placeId, String tempo, int index) {
     final pace = tempo.trim().toLowerCase();
     final normId = placeId.trim().toLowerCase().replaceAll('-', '_');
 
     if (pace.contains('quick')) {
+      // Anuradhapura
       if (normId.contains('ruwanweli')) return 25;
       if (normId.contains('maha_bodhi') || normId.contains('bodhi')) return 20;
       if (normId.contains('thuparamaya')) return 28;
       if (normId.contains('jetavana')) return 24;
       if (normId.contains('abhayagiri')) return 26;
+      // Polonnaruwa
+      if (normId.contains('gal_viharaya')) return 25;
+      if (normId.contains('royal_palace')) return 20;
+      if (normId.contains('rankoth')) return 28;
+      if (normId.contains('lankathilaka')) return 22;
+      if (normId.contains('parakrama')) return 26;
+      // Dambulla
+      if (normId.contains('dambulla')) return 25;
+      if (normId.contains('sigiriya')) return 28;
+      if (normId.contains('ibbankatuwa')) return 20;
+      // Down South
+      if (normId.contains('galle')) return 28;
+      if (normId.contains('star_fort')) return 22;
+      if (normId.contains('mulgirigala')) return 26;
+      if (normId.contains('kushta_raja')) return 18;
+
       final variations = [25, 20, 28, 24, 26, 22, 18];
       return variations[index % variations.length];
     } else if (pace.contains('leisurely')) {
+      // Anuradhapura
       if (normId.contains('ruwanweli')) return 75; // 1h 15m
       if (normId.contains('maha_bodhi') || normId.contains('bodhi')) return 70; // 1h 10m
       if (normId.contains('thuparamaya')) return 80; // 1h 20m
       if (normId.contains('jetavana')) return 85; // 1h 25m
       if (normId.contains('abhayagiri')) return 90; // 1h 30m
+      // Polonnaruwa
+      if (normId.contains('gal_viharaya')) return 75; // 1h 15m
+      if (normId.contains('royal_palace')) return 70; // 1h 10m
+      if (normId.contains('rankoth')) return 80; // 1h 20m
+      if (normId.contains('lankathilaka')) return 65; // 1h 05m
+      if (normId.contains('parakrama')) return 85; // 1h 25m
+      // Dambulla
+      if (normId.contains('dambulla')) return 75; // 1h 15m
+      if (normId.contains('sigiriya')) return 90; // 1h 30m
+      if (normId.contains('ibbankatuwa')) return 70; // 1h 10m
+      // Down South
+      if (normId.contains('galle')) return 90; // 1h 30m
+      if (normId.contains('star_fort')) return 70; // 1h 10m
+      if (normId.contains('mulgirigala')) return 80; // 1h 20m
+      if (normId.contains('kushta_raja')) return 65; // 1h 05m
+
       final variations = [75, 70, 80, 85, 90, 65];
       return variations[index % variations.length];
     } else {
       // Default: MODERATE (30-60 min)
+      // Anuradhapura
       if (normId.contains('ruwanweli')) return 50;
       if (normId.contains('maha_bodhi') || normId.contains('bodhi')) return 45;
       if (normId.contains('thuparamaya')) return 40;
       if (normId.contains('jetavana')) return 50;
       if (normId.contains('abhayagiri')) return 55;
+      // Polonnaruwa
+      if (normId.contains('gal_viharaya')) return 45;
+      if (normId.contains('royal_palace')) return 40;
+      if (normId.contains('rankoth')) return 50;
+      if (normId.contains('lankathilaka')) return 35;
+      if (normId.contains('parakrama')) return 45;
+      // Dambulla
+      if (normId.contains('dambulla')) return 50;
+      if (normId.contains('sigiriya')) return 60;
+      if (normId.contains('ibbankatuwa')) return 40;
+      // Down South
+      if (normId.contains('galle')) return 60;
+      if (normId.contains('star_fort')) return 40;
+      if (normId.contains('mulgirigala')) return 50;
+      if (normId.contains('kushta_raja')) return 35;
+
       final variations = [50, 45, 40, 50, 55, 35];
       return variations[index % variations.length];
     }
@@ -251,7 +316,7 @@ class RouteGenerationService {
     }
   }
 
-  /// Parses the available time string into total minutes.
+  /// Parses the available time string into total active touring minutes.
   static int parseAvailableMinutes(String timeStr) {
     final s = timeStr.trim().toLowerCase();
     final matchH = RegExp(r'(\d+)\s*h').firstMatch(s);
@@ -260,21 +325,37 @@ class RouteGenerationService {
     }
     final matchDay = RegExp(r'(\d+)\s*day').firstMatch(s);
     if (matchDay != null) {
-      return int.parse(matchDay.group(1)!) * 8 * 60; // 8 active tour hours per day
+      final days = int.parse(matchDay.group(1)!);
+      return days * 8 * 60; // 8 active sightseeing hours per day
     }
     return 480; // default: 8 hours = 480 minutes
+  }
+
+  /// Haversine distance in kilometers between two lat/lng coordinates.
+  static double _haversineKm(double lat1, double lon1, double lat2, double lon2) {
+    const p = 0.017453292519943295; // Math.PI / 180
+    final a = 0.5 -
+        math.cos((lat2 - lat1) * p) / 2 +
+        math.cos(lat1 * p) *
+            math.cos(lat2 * p) *
+            (1 - math.cos((lon2 - lon1) * p)) /
+            2;
+    return 12742 * math.asin(math.sqrt(a)); // 2 * R; R = 6371 km
   }
 
   /// Standard leg distances & walking durations between places.
   static ({double km, int minutes}) getLegInfo(
     String fromId,
     String toId,
-    String tempo,
-  ) {
+    String tempo, {
+    HistoricalPlace? fromPlace,
+    HistoricalPlace? toPlace,
+  }) {
     final fromNorm = fromId.trim().toLowerCase().replaceAll('-', '_');
     final toNorm = toId.trim().toLowerCase().replaceAll('-', '_');
 
     final Map<String, Map<String, ({double km, int minutes})>> table = {
+      // ANURADHAPURA
       'ruwanwelisaya': {
         'sri_maha_bodhi': (km: 0.85, minutes: 12),
         'thuparamaya': (km: 1.2, minutes: 15),
@@ -305,13 +386,137 @@ class RouteGenerationService {
         'ruwanwelisaya': (km: 2.8, minutes: 34),
         'sri_maha_bodhi': (km: 3.5, minutes: 42),
       },
+
+      // POLONNARUWA
+      'gal_viharaya': {
+        'royal_palace': (km: 2.7, minutes: 33),
+        'rankoth_vehera': (km: 1.2, minutes: 15),
+        'lankathilaka': (km: 0.6, minutes: 8),
+        'lankathilaka_image_house': (km: 0.6, minutes: 8),
+        'parakrama_samudraya': (km: 5.3, minutes: 65),
+      },
+      'royal_palace': {
+        'gal_viharaya': (km: 2.7, minutes: 33),
+        'rankoth_vehera': (km: 1.6, minutes: 20),
+        'lankathilaka': (km: 2.2, minutes: 27),
+        'lankathilaka_image_house': (km: 2.2, minutes: 27),
+        'parakrama_samudraya': (km: 3.0, minutes: 38),
+      },
+      'rankoth_vehera': {
+        'gal_viharaya': (km: 1.2, minutes: 15),
+        'royal_palace': (km: 1.6, minutes: 20),
+        'lankathilaka': (km: 0.7, minutes: 9),
+        'lankathilaka_image_house': (km: 0.7, minutes: 9),
+        'parakrama_samudraya': (km: 4.3, minutes: 53),
+      },
+      'lankathilaka': {
+        'gal_viharaya': (km: 0.6, minutes: 8),
+        'royal_palace': (km: 2.2, minutes: 27),
+        'rankoth_vehera': (km: 0.7, minutes: 9),
+        'parakrama_samudraya': (km: 4.9, minutes: 60),
+      },
+      'lankathilaka_image_house': {
+        'gal_viharaya': (km: 0.6, minutes: 8),
+        'royal_palace': (km: 2.2, minutes: 27),
+        'rankoth_vehera': (km: 0.7, minutes: 9),
+        'parakrama_samudraya': (km: 4.9, minutes: 60),
+      },
+      'parakrama_samudraya': {
+        'gal_viharaya': (km: 5.3, minutes: 65),
+        'royal_palace': (km: 3.0, minutes: 38),
+        'rankoth_vehera': (km: 4.3, minutes: 53),
+        'lankathilaka': (km: 4.9, minutes: 60),
+        'lankathilaka_image_house': (km: 4.9, minutes: 60),
+      },
+
+      // DAMBULLA
+      'dambulla_cave_temple': {
+        'ibbankatuwa_megalithic_tombs': (km: 4.5, minutes: 55),
+        'ibbankatuwa': (km: 4.5, minutes: 55),
+        'sigiriya_rock_fortress': (km: 17.5, minutes: 210),
+        'sigiriya': (km: 17.5, minutes: 210),
+      },
+      'dambulla': {
+        'ibbankatuwa_megalithic_tombs': (km: 4.5, minutes: 55),
+        'ibbankatuwa': (km: 4.5, minutes: 55),
+        'sigiriya_rock_fortress': (km: 17.5, minutes: 210),
+        'sigiriya': (km: 17.5, minutes: 210),
+      },
+      'sigiriya_rock_fortress': {
+        'dambulla_cave_temple': (km: 17.5, minutes: 210),
+        'dambulla': (km: 17.5, minutes: 210),
+        'ibbankatuwa_megalithic_tombs': (km: 21.0, minutes: 255),
+        'ibbankatuwa': (km: 21.0, minutes: 255),
+      },
+      'sigiriya': {
+        'dambulla_cave_temple': (km: 17.5, minutes: 210),
+        'dambulla': (km: 17.5, minutes: 210),
+        'ibbankatuwa_megalithic_tombs': (km: 21.0, minutes: 255),
+        'ibbankatuwa': (km: 21.0, minutes: 255),
+      },
+      'ibbankatuwa_megalithic_tombs': {
+        'dambulla_cave_temple': (km: 4.5, minutes: 55),
+        'dambulla': (km: 4.5, minutes: 55),
+        'sigiriya_rock_fortress': (km: 21.0, minutes: 255),
+        'sigiriya': (km: 21.0, minutes: 255),
+      },
+      'ibbankatuwa': {
+        'dambulla_cave_temple': (km: 4.5, minutes: 55),
+        'dambulla': (km: 4.5, minutes: 55),
+        'sigiriya_rock_fortress': (km: 21.0, minutes: 255),
+        'sigiriya': (km: 21.0, minutes: 255),
+      },
+
+      // DOWN SOUTH
+      'galle_dutch_fort_lighthouse': {
+        'kushta_raja_gala': (km: 3.5, minutes: 45),
+        'kushta_raja': (km: 3.5, minutes: 45),
+        'star_fort_matara': (km: 6.0, minutes: 75),
+        'star_fort': (km: 6.0, minutes: 75),
+        'mulgirigala_rock_temple': (km: 9.0, minutes: 110),
+        'mulgirigala': (km: 9.0, minutes: 110),
+      },
+      'kushta_raja_gala': {
+        'galle_dutch_fort_lighthouse': (km: 3.5, minutes: 45),
+        'galle': (km: 3.5, minutes: 45),
+        'star_fort_matara': (km: 2.8, minutes: 35),
+        'star_fort': (km: 2.8, minutes: 35),
+        'mulgirigala_rock_temple': (km: 6.5, minutes: 80),
+        'mulgirigala': (km: 6.5, minutes: 80),
+      },
+      'star_fort_matara': {
+        'galle_dutch_fort_lighthouse': (km: 6.0, minutes: 75),
+        'galle': (km: 6.0, minutes: 75),
+        'kushta_raja_gala': (km: 2.8, minutes: 35),
+        'kushta_raja': (km: 2.8, minutes: 35),
+        'mulgirigala_rock_temple': (km: 4.0, minutes: 50),
+        'mulgirigala': (km: 4.0, minutes: 50),
+      },
+      'mulgirigala_rock_temple': {
+        'galle_dutch_fort_lighthouse': (km: 9.0, minutes: 110),
+        'galle': (km: 9.0, minutes: 110),
+        'kushta_raja_gala': (km: 6.5, minutes: 80),
+        'kushta_raja': (km: 6.5, minutes: 80),
+        'star_fort_matara': (km: 4.0, minutes: 50),
+        'star_fort': (km: 4.0, minutes: 50),
+      },
     };
 
     final leg = table[fromNorm]?[toNorm] ??
-        table[toNorm]?[fromNorm] ??
-        (km: 1.0, minutes: 12);
+        table[toNorm]?[fromNorm];
 
-    return leg;
+    if (leg != null) {
+      return leg;
+    }
+
+    // Dynamic Haversine calculation if coordinates are available
+    if (fromPlace != null && toPlace != null) {
+      final distKm = _haversineKm(fromPlace.lat, fromPlace.lng, toPlace.lat, toPlace.lng);
+      final walkMins = (distKm / 4.5 * 60).round().clamp(2, 180);
+      return (km: double.parse(distKm.toStringAsFixed(1)), minutes: walkMins);
+    }
+
+    return (km: 1.0, minutes: 12);
   }
 
   /// Route-generation algorithm:
@@ -329,16 +534,33 @@ class RouteGenerationService {
     required String ratingFilter,
     required String destinationName,
   }) {
+    final circuitTitle = destinationName.toLowerCase().contains('polonnaruwa')
+        ? 'POLONNARUWA · HISTORICAL CIRCUIT'
+        : destinationName.toLowerCase().contains('dambulla')
+            ? 'DAMBULLA · HISTORICAL CIRCUIT'
+            : destinationName.toLowerCase().contains('south')
+                ? 'DOWN SOUTH · HISTORICAL CIRCUIT'
+                : 'CURATED HISTORICAL CIRCUIT';
+
+    final headline = _formatTourHeadline(destinationName, timeAvailable);
+
     if (eligiblePlaces.isEmpty) {
       return GeneratedWalkingTour(
         destinationName: destinationName,
-        circuitTitle: 'CURATED HISTORICAL CIRCUIT',
-        headline: _formatTourHeadline(timeAvailable),
+        circuitTitle: circuitTitle,
+        headline: headline,
         description:
             'No places currently meet the selected minimum rating ($ratingFilter).',
         totalDurationLabel: '0h 0m',
         totalDistanceLabel: '0.0 km',
+        totalVisitTimeLabel: '0m',
+        totalWalkTimeLabel: '0m',
+        totalBreakTimeLabel: '0m',
+        totalVisitMinutes: 0,
+        totalWalkMinutes: 0,
+        totalBreakMinutes: 0,
         tempo: tempo,
+        timeAvailable: timeAvailable,
         ratingFilter: ratingFilter,
         stops: const [],
       );
@@ -359,7 +581,13 @@ class RouteGenerationService {
       int transitionMin = 0;
       if (fittedPlaces.isNotEmpty) {
         final prevPlace = fittedPlaces.last;
-        final leg = getLegInfo(prevPlace.placeId, currentPlace.placeId, tempo);
+        final leg = getLegInfo(
+          prevPlace.placeId,
+          currentPlace.placeId,
+          tempo,
+          fromPlace: prevPlace.place,
+          toPlace: currentPlace.place,
+        );
         transitionMin = leg.minutes;
 
         // Apply Break Rule: after every 4 selected places
@@ -384,6 +612,10 @@ class RouteGenerationService {
     // Start tour at 09:00 AM (09:00 = 540 minutes from midnight)
     int currentMinutesFromMidnight = 9 * 60;
     double accumulatedDistanceKm = 0.0;
+    int accumulatedVisitMinutes = 0;
+    int accumulatedWalkMinutes = 0;
+    int accumulatedBreakMinutes = 0;
+
     final List<WalkingRouteStop> routeStops = [];
 
     for (int i = 0; i < fittedPlaces.length; i++) {
@@ -391,6 +623,8 @@ class RouteGenerationService {
       final pId = current.placeId;
 
       final stay = getVisitDurationMinutes(pId, tempo, i);
+      accumulatedVisitMinutes += stay;
+
       final arrivalTimeStr = _formatMinutesToAmPm(currentMinutesFromMidnight);
 
       currentMinutesFromMidnight += stay;
@@ -403,15 +637,23 @@ class RouteGenerationService {
 
       if (i < fittedPlaces.length - 1) {
         final next = fittedPlaces[i + 1];
-        final legInfo = getLegInfo(pId, next.placeId, tempo);
+        final legInfo = getLegInfo(
+          pId,
+          next.placeId,
+          tempo,
+          fromPlace: current.place,
+          toPlace: next.place,
+        );
 
         distanceToNext = legInfo.km;
         walkMinutesToNext = legInfo.minutes;
+        accumulatedWalkMinutes += walkMinutesToNext;
 
         // Apply Break Rule after every 4 selected places (index 3, 7...)
         if ((i + 1) % 4 == 0) {
           hasBreakAfter = true;
           breakMinutesAfter = getBreakMinutes(tempo);
+          accumulatedBreakMinutes += breakMinutesAfter;
         }
 
         // Timeline advances: departure + walk time + break time
@@ -456,27 +698,54 @@ class RouteGenerationService {
         ? '${accumulatedDistanceKm.toStringAsFixed(1)} km'
         : '0.0 km';
 
+    final desc = destinationName.toLowerCase().contains('polonnaruwa')
+        ? 'A personalized journey exploring the ancient ruins, grand palaces, and sacred stupas of Polonnaruwa.'
+        : destinationName.toLowerCase().contains('dambulla')
+            ? 'A personalized journey through the ancient rock temples, fortress ruins, and prehistoric heritage of Dambulla.'
+            : destinationName.toLowerCase().contains('south')
+                ? 'A scenic coastal journey through the colonial fortresses, sacred rock temples, and historic ruins of Down South.'
+                : 'A perfect blend of history, culture and peaceful sacred moments.';
+
     return GeneratedWalkingTour(
       destinationName: destinationName,
-      circuitTitle: 'CURATED HISTORICAL CIRCUIT',
-      headline: _formatTourHeadline(timeAvailable),
-      description:
-          'A perfect blend of history, culture and peaceful sacred moments.',
+      circuitTitle: circuitTitle,
+      headline: headline,
+      description: desc,
       totalDurationLabel: totalDurationStr,
       totalDistanceLabel: totalDistanceStr,
+      totalVisitTimeLabel: formatStayDuration(accumulatedVisitMinutes),
+      totalWalkTimeLabel: formatStayDuration(accumulatedWalkMinutes),
+      totalBreakTimeLabel: accumulatedBreakMinutes > 0
+          ? formatStayDuration(accumulatedBreakMinutes)
+          : '0m',
+      totalVisitMinutes: accumulatedVisitMinutes,
+      totalWalkMinutes: accumulatedWalkMinutes,
+      totalBreakMinutes: accumulatedBreakMinutes,
       tempo: tempo,
+      timeAvailable: timeAvailable,
       ratingFilter: ratingFilter,
       stops: routeStops,
     );
   }
 
-  static String _formatTourHeadline(String timeAvailable) {
+  static String _formatTourHeadline(String destinationName, String timeAvailable) {
     final t = timeAvailable.trim();
-    if (t.contains('8h')) return 'Your 8-Hour Walking Tour';
-    if (t.contains('12h')) return 'Your 12-Hour Walking Tour';
-    if (t.contains('1 Day')) return 'Your 1-Day Walking Tour';
-    if (t.contains('2 Day')) return 'Your 2-Day Walking Tour';
-    return 'Your $t Walking Tour';
+    final isPol = destinationName.toLowerCase().contains('polonnaruwa');
+    final isDam = destinationName.toLowerCase().contains('dambulla');
+    final isSouth = destinationName.toLowerCase().contains('south');
+    final cityPrefix = isPol
+        ? 'Polonnaruwa '
+        : (isDam
+            ? 'Dambulla '
+            : (isSouth
+                ? 'Down South '
+                : ''));
+
+    if (t.contains('8h')) return 'Your 8-Hour ${cityPrefix}Walking Tour';
+    if (t.contains('12h')) return 'Your 12-Hour ${cityPrefix}Walking Tour';
+    if (t.contains('1 Day')) return 'Your 1-Day ${cityPrefix}Walking Tour';
+    if (t.contains('2 Day')) return 'Your 2-Day ${cityPrefix}Walking Tour';
+    return 'Your $t ${cityPrefix}Walking Tour';
   }
 
   static String _formatMinutesToAmPm(int totalMinutes) {

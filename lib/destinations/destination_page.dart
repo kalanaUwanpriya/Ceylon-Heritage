@@ -8,8 +8,6 @@ import '../models/destination.dart';
 
 import '../data/place_information_data.dart';
 
-import '../screens/profile_screen.dart';
-import '../screens/saved_places_screen.dart';
 import '../screens/plan/walking_plan_page.dart';
 import '../widgets/app_navigation_bar.dart';
 import 'ruwanwelisaya_detail_page.dart';
@@ -22,6 +20,7 @@ import 'lankathilaka_detail_page.dart';
 import 'dambulla_detail_page.dart';
 import 'sigiriya_detail_page.dart';
 import 'ibbankatuwa_detail_page.dart';
+import '../widgets/audio_guide_player.dart';
 
 class DestinationPage extends StatefulWidget {
   final Destination destination;
@@ -52,8 +51,6 @@ class _DestinationPageState extends State<DestinationPage> {
   static const Color cardColor = Color(0xFFF0DDC3);
 
   static const Color accentColor = Color(0xFF9F5625);
-
-  static const Color greyText = Color(0xFF5F625D);
 
   static const Color borderColor = Color(0xFFE1D2BD);
 
@@ -459,170 +456,8 @@ class _DestinationPageState extends State<DestinationPage> {
 
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-
-                child: Container(
-                  width: double.infinity,
-
-                  padding: const EdgeInsets.all(14),
-
-                  decoration: BoxDecoration(
-                    color: cardColor,
-
-                    borderRadius: BorderRadius.circular(18),
-
-                    border: Border.all(color: borderColor),
-                  ),
-
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            width: 46,
-
-                            height: 46,
-
-                            decoration: const BoxDecoration(
-                              color: backgroundColor,
-
-                              shape: BoxShape.circle,
-                            ),
-
-                            child: const Icon(
-                              Icons.headphones_outlined,
-
-                              color: darkGreen,
-
-                              size: 25,
-                            ),
-                          ),
-
-                          const SizedBox(width: 12),
-
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-
-                              children: [
-                                Text(
-                                  'Audio Guide',
-
-                                  style: GoogleFonts.inter(
-                                    fontSize: 15,
-
-                                    fontWeight: FontWeight.w700,
-
-                                    color: darkGreen,
-                                  ),
-                                ),
-
-                                const SizedBox(height: 3),
-
-                                Text(
-                                  (widget.destination.name == 'Anuradhapura' ||
-                                          widget.destination.name == 'Dambulla')
-                                      ? 'Narrated by Dr. Sensaka Bandara'
-                                      : 'Narrated by Heritage Walks',
-
-                                  style: GoogleFonts.inter(
-                                    fontSize: 11,
-
-                                    color: greyText,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          Container(
-                            width: 42,
-
-                            height: 42,
-
-                            decoration: const BoxDecoration(
-                              color: darkGreen,
-
-                              shape: BoxShape.circle,
-                            ),
-
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-
-                              icon: const Icon(
-                                Icons.play_arrow_rounded,
-
-                                color: backgroundColor,
-
-                                size: 28,
-                              ),
-
-                              onPressed: () {},
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 10),
-
-                      Row(
-                        children: [
-                          Text(
-                            '0:00',
-
-                            style: GoogleFonts.inter(
-                              fontSize: 9,
-
-                              color: greyText,
-                            ),
-                          ),
-
-                          const SizedBox(width: 8),
-
-                          Expanded(
-                            child: Stack(
-                              alignment: Alignment.centerLeft,
-
-                              children: [
-                                Container(
-                                  height: 3,
-
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFFD4C5B0),
-
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-
-                                Container(
-                                  width: 35,
-
-                                  height: 3,
-
-                                  decoration: BoxDecoration(
-                                    color: accentColor,
-
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(width: 8),
-
-                          Text(
-                            '45:20',
-
-                            style: GoogleFonts.inter(
-                              fontSize: 9,
-
-                              color: greyText,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                child: AudioGuidePlayer(
+                  destinationName: widget.destination.name,
                 ),
               ),
 
@@ -646,7 +481,8 @@ class _DestinationPageState extends State<DestinationPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const WalkingPlanPage(),
+                          builder: (context) =>
+                              WalkingPlanPage(destination: widget.destination),
                         ),
                       );
                     },
@@ -880,42 +716,11 @@ class _DestinationPageState extends State<DestinationPage> {
       bottomNavigationBar: AppNavigationBar(
         selectedIndex: 0,
         onDestinationSelected: (index) {
-          if (index == 0) {
-            Navigator.pop(context);
-            return;
-          }
-          if (index == 2) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const SavedPlacesScreen(),
-              ),
-            );
-            return;
-          }
-          if (index == 3) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const ProfileScreen()),
-            );
-            return;
-          }
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                'Services will be connected next.',
-                style: GoogleFonts.inter(),
-              ),
-              backgroundColor: darkGreen,
-              duration: const Duration(seconds: 1),
-            ),
-          );
+          AppNavigationBar.handleNavigation(context, index);
         },
       ),
     );
   }
-
-
 
   // =========================================================
 
@@ -1033,6 +838,7 @@ class _DestinationPageState extends State<DestinationPage> {
 
         break;
 
+      case 'Star Fort, Matara':
       case 'Star Fort (Matara)':
         page = starFortInformation;
 
@@ -1212,6 +1018,7 @@ class _DestinationPageState extends State<DestinationPage> {
       case 'Kushta Raja Gala':
         return 'assets/images/kushta_raja_gala.png';
 
+      case 'Star Fort, Matara':
       case 'Star Fort (Matara)':
         return 'assets/images/star_fort.png';
 

@@ -62,7 +62,7 @@ class _WalkingTourMapScreenState extends State<WalkingTourMapScreen> {
         .toList();
   }
 
-  Future<void> _fetchRealWalkingRoute() async {
+  Future<void> _fetchRealWalkingRoute({bool forceRefresh = false}) async {
     setState(() {
       _isLoadingRoute = true;
       _routeErrorMessage = null;
@@ -81,7 +81,7 @@ class _WalkingTourMapScreenState extends State<WalkingTourMapScreen> {
     }
 
     try {
-      final result = await _routeService.getWalkingRoute(waypoints);
+      final result = await _routeService.getWalkingRoute(waypoints, forceRefresh: forceRefresh);
 
       if (mounted) {
         setState(() {
@@ -109,6 +109,9 @@ class _WalkingTourMapScreenState extends State<WalkingTourMapScreen> {
           _routeErrorMessage = 'Network error while fetching route.';
           _isLoadingRoute = false;
         });
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _fitCameraToBounds();
+        });
       }
     }
   }
@@ -122,17 +125,30 @@ class _WalkingTourMapScreenState extends State<WalkingTourMapScreen> {
     if (pointsToFit.isEmpty) return;
 
     if (pointsToFit.length == 1) {
-      _mapController.move(pointsToFit.first, 16.0);
+      _mapController.move(pointsToFit.first, 15.0);
       return;
     }
 
-    final bounds = LatLngBounds.fromPoints(pointsToFit);
-    _mapController.fitCamera(
-      CameraFit.bounds(
-        bounds: bounds,
-        padding: const EdgeInsets.fromLTRB(40, 110, 40, 230),
-      ),
-    );
+    try {
+      final bounds = LatLngBounds.fromPoints(pointsToFit);
+      // Guard against identical points (0 delta) which causes NaN zoom in flutter_map
+      if (bounds.south == bounds.north && bounds.west == bounds.east) {
+        _mapController.move(bounds.center, 14.5);
+        return;
+      }
+
+      _mapController.fitCamera(
+        CameraFit.bounds(
+          bounds: bounds,
+          padding: const EdgeInsets.fromLTRB(40, 110, 40, 230),
+        ),
+      );
+    } catch (_) {
+      // Safe fallback if fitting bounds encounters unexpected dimension
+      if (pointsToFit.isNotEmpty) {
+        _mapController.move(pointsToFit.first, 12.0);
+      }
+    }
   }
 
   void _onSelectMarker(int index) {
@@ -405,9 +421,34 @@ class _WalkingTourMapScreenState extends State<WalkingTourMapScreen> {
             Expanded(
               child: Text(
                 _routeErrorMessage!,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.inter(
                   fontSize: 11,
                   color: const Color(0xFF663C00),
+                ),
+              ),
+            ),
+            const SizedBox(width: 6),
+            InkWell(
+              onTap: () => _fetchRealWalkingRoute(forceRefresh: true),
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.refresh_rounded, size: 14, color: accentColor),
+                    const SizedBox(width: 3),
+                    Text(
+                      'Retry',
+                      style: GoogleFonts.inter(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: accentColor,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -602,14 +643,19 @@ class _WalkingTourMapScreenState extends State<WalkingTourMapScreen> {
                 size: 20,
               ),
               label: Row(
+                mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Navigate with Maps',
-                    style: GoogleFonts.inter(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.3,
+                  Flexible(
+                    child: Text(
+                      'Navigate with Maps',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 0.3,
+                      ),
                     ),
                   ),
                   const SizedBox(width: 6),

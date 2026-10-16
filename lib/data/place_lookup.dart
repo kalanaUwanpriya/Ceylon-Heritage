@@ -296,12 +296,13 @@ class PlaceLookup {
         pageBuilder: (context) => jaffnaLibraryInformation,
       );
     }
-    if (norm.contains('nagadeepa') || norm.contains('nainativu')) {
+    if (norm.contains('nagadeepa') ||
+        norm.contains('nainativu')) {
       return PlaceDetails(
         id: 'nagadeepa_purana_viharaya',
         name: 'Nagadeepa Purana Viharaya',
         destinationName: 'Jaffna',
-        location: 'Nainativu Island, Jaffna, Sri Lanka',
+        location: 'Nainativu Island, Jaffna, Northern Province',
         description: nagadeepaInformation.description,
         image: 'assets/images/nagadeepa.jpeg',
         pageBuilder: (context) => nagadeepaInformation,

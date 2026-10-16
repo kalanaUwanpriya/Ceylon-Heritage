@@ -6,6 +6,7 @@ import '../home_screen.dart';
 import '../profile_screen.dart';
 import '../saved_places_screen.dart';
 import 'firestore_services_repository.dart';
+import '../../widgets/app_navigation_bar.dart';
 
 class ServiceCity {
   final String name;
@@ -29,7 +30,6 @@ class ServicesScreen extends StatefulWidget {
 }
 
 class _ServicesScreenState extends State<ServicesScreen> {
-  final int _selectedIndex = 1;
   // ================= DESIGN SYSTEM COLORS =================
   static const Color backgroundColor = Color(0xFFF6EADA);
   static const Color primaryGreen = Color(0xFF17452F);
@@ -534,142 +534,11 @@ class _ServicesScreenState extends State<ServicesScreen> {
   // BOTTOM NAVIGATION
   // ============================================================
   Widget _buildBottomNavigationBar() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-
-      decoration: BoxDecoration(
-        color: backgroundColor,
-
-        boxShadow: [
-          BoxShadow(
-            color: primaryGreen.withValues(alpha: 0.07),
-            blurRadius: 10,
-            offset: const Offset(0, -3),
-          ),
-        ],
-      ),
-
-      child: SafeArea(
-        top: false,
-
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-          children: [
-            _buildNavItem(
-              index: 0,
-              icon: Icons.home_outlined,
-              selectedIcon: Icons.home_rounded,
-              label: 'Home',
-            ),
-
-            _buildNavItem(
-              index: 1,
-              icon: Icons.grid_view_outlined,
-              selectedIcon: Icons.grid_view_rounded,
-              label: 'Services',
-            ),
-
-            _buildNavItem(
-              index: 2,
-              icon: Icons.favorite_border_rounded,
-              selectedIcon: Icons.favorite_rounded,
-              label: 'Saved',
-            ),
-
-            _buildNavItem(
-              index: 3,
-              icon: Icons.person_outline_rounded,
-              selectedIcon: Icons.person_rounded,
-              label: 'Profile',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  // ============================================================
-  // NAVIGATION ITEM
-  // ============================================================
-  Widget _buildNavItem({
-    required int index,
-    required IconData icon,
-    required IconData selectedIcon,
-    required String label,
-  }) {
-    final bool isSelected = _selectedIndex == index;
-
-    return InkWell(
-      onTap: () {
-        if (index == 1) return;
-
-        Widget? page;
-
-        switch (index) {
-          case 0:
-            page = const HomeScreen();
-            break;
-          case 2:
-            page = const SavedPlacesScreen();
-            break;
-          case 3:
-            page = const ProfileScreen();
-            break;
-        }
-
-        if (page != null) {
-          Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (_) => page!),
-            (route) => route.isFirst,
-          );
-        }
+    return AppNavigationBar(
+      selectedIndex: 1,
+      onDestinationSelected: (index) {
+        AppNavigationBar.handleNavigation(context, index, currentIndex: 1);
       },
-
-      borderRadius: BorderRadius.circular(18),
-
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-
-        decoration: BoxDecoration(
-          // Design system:
-          // Active navigation = dark green filled
-          color: isSelected ? primaryGreen : Colors.transparent,
-
-          borderRadius: BorderRadius.circular(18),
-        ),
-
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-
-          children: [
-            Icon(
-              isSelected ? selectedIcon : icon,
-
-              size: 24,
-
-              color: isSelected ? backgroundColor : primaryGreen,
-            ),
-
-            const SizedBox(height: 4),
-
-            Text(
-              label,
-
-              // NAVIGATION = INTER
-              style: GoogleFonts.inter(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-
-                color: isSelected ? backgroundColor : primaryGreen,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

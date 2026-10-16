@@ -7,7 +7,6 @@ import '../widgets/review_card.dart';
 import '../widgets/review_modal.dart';
 import '../widgets/delete_review_dialog.dart';
 import '../../widgets/app_navigation_bar.dart';
-import '../../screens/home_screen.dart';
 
 class MyReviewsPage extends StatefulWidget {
   const MyReviewsPage({super.key});
@@ -199,17 +198,7 @@ class _MyReviewsPageState extends State<MyReviewsPage> {
       bottomNavigationBar: AppNavigationBar(
         selectedIndex: 3, // Profile tab active
         onDestinationSelected: (index) {
-          if (index == 0) {
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
-              (route) => false,
-            );
-          } else if (index == 3) {
-            Navigator.of(context).pop();
-          } else {
-            Navigator.of(context).pop();
-          }
+          AppNavigationBar.handleNavigation(context, index, currentIndex: 3);
         },
       ),
     );
