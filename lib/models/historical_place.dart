@@ -33,8 +33,25 @@ class HistoricalPlace {
 
   String get placeCategory => category ?? 'Historical Site';
 
-  double get lat => latitude ?? _defaultCoordinates[placeId]?.lat ?? 8.3500;
-  double get lng => longitude ?? _defaultCoordinates[placeId]?.lng ?? 80.3962;
+  double get lat =>
+      latitude ??
+      _defaultCoordinates[placeId]?.lat ??
+      _defaultCoordinates[placeId.replaceAll('_image_house', '')]?.lat ??
+      (destination.toLowerCase().contains('polonnaruwa')
+          ? 7.9405
+          : destination.toLowerCase().contains('dambulla')
+              ? 7.8566
+              : 8.3500);
+
+  double get lng =>
+      longitude ??
+      _defaultCoordinates[placeId]?.lng ??
+      _defaultCoordinates[placeId.replaceAll('_image_house', '')]?.lng ??
+      (destination.toLowerCase().contains('polonnaruwa')
+          ? 81.0028
+          : destination.toLowerCase().contains('dambulla')
+              ? 80.6483
+              : 80.3962);
 
   static const Map<String, ({double lat, double lng})> _defaultCoordinates = {
     'ruwanwelisaya': (lat: 8.350044, lng: 80.396236),
@@ -47,10 +64,14 @@ class HistoricalPlace {
     'royal_palace': (lat: 7.9405, lng: 81.0028),
     'rankoth_vehera': (lat: 7.9547, lng: 81.0028),
     'lankathilaka': (lat: 7.9602, lng: 81.0019),
+    'lankathilaka_image_house': (lat: 7.9602, lng: 81.0019),
     'parakrama_samudraya': (lat: 7.9197, lng: 80.9856),
     'dambulla_cave_temple': (lat: 7.8566, lng: 80.6483),
+    'dambulla': (lat: 7.8566, lng: 80.6483),
     'sigiriya_rock_fortress': (lat: 7.9570, lng: 80.7603),
+    'sigiriya': (lat: 7.9570, lng: 80.7603),
     'ibbankatuwa_megalithic_tombs': (lat: 7.8389, lng: 80.6120),
+    'ibbankatuwa': (lat: 7.8389, lng: 80.6120),
     'sri_dalada_maligawa': (lat: 7.2936, lng: 80.6413),
     'nallur_kandaswamy_kovil': (lat: 9.6745, lng: 80.0296),
     'jaffna_fort': (lat: 9.6617, lng: 80.0097),

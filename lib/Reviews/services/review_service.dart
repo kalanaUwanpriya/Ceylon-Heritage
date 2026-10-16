@@ -260,6 +260,25 @@ class ReviewService {
         reviews = await getPlaceReviewsOnce(normalized);
       }
       if (reviews.isEmpty) {
+        if (normalized == 'lankathilaka_image_house') {
+          reviews = await getPlaceReviewsOnce('lankathilaka');
+        } else if (normalized == 'lankathilaka') {
+          reviews = await getPlaceReviewsOnce('lankathilaka_image_house');
+        } else if (normalized == 'dambulla_cave_temple') {
+          reviews = await getPlaceReviewsOnce('dambulla');
+        } else if (normalized == 'dambulla') {
+          reviews = await getPlaceReviewsOnce('dambulla_cave_temple');
+        } else if (normalized == 'sigiriya_rock_fortress') {
+          reviews = await getPlaceReviewsOnce('sigiriya');
+        } else if (normalized == 'sigiriya') {
+          reviews = await getPlaceReviewsOnce('sigiriya_rock_fortress');
+        } else if (normalized == 'ibbankatuwa_megalithic_tombs') {
+          reviews = await getPlaceReviewsOnce('ibbankatuwa');
+        } else if (normalized == 'ibbankatuwa') {
+          reviews = await getPlaceReviewsOnce('ibbankatuwa_megalithic_tombs');
+        }
+      }
+      if (reviews.isEmpty) {
         if (placeId.endsWith('a')) {
           reviews = await getPlaceReviewsOnce(
               placeId.substring(0, placeId.length - 1));
@@ -303,6 +322,25 @@ class ReviewService {
         final normalized =
             id.toLowerCase().trim().replaceAll('-', '_');
         List<int>? ratings = ratingsMap[normalized];
+        if (ratings == null || ratings.isEmpty) {
+          if (normalized == 'lankathilaka_image_house') {
+            ratings = ratingsMap['lankathilaka'];
+          } else if (normalized == 'lankathilaka') {
+            ratings = ratingsMap['lankathilaka_image_house'];
+          } else if (normalized == 'dambulla_cave_temple') {
+            ratings = ratingsMap['dambulla'];
+          } else if (normalized == 'dambulla') {
+            ratings = ratingsMap['dambulla_cave_temple'];
+          } else if (normalized == 'sigiriya_rock_fortress') {
+            ratings = ratingsMap['sigiriya'];
+          } else if (normalized == 'sigiriya') {
+            ratings = ratingsMap['sigiriya_rock_fortress'];
+          } else if (normalized == 'ibbankatuwa_megalithic_tombs') {
+            ratings = ratingsMap['ibbankatuwa'];
+          } else if (normalized == 'ibbankatuwa') {
+            ratings = ratingsMap['ibbankatuwa_megalithic_tombs'];
+          }
+        }
         if (ratings == null || ratings.isEmpty) {
           if (normalized.endsWith('a')) {
             ratings =

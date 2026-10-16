@@ -399,6 +399,7 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
                 ),
               ),
 
+
               const SizedBox(height: 24),
 
               // Stops Timeline
@@ -438,7 +439,9 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
             onPressed: () => Navigator.of(context).maybePop(),
           ),
           Text(
-            'Heritage Sri Lanka',
+            widget.destination != null
+                ? '${widget.destination!.name} Tour'
+                : 'Heritage Sri Lanka',
             style: GoogleFonts.playfairDisplay(
               color: primaryColor,
               fontSize: 20,
@@ -554,6 +557,64 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
               height: 1.35,
             ),
           ),
+
+          const SizedBox(height: 14),
+
+          // Selected Preference Badges: Tempo, Time, Rating
+          Wrap(
+            spacing: 8,
+            runSpacing: 6,
+            alignment: WrapAlignment.center,
+            children: [
+              _buildPreferenceBadge(
+                icon: Icons.speed_outlined,
+                label: 'Pace: ${widget.tempo}',
+              ),
+              _buildPreferenceBadge(
+                icon: Icons.hourglass_empty_rounded,
+                label: 'Time: ${widget.timeAvailable}',
+              ),
+              _buildPreferenceBadge(
+                icon: Icons.star_rounded,
+                label: 'Rating: ${widget.ratingFilter}',
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============================================================
+  // PREFERENCE BADGE CHIP
+  // ============================================================
+  Widget _buildPreferenceBadge({
+    required IconData icon,
+    required String label,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: accentColor.withValues(alpha: 0.35),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 13, color: accentColor),
+          const SizedBox(width: 5),
+          Text(
+            label,
+            style: GoogleFonts.inter(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w600,
+              color: primaryColor,
+            ),
+          ),
         ],
       ),
     );
@@ -627,7 +688,6 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
     );
   }
 
-  // ============================================================
   // TIMELINE OF STOPS
   // ============================================================
   Widget _buildTimeline(GeneratedWalkingTour tour) {
@@ -913,56 +973,164 @@ class _WalkingTourRoutePageState extends State<WalkingTourRoutePage> {
   // CONNECTING WALK LEG
   // ============================================================
   Widget _buildConnectingWalkLeg(WalkingRouteStop stop) {
-    String legText = '${stop.distanceToNextLabel} · ${stop.walkTimeToNextLabel}';
-    if (stop.hasBreakAfter && stop.breakMinutesAfter > 0) {
-      final breakLabel = stop.breakMinutesAfter >= 60
-          ? '${stop.breakMinutesAfter ~/ 60}h break'
-          : '${stop.breakMinutesAfter}m break';
-      legText = '$legText · $breakLabel';
-    }
-
     return Padding(
       padding: const EdgeInsets.only(left: 36.0, top: 4.0, bottom: 4.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Vertical Connecting Line
-          Container(
-            width: 2,
-            height: 48,
-            color: primaryColor.withValues(alpha: 0.4),
+          // Vertical Connecting Line + Walk Info Pill
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 2,
+                height: 38,
+                color: primaryColor.withValues(alpha: 0.4),
+              ),
+              const SizedBox(width: 18),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF3ECE0),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: borderColor),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.directions_walk_rounded,
+                      size: 14,
+                      color: secondaryTextColor,
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      '${stop.distanceToNextLabel} · ${stop.walkTimeToNextLabel}',
+                      style: GoogleFonts.inter(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w500,
+                        color: secondaryTextColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
 
-          const SizedBox(width: 18),
-
-          // Walk Info Pill
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-            decoration: BoxDecoration(
-              color: const Color(0xFFF3ECE0),
-              borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: borderColor),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
+          // Separate timeline Break Item if applicable
+          if (stop.hasBreakAfter && stop.breakMinutesAfter > 0) ...[
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(
-                  Icons.directions_walk_rounded,
-                  size: 14,
-                  color: secondaryTextColor,
+                // Connecting line through the break
+                Column(
+                  children: [
+                    Container(
+                      width: 2,
+                      height: 10,
+                      color: primaryColor.withValues(alpha: 0.4),
+                    ),
+                    Container(
+                      width: 28,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: cardColor,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: accentColor.withValues(alpha: 0.5),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: const Center(
+                        child: Icon(
+                          Icons.coffee_rounded,
+                          size: 15,
+                          color: accentColor,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: 2,
+                      height: 10,
+                      color: primaryColor.withValues(alpha: 0.4),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 5),
-                Text(
-                  legText,
-                  style: GoogleFonts.inter(
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w500,
-                    color: secondaryTextColor,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 14, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: cardColor,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: accentColor.withValues(alpha: 0.35),
+                        width: 1,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: primaryColor.withValues(alpha: 0.03),
+                          blurRadius: 6,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Rest & Refreshment Break',
+                                style: GoogleFonts.playfairDisplay(
+                                  fontSize: 14.5,
+                                  fontWeight: FontWeight.w700,
+                                  color: primaryColor,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                'Take time to relax, hydrate, and refresh',
+                                style: GoogleFonts.inter(
+                                  fontSize: 11,
+                                  color: secondaryTextColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: backgroundColor,
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color: accentColor.withValues(alpha: 0.3),
+                            ),
+                          ),
+                          child: Text(
+                            stop.breakMinutesAfter >= 60
+                                ? '${stop.breakMinutesAfter ~/ 60}h break'
+                                : '${stop.breakMinutesAfter}m break',
+                            style: GoogleFonts.inter(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: accentColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
-          ),
+          ],
         ],
       ),
     );

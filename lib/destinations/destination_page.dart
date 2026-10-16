@@ -644,7 +644,9 @@ class _DestinationPageState extends State<DestinationPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const WalkingPlanPage(),
+                          builder: (context) => WalkingPlanPage(
+                            destination: widget.destination,
+                          ),
                         ),
                       );
                     },
