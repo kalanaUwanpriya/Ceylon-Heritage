@@ -14,7 +14,6 @@ import 'login_screen.dart';
 import 'saved_places_screen.dart';
 import 'notifications_screen.dart';
 import 'services/services_screen.dart';
-import 'notification_settings_screen.dart';
 class PlaceItem {
   final String title;
   final String subtitle;
@@ -43,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   static const Color primaryColor = Color(0xFF17452F);
   static const Color secondaryTextColor = Color(0xFF5F625D);
 
-  final int _selectedIndex = 0;
+  int _selectedIndex = 0;
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>?
   _accountStatusSubscription;
 
@@ -580,4 +579,5 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       return;
     }
+  }
 }

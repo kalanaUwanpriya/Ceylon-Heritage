@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
@@ -187,6 +188,121 @@ class _DestinationPageState extends State<DestinationPage> {
     super.dispose();
   }
 
+  String get _destinationUrl {
+    final name = widget.destination.name.trim().toLowerCase();
+    final String slug;
+    switch (name) {
+      case 'anuradhapura':
+        slug = 'anuradhapura';
+        break;
+      case 'polonnaruwa':
+        slug = 'polonnaruwa';
+        break;
+      case 'jaffna':
+        slug = 'jaffna';
+        break;
+      case 'down south':
+        slug = 'down-south';
+        break;
+      case 'kandy':
+        slug = 'kandy';
+        break;
+      case 'dambulla':
+        slug = 'dambulla';
+        break;
+      default:
+        slug = name.replaceAll(RegExp(r'\s+'), '-');
+        break;
+    }
+    return 'https://ceylonheritage.app/destination/$slug';
+  }
+
+  void _showShareBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: backgroundColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: borderColor,
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ListTile(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                  leading: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: const BoxDecoration(
+                      color: cardColor,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.link_rounded,
+                      color: darkGreen,
+                      size: 22,
+                    ),
+                  ),
+                  title: Text(
+                    'Copy Destination Link',
+                    style: GoogleFonts.inter(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      color: darkGreen,
+                    ),
+                  ),
+                  onTap: () async {
+                    Navigator.pop(ctx);
+                    await Clipboard.setData(
+                      ClipboardData(text: _destinationUrl),
+                    );
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Destination link copied!',
+                          style: GoogleFonts.inter(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        backgroundColor: darkGreen,
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        duration: const Duration(seconds: 2),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   // =========================================================
 
   // MAIN PAGE
@@ -236,7 +352,7 @@ class _DestinationPageState extends State<DestinationPage> {
           IconButton(
             icon: const Icon(Icons.share_outlined, color: darkGreen, size: 27),
 
-            onPressed: () {},
+            onPressed: _showShareBottomSheet,
           ),
 
           const SizedBox(width: 5),
