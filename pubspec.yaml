@@ -38,6 +38,8 @@ dependencies:
   latlong2: ^0.9.1
   map_launcher: ^3.4.1
   http: ^1.2.2
+  just_audio: ^0.10.6
+  just_audio_windows: ^0.2.3
 
 dev_dependencies:
   flutter_test:
@@ -57,3 +59,9 @@ flutter:
     - assets/images/services/jaffna/
     - assets/images/services/downsouth/
     - assets/images/services/dambulla/
+    - assets/Sound/Anuradhapura.mp3
+    - assets/Sound/Dambulla.mp3
+    - assets/Sound/DownSouth.mp3
+    - assets/Sound/Jaffna.mp3
+    - assets/Sound/Kandy.mp3
+    - assets/Sound/Pollonnaruwa.mp3
