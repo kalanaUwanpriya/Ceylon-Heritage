@@ -665,40 +665,7 @@ class _DestinationPageState extends State<DestinationPage> {
                 },
               ),
 
-              // =================================================
 
-              // MORE PLACES (hidden for Dambulla)
-
-              // =================================================
-              if (widget.destination.name != 'Dambulla') ...[
-                const SizedBox(height: 10),
-
-                Center(
-                  child: TextButton.icon(
-                    onPressed: () {},
-
-                    icon: const Icon(
-                      Icons.keyboard_arrow_down_rounded,
-
-                      color: darkGreen,
-
-                      size: 22,
-                    ),
-
-                    label: Text(
-                      'More places',
-
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-
-                        fontWeight: FontWeight.w600,
-
-                        color: darkGreen,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
 
               const SizedBox(height: 20),
             ],

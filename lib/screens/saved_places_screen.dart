@@ -23,6 +23,66 @@ class SavedPlacesScreen extends StatefulWidget {
     this.initialCategory = SavedCategory.all,
   });
 
+  /// Calculate dynamic card height to fit content without any overflow.
+  static double calculateSavedCardHeight({
+    required SavedPlaceModel place,
+    required double cardWidth,
+    required TextScaler textScaler,
+    required bool isPlace,
+    BuildContext? context,
+  }) {
+    // 6 left + 6 right padding + 2 border = 14px horizontal insets
+    final double innerWidth = (cardWidth - 14.0).clamp(10.0, double.infinity);
+    final double imageHeight = innerWidth / 1.35;
+
+    // 16px reserved for the 3-dot options icon (15px icon + 1px left padding)
+    final double titleMaxWidth =
+        (innerWidth - 16.0).clamp(10.0, double.infinity);
+
+    final defaultStyle = context != null
+        ? DefaultTextStyle.of(context).style
+        : const TextStyle();
+    final effectiveTitleStyle = defaultStyle.merge(
+      GoogleFonts.inter(
+        fontSize: 11.0,
+        fontWeight: FontWeight.w700,
+        color: const Color(0xFF17452F),
+        height: 1.25,
+      ),
+    );
+
+    final tp = TextPainter(
+      text: TextSpan(
+        text: place.destinationName,
+        style: effectiveTitleStyle,
+      ),
+      textDirection: context != null
+          ? Directionality.of(context)
+          : TextDirection.ltr,
+      textScaler: textScaler,
+      maxLines: null,
+    )..layout(maxWidth: titleMaxWidth);
+
+    final double titleHeight = tp.size.height;
+    tp.dispose();
+
+    const double verticalPadding = 17.0; // 7 top + 8 bottom + 2 border
+    const double gapImageToTitle = 6.0;
+    const double gapTitleToBottom = 6.0;
+    // Location row has font size 10 + 11px icon (~16-18px), chevron icon has 14px
+    final double bottomActionHeight = isPlace ? 18.0 : 16.0;
+    // Safety buffer ensuring cards never overflow across any device/font metrics
+    const double safetyBuffer = 10.0;
+
+    return verticalPadding +
+        imageHeight +
+        gapImageToTitle +
+        titleHeight +
+        gapTitleToBottom +
+        bottomActionHeight +
+        safetyBuffer;
+  }
+
   @override
   State<SavedPlacesScreen> createState() => _SavedPlacesScreenState();
 }
@@ -217,8 +277,8 @@ class _SavedPlacesScreenState extends State<SavedPlacesScreen> {
                         children: [
                           Text(
                             place.destinationName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            maxLines: null,
                             style: GoogleFonts.inter(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
@@ -927,8 +987,8 @@ class _SavedPlacesScreenState extends State<SavedPlacesScreen> {
             Expanded(
               child: Text(
                 place.destinationName,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+                softWrap: true,
+                maxLines: null,
                 style: GoogleFonts.inter(
                   fontSize: 14.5,
                   fontWeight: FontWeight.w700,
@@ -960,26 +1020,81 @@ class _SavedPlacesScreenState extends State<SavedPlacesScreen> {
     );
   }
 
-  // ── Places Grid (3 columns as in reference screenshot) ────────────────
-  Widget _buildPlacesGrid(List<SavedPlaceModel> places) {
+
+  // ── Adaptive Item Grid Helper ──────────────────────────────────────────
+  Widget _buildItemGrid({
+    required List<SavedPlaceModel> items,
+    required Widget Function(SavedPlaceModel item) cardBuilder,
+    required bool isPlace,
+  }) {
     return LayoutBuilder(
       builder: (context, constraints) {
         final crossAxisCount = constraints.maxWidth >= 600 ? 4 : 3;
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: places.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 12,
-            childAspectRatio: 0.76,
-          ),
-          itemBuilder: (context, index) {
-            return _buildPlaceGridCard(places[index]);
-          },
+        final rowCount = (items.length / crossAxisCount).ceil();
+        final cardWidth =
+            (constraints.maxWidth - (crossAxisCount - 1) * 10) / crossAxisCount;
+        final textScaler = MediaQuery.textScalerOf(context);
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: List.generate(rowCount, (rowIndex) {
+            final startIndex = rowIndex * crossAxisCount;
+            final endIndex =
+                (startIndex + crossAxisCount).clamp(0, items.length);
+            final rowItems = items.sublist(startIndex, endIndex);
+
+            // Dynamically calculate the row height according to the tallest card in this row
+            double maxRowHeight = 140.0;
+            for (final item in rowItems) {
+              final h = SavedPlacesScreen.calculateSavedCardHeight(
+                place: item,
+                cardWidth: cardWidth,
+                textScaler: textScaler,
+                isPlace: isPlace,
+                context: context,
+              );
+              if (h > maxRowHeight) {
+                maxRowHeight = h;
+              }
+            }
+
+            final List<Widget> rowChildren = [];
+            for (int i = 0; i < crossAxisCount; i++) {
+              if (i > 0) {
+                rowChildren.add(const SizedBox(width: 10));
+              }
+              if (i < rowItems.length) {
+                rowChildren.add(Expanded(child: cardBuilder(rowItems[i])));
+              } else {
+                rowChildren.add(const Expanded(child: SizedBox.shrink()));
+              }
+            }
+
+            return Padding(
+              padding: EdgeInsets.only(
+                bottom: rowIndex == rowCount - 1 ? 0 : 12,
+              ),
+              child: SizedBox(
+                height: maxRowHeight,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: rowChildren,
+                ),
+              ),
+            );
+          }),
         );
       },
+    );
+  }
+
+  // ── Places Grid (3 columns as in reference screenshot) ────────────────
+  Widget _buildPlacesGrid(List<SavedPlaceModel> places) {
+    return _buildItemGrid(
+      items: places,
+      cardBuilder: _buildPlaceGridCard,
+      isPlace: true,
     );
   }
 
@@ -999,7 +1114,7 @@ class _SavedPlacesScreenState extends State<SavedPlacesScreen> {
             ),
           ],
         ),
-        padding: const EdgeInsets.all(7),
+        padding: const EdgeInsets.fromLTRB(6, 7, 6, 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1014,16 +1129,18 @@ class _SavedPlacesScreenState extends State<SavedPlacesScreen> {
             const SizedBox(height: 6),
             // Title + Options
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Text(
                     place.destinationName,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    maxLines: null,
                     style: GoogleFonts.inter(
-                      fontSize: 12,
+                      fontSize: 11.0,
                       fontWeight: FontWeight.w700,
                       color: darkGreen,
+                      height: 1.25,
                     ),
                   ),
                 ),
@@ -1031,16 +1148,17 @@ class _SavedPlacesScreenState extends State<SavedPlacesScreen> {
                   onTap: () => _showItemOptions(place),
                   behavior: HitTestBehavior.opaque,
                   child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 2.0),
+                    padding: EdgeInsets.only(left: 1.0, top: 1.0),
                     child: Icon(
                       Icons.more_horiz_rounded,
-                      size: 16,
+                      size: 15,
                       color: secondaryTextColor,
                     ),
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 6),
             const Spacer(),
             // Location + Chevron
             Row(
@@ -1077,24 +1195,10 @@ class _SavedPlacesScreenState extends State<SavedPlacesScreen> {
 
   // ── Services Grid (as in reference screenshot) ─────────────────────────
   Widget _buildServicesGrid(List<SavedPlaceModel> services) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final crossAxisCount = constraints.maxWidth >= 600 ? 4 : 3;
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: services.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 12,
-            childAspectRatio: 0.85,
-          ),
-          itemBuilder: (context, index) {
-            return _buildServiceGridCard(services[index]);
-          },
-        );
-      },
+    return _buildItemGrid(
+      items: services,
+      cardBuilder: _buildServiceGridCard,
+      isPlace: false,
     );
   }
 
@@ -1114,7 +1218,7 @@ class _SavedPlacesScreenState extends State<SavedPlacesScreen> {
             ),
           ],
         ),
-        padding: const EdgeInsets.all(7),
+        padding: const EdgeInsets.fromLTRB(6, 7, 6, 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1127,41 +1231,46 @@ class _SavedPlacesScreenState extends State<SavedPlacesScreen> {
               ),
             ),
             const SizedBox(height: 6),
-            // Title + Options + Chevron
-            Expanded(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Text(
-                      place.destinationName,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.inter(
-                        fontSize: 11.5,
-                        fontWeight: FontWeight.w700,
-                        color: darkGreen,
-                      ),
+            // Title + Options
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    place.destinationName,
+                    softWrap: true,
+                    maxLines: null,
+                    style: GoogleFonts.inter(
+                      fontSize: 11.0,
+                      fontWeight: FontWeight.w700,
+                      color: darkGreen,
+                      height: 1.25,
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () => _showItemOptions(place),
-                    behavior: HitTestBehavior.opaque,
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 2.0),
-                      child: Icon(
-                        Icons.more_horiz_rounded,
-                        size: 15,
-                        color: secondaryTextColor,
-                      ),
+                ),
+                GestureDetector(
+                  onTap: () => _showItemOptions(place),
+                  behavior: HitTestBehavior.opaque,
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 1.0, top: 1.0),
+                    child: Icon(
+                      Icons.more_horiz_rounded,
+                      size: 15,
+                      color: secondaryTextColor,
                     ),
                   ),
-                  const Icon(
-                    Icons.chevron_right_rounded,
-                    size: 14,
-                    color: secondaryTextColor,
-                  ),
-                ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            const Spacer(),
+            // Navigation Arrow
+            const Align(
+              alignment: Alignment.centerRight,
+              child: Icon(
+                Icons.chevron_right_rounded,
+                size: 14,
+                color: secondaryTextColor,
               ),
             ),
           ],
@@ -1757,8 +1866,8 @@ class _SavedCategoryViewScreenState extends State<SavedCategoryViewScreen> {
                         Expanded(
                           child: Text(
                             place.destinationName,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                            softWrap: true,
+                            maxLines: null,
                             style: GoogleFonts.inter(
                               fontSize: 14.5,
                               fontWeight: FontWeight.w700,
@@ -1796,119 +1905,172 @@ class _SavedCategoryViewScreenState extends State<SavedCategoryViewScreen> {
           return LayoutBuilder(
             builder: (context, constraints) {
               final crossAxisCount = constraints.maxWidth >= 600 ? 4 : 3;
-              return GridView.builder(
+              final rowCount = (items.length / crossAxisCount).ceil();
+              final cardWidth =
+                  (constraints.maxWidth - (crossAxisCount - 1) * 10) /
+                      crossAxisCount;
+              final textScaler = MediaQuery.textScalerOf(context);
+              final isPlace = widget.category == SavedCategory.places;
+
+              return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-                itemCount: items.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 12,
-                  childAspectRatio:
-                      widget.category == SavedCategory.places ? 0.76 : 0.85,
-                ),
-                itemBuilder: (context, index) {
-                  final place = items[index];
-                  return GestureDetector(
-                    onTap: () => _openItem(place),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: cardColor,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: borderColor.withAlpha(120),
-                          width: 1,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: List.generate(rowCount, (rowIndex) {
+                    final startIndex = rowIndex * crossAxisCount;
+                    final endIndex =
+                        (startIndex + crossAxisCount).clamp(0, items.length);
+                    final rowItems = items.sublist(startIndex, endIndex);
+
+                    // Dynamically calculate the row height according to the tallest card in this row
+                    double maxRowHeight = 140.0;
+                    for (final item in rowItems) {
+                      final h = SavedPlacesScreen.calculateSavedCardHeight(
+                        place: item,
+                        cardWidth: cardWidth,
+                        textScaler: textScaler,
+                        isPlace: isPlace,
+                        context: context,
+                      );
+                      if (h > maxRowHeight) {
+                        maxRowHeight = h;
+                      }
+                    }
+
+                    final List<Widget> rowChildren = [];
+                    for (int i = 0; i < crossAxisCount; i++) {
+                      if (i > 0) {
+                        rowChildren.add(const SizedBox(width: 10));
+                      }
+                      if (i < rowItems.length) {
+                        rowChildren.add(
+                          Expanded(
+                            child: _buildCategoryGridCard(rowItems[i]),
+                          ),
+                        );
+                      } else {
+                        rowChildren.add(const Expanded(child: SizedBox.shrink()));
+                      }
+                    }
+
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        bottom: rowIndex == rowCount - 1 ? 0 : 12,
+                      ),
+                      child: SizedBox(
+                        height: maxRowHeight,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: rowChildren,
                         ),
                       ),
-                      padding: const EdgeInsets.all(7),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(11),
-                            child: AspectRatio(
-                              aspectRatio: 1.35,
-                              child: _buildImage(place.destinationImage),
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  place.destinationName,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: GoogleFonts.inter(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w700,
-                                    color: darkGreen,
-                                  ),
-                                ),
-                              ),
-                              GestureDetector(
-                                onTap: () => _showItemOptions(place),
-                                behavior: HitTestBehavior.opaque,
-                                child: const Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 2.0),
-                                  child: Icon(
-                                    Icons.more_horiz_rounded,
-                                    size: 16,
-                                    color: secondaryTextColor,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          if (widget.category == SavedCategory.places)
-                            Row(
-                              children: [
-                                const Icon(
-                                  Icons.location_on_outlined,
-                                  size: 11,
-                                  color: secondaryTextColor,
-                                ),
-                                const SizedBox(width: 2),
-                                Expanded(
-                                  child: Text(
-                                    place.location.isNotEmpty
-                                        ? place.location
-                                        : 'Sri Lanka',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: GoogleFonts.inter(
-                                      fontSize: 10,
-                                      color: secondaryTextColor,
-                                    ),
-                                  ),
-                                ),
-                                const Icon(
-                                  Icons.chevron_right_rounded,
-                                  size: 14,
-                                  color: secondaryTextColor,
-                                ),
-                              ],
-                            )
-                          else
-                            const Align(
-                              alignment: Alignment.centerRight,
-                              child: Icon(
-                                Icons.chevron_right_rounded,
-                                size: 14,
-                                color: secondaryTextColor,
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
+                    );
+                  }),
+                ),
               );
             },
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildCategoryGridCard(SavedPlaceModel place) {
+    return GestureDetector(
+      onTap: () => _openItem(place),
+      child: Container(
+        decoration: BoxDecoration(
+          color: cardColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: borderColor.withAlpha(120),
+            width: 1,
+          ),
+        ),
+        padding: const EdgeInsets.fromLTRB(6, 7, 6, 8),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(11),
+              child: AspectRatio(
+                aspectRatio: 1.35,
+                child: _buildImage(place.destinationImage),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    place.destinationName,
+                    softWrap: true,
+                    maxLines: null,
+                    style: GoogleFonts.inter(
+                      fontSize: 11.0,
+                      fontWeight: FontWeight.w700,
+                      color: darkGreen,
+                      height: 1.25,
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => _showItemOptions(place),
+                  behavior: HitTestBehavior.opaque,
+                  child: const Padding(
+                    padding: EdgeInsets.only(left: 1.0, top: 1.0),
+                    child: Icon(
+                      Icons.more_horiz_rounded,
+                      size: 15,
+                      color: secondaryTextColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            const Spacer(),
+            if (widget.category == SavedCategory.places)
+              Row(
+                children: [
+                  const Icon(
+                    Icons.location_on_outlined,
+                    size: 11,
+                    color: secondaryTextColor,
+                  ),
+                  const SizedBox(width: 2),
+                  Expanded(
+                    child: Text(
+                      place.location.isNotEmpty ? place.location : 'Sri Lanka',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: GoogleFonts.inter(
+                        fontSize: 10,
+                        color: secondaryTextColor,
+                      ),
+                    ),
+                  ),
+                  const Icon(
+                    Icons.chevron_right_rounded,
+                    size: 14,
+                    color: secondaryTextColor,
+                  ),
+                ],
+              )
+            else
+              const Align(
+                alignment: Alignment.centerRight,
+                child: Icon(
+                  Icons.chevron_right_rounded,
+                  size: 14,
+                  color: secondaryTextColor,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

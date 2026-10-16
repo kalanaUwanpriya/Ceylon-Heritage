@@ -537,30 +537,6 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
                 ),
               ),
             ),
-
-            const SizedBox(width: 6),
-
-            Text(
-              'More',
-
-              style: GoogleFonts.inter(
-                fontSize: 13,
-
-                fontWeight: FontWeight.w600,
-
-                color: darkGreen,
-              ),
-            ),
-
-            const SizedBox(width: 2),
-
-            const Icon(
-              Icons.keyboard_arrow_down_rounded,
-
-              color: darkGreen,
-
-              size: 21,
-            ),
           ],
         ),
       ],
@@ -721,7 +697,7 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
       widget.nearbyDistances.length,
     ].reduce((value, element) => value < element ? value : element);
 
-    final int count = availableCount > 4 ? 4 : availableCount;
+    final int count = availableCount;
 
     if (count == 0) {
       return const SizedBox.shrink();
@@ -731,35 +707,7 @@ class _PlaceInformationPageState extends State<PlaceInformationPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-
-          children: [
-            Expanded(child: _sectionTitle('Nearby Attractions')),
-
-            Text(
-              'See All',
-
-              style: GoogleFonts.inter(
-                fontSize: 13,
-
-                color: darkGreen,
-
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-
-            const SizedBox(width: 2),
-
-            const Icon(
-              Icons.chevron_right_rounded,
-
-              color: accentColor,
-
-              size: 22,
-            ),
-          ],
-        ),
+        _sectionTitle('Nearby Attractions'),
 
         const SizedBox(height: 12),
 
