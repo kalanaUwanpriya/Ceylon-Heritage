@@ -31,9 +31,9 @@ class _WalkingPlanPageState extends State<WalkingPlanPage> {
 
   // Option lists
   final List<String> _tempoOptions = const [
-    'Leisurely',
-    'Moderate',
     'Quick',
+    'Moderate',
+    'Leisurely',
   ];
 
   final List<String> _timeOptions = const [
@@ -44,9 +44,9 @@ class _WalkingPlanPageState extends State<WalkingPlanPage> {
   ];
 
   final List<String> _ratingOptions = const [
+    'Any',
     '1 Star',
     '2 Star',
-    'Any',
   ];
 
   @override
