@@ -144,57 +144,59 @@ final Destination downSouth = Destination(
   image: 'assets/images/down_south.png',
   popularAttractions: [
     'Galle Dutch Fort & Lighthouse',
+    'Star Fort, Matara',
     'Mulgirigala Rock Temple',
     'Kushta Raja Gala',
-    'Star Fort (Matara)',
-    'Ariyapala Masks Museum',
   ],
 );
 
 final List<HistoricalPlace> downSouthPlaces = [
   HistoricalPlace(
+    id: 'galle_dutch_fort_lighthouse',
     name: 'Galle Dutch Fort & Lighthouse',
     destination: 'Down South',
     description:
         'Galle Dutch Fort is a historic fortified city overlooking the Indian Ocean, featuring colonial architecture, old streets, ramparts, and the famous Galle Lighthouse.',
     location: 'Galle, Sri Lanka',
     image: 'assets/images/galle_fort.png',
+    latitude: 6.0269,
+    longitude: 80.2170,
   ),
 
   HistoricalPlace(
-    name: 'Mulgirigala Rock Temple',
-    destination: 'Down South',
-    description:
-        'Mulgirigala Rock Temple is an ancient Buddhist temple complex located on a large natural rock and is known for its historic caves, murals, and religious monuments.',
-    location: 'Tangalle, Sri Lanka',
-    image: 'assets/images/mulgirigala.png',
-  ),
-
-  HistoricalPlace(
+    id: 'kushta_raja_gala',
     name: 'Kushta Raja Gala',
     destination: 'Down South',
     description:
         'Kushta Raja Gala is a historic rock-cut statue located near Weligama and is an interesting example of the region’s archaeological heritage.',
     location: 'Weligama, Sri Lanka',
     image: 'assets/images/kushta_raja_gala.png',
+    latitude: 5.9744,
+    longitude: 80.4286,
   ),
 
   HistoricalPlace(
-    name: 'Star Fort (Matara)',
+    id: 'star_fort_matara',
+    name: 'Star Fort, Matara',
     destination: 'Down South',
     description:
         'Star Fort is a distinctive Dutch fortification in Matara, built in a six-pointed star shape as part of the historic coastal defence system.',
     location: 'Matara, Sri Lanka',
     image: 'assets/images/star_fort.png',
+    latitude: 5.9490,
+    longitude: 80.5447,
   ),
 
   HistoricalPlace(
-    name: 'Ariyapala Masks Museum',
+    id: 'mulgirigala_rock_temple',
+    name: 'Mulgirigala Rock Temple',
     destination: 'Down South',
     description:
-        'Ariyapala Masks Museum in Ambalangoda showcases traditional Sri Lankan masks, craftsmanship, folklore, and cultural traditions of the southern region.',
-    location: 'Ambalangoda, Sri Lanka',
-    image: 'assets/images/ariyapala_masks.png',
+        'Mulgirigala Rock Temple is an ancient Buddhist temple complex located on a large natural rock and is known for its historic caves, murals, and religious monuments.',
+    location: 'Near Tangalle, Southern Province, Sri Lanka',
+    image: 'assets/images/mulgirigala.png',
+    latitude: 6.0822,
+    longitude: 80.7675,
   ),
 ];
 

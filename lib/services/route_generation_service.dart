@@ -224,6 +224,11 @@ class RouteGenerationService {
       if (normId.contains('dambulla')) return 25;
       if (normId.contains('sigiriya')) return 28;
       if (normId.contains('ibbankatuwa')) return 20;
+      // Down South
+      if (normId.contains('galle')) return 28;
+      if (normId.contains('star_fort')) return 22;
+      if (normId.contains('mulgirigala')) return 26;
+      if (normId.contains('kushta_raja')) return 18;
 
       final variations = [25, 20, 28, 24, 26, 22, 18];
       return variations[index % variations.length];
@@ -244,6 +249,11 @@ class RouteGenerationService {
       if (normId.contains('dambulla')) return 75; // 1h 15m
       if (normId.contains('sigiriya')) return 90; // 1h 30m
       if (normId.contains('ibbankatuwa')) return 70; // 1h 10m
+      // Down South
+      if (normId.contains('galle')) return 90; // 1h 30m
+      if (normId.contains('star_fort')) return 70; // 1h 10m
+      if (normId.contains('mulgirigala')) return 80; // 1h 20m
+      if (normId.contains('kushta_raja')) return 65; // 1h 05m
 
       final variations = [75, 70, 80, 85, 90, 65];
       return variations[index % variations.length];
@@ -265,6 +275,11 @@ class RouteGenerationService {
       if (normId.contains('dambulla')) return 50;
       if (normId.contains('sigiriya')) return 60;
       if (normId.contains('ibbankatuwa')) return 40;
+      // Down South
+      if (normId.contains('galle')) return 60;
+      if (normId.contains('star_fort')) return 40;
+      if (normId.contains('mulgirigala')) return 50;
+      if (normId.contains('kushta_raja')) return 35;
 
       final variations = [50, 45, 40, 50, 55, 35];
       return variations[index % variations.length];
@@ -451,6 +466,40 @@ class RouteGenerationService {
         'sigiriya_rock_fortress': (km: 21.0, minutes: 255),
         'sigiriya': (km: 21.0, minutes: 255),
       },
+
+      // DOWN SOUTH
+      'galle_dutch_fort_lighthouse': {
+        'kushta_raja_gala': (km: 3.5, minutes: 45),
+        'kushta_raja': (km: 3.5, minutes: 45),
+        'star_fort_matara': (km: 6.0, minutes: 75),
+        'star_fort': (km: 6.0, minutes: 75),
+        'mulgirigala_rock_temple': (km: 9.0, minutes: 110),
+        'mulgirigala': (km: 9.0, minutes: 110),
+      },
+      'kushta_raja_gala': {
+        'galle_dutch_fort_lighthouse': (km: 3.5, minutes: 45),
+        'galle': (km: 3.5, minutes: 45),
+        'star_fort_matara': (km: 2.8, minutes: 35),
+        'star_fort': (km: 2.8, minutes: 35),
+        'mulgirigala_rock_temple': (km: 6.5, minutes: 80),
+        'mulgirigala': (km: 6.5, minutes: 80),
+      },
+      'star_fort_matara': {
+        'galle_dutch_fort_lighthouse': (km: 6.0, minutes: 75),
+        'galle': (km: 6.0, minutes: 75),
+        'kushta_raja_gala': (km: 2.8, minutes: 35),
+        'kushta_raja': (km: 2.8, minutes: 35),
+        'mulgirigala_rock_temple': (km: 4.0, minutes: 50),
+        'mulgirigala': (km: 4.0, minutes: 50),
+      },
+      'mulgirigala_rock_temple': {
+        'galle_dutch_fort_lighthouse': (km: 9.0, minutes: 110),
+        'galle': (km: 9.0, minutes: 110),
+        'kushta_raja_gala': (km: 6.5, minutes: 80),
+        'kushta_raja': (km: 6.5, minutes: 80),
+        'star_fort_matara': (km: 4.0, minutes: 50),
+        'star_fort': (km: 4.0, minutes: 50),
+      },
     };
 
     final leg = table[fromNorm]?[toNorm] ??
@@ -489,7 +538,9 @@ class RouteGenerationService {
         ? 'POLONNARUWA · HISTORICAL CIRCUIT'
         : destinationName.toLowerCase().contains('dambulla')
             ? 'DAMBULLA · HISTORICAL CIRCUIT'
-            : 'CURATED HISTORICAL CIRCUIT';
+            : destinationName.toLowerCase().contains('south')
+                ? 'DOWN SOUTH · HISTORICAL CIRCUIT'
+                : 'CURATED HISTORICAL CIRCUIT';
 
     final headline = _formatTourHeadline(destinationName, timeAvailable);
 
@@ -651,7 +702,9 @@ class RouteGenerationService {
         ? 'A personalized journey exploring the ancient ruins, grand palaces, and sacred stupas of Polonnaruwa.'
         : destinationName.toLowerCase().contains('dambulla')
             ? 'A personalized journey through the ancient rock temples, fortress ruins, and prehistoric heritage of Dambulla.'
-            : 'A perfect blend of history, culture and peaceful sacred moments.';
+            : destinationName.toLowerCase().contains('south')
+                ? 'A scenic coastal journey through the colonial fortresses, sacred rock temples, and historic ruins of Down South.'
+                : 'A perfect blend of history, culture and peaceful sacred moments.';
 
     return GeneratedWalkingTour(
       destinationName: destinationName,
@@ -679,7 +732,14 @@ class RouteGenerationService {
     final t = timeAvailable.trim();
     final isPol = destinationName.toLowerCase().contains('polonnaruwa');
     final isDam = destinationName.toLowerCase().contains('dambulla');
-    final cityPrefix = isPol ? 'Polonnaruwa ' : (isDam ? 'Dambulla ' : '');
+    final isSouth = destinationName.toLowerCase().contains('south');
+    final cityPrefix = isPol
+        ? 'Polonnaruwa '
+        : (isDam
+            ? 'Dambulla '
+            : (isSouth
+                ? 'Down South '
+                : ''));
 
     if (t.contains('8h')) return 'Your 8-Hour ${cityPrefix}Walking Tour';
     if (t.contains('12h')) return 'Your 12-Hour ${cityPrefix}Walking Tour';

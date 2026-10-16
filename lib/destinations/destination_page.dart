@@ -1004,6 +1004,7 @@ class _DestinationPageState extends State<DestinationPage> {
 
         break;
 
+      case 'Star Fort, Matara':
       case 'Star Fort (Matara)':
         page = starFortInformation;
 
@@ -1183,6 +1184,7 @@ class _DestinationPageState extends State<DestinationPage> {
       case 'Kushta Raja Gala':
         return 'assets/images/kushta_raja_gala.png';
 
+      case 'Star Fort, Matara':
       case 'Star Fort (Matara)':
         return 'assets/images/star_fort.png';
 
