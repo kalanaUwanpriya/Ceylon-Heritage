@@ -9,6 +9,7 @@ import '../home_screen.dart';
 import '../profile_screen.dart';
 import '../saved_places_screen.dart';
 import 'services_screen.dart';
+import 'firestore_services_repository.dart';
 
 class ServicePlacesScreen extends StatefulWidget {
   final String cityName;
@@ -172,7 +173,7 @@ class _ServicePlacesScreenState extends State<ServicePlacesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<ServicePlace> places = _filteredPlaces;
+    final List<ServicePlace> hardcodedPlaces = _filteredPlaces;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -186,43 +187,182 @@ class _ServicePlacesScreenState extends State<ServicePlacesScreen> {
         child: Column(
           children: [
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(18, 14, 18, 24),
+              child: StreamBuilder<List<ServicePlace>>(
+                stream: FirestoreServicesRepository.watchPlaces(
+                  widget.cityName,
+                  widget.category,
+                ),
+                builder: (context, snapshot) {
+                  final firestorePlaces = snapshot.data ?? <ServicePlace>[];
 
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  final allPlaces = [...hardcodedPlaces, ...firestorePlaces];
 
-                  children: [
-                    // -------------------------------------------------
+                  final searchText = _searchController.text
+                      .trim()
+                      .toLowerCase();
 
-                    // TOP BAR
+                  final places = allPlaces.where((place) {
+                    final matchesSearch =
+                        searchText.isEmpty ||
+                        place.name.toLowerCase().contains(searchText) ||
+                        place.type.toLowerCase().contains(searchText) ||
+                        place.location.toLowerCase().contains(searchText);
 
-                    // -------------------------------------------------
-                    Row(
+                    final matchesFilter =
+                        _selectedFilter == 'All' ||
+                        place.type.toLowerCase().contains(
+                          _selectedFilter.toLowerCase(),
+                        );
+
+                    return matchesSearch && matchesFilter;
+                  }).toList();
+
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.fromLTRB(18, 14, 18, 24),
+
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
                       children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
+                        // -------------------------------------------------
 
-                          icon: const Icon(
-                            Icons.arrow_back,
+                        // TOP BAR
 
-                            color: primaryGreen,
+                        // -------------------------------------------------
+                        Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
 
-                            size: 23,
-                          ),
+                              icon: const Icon(
+                                Icons.arrow_back,
 
-                          padding: EdgeInsets.zero,
+                                color: primaryGreen,
 
-                          constraints: const BoxConstraints(),
+                                size: 23,
+                              ),
+
+                              padding: EdgeInsets.zero,
+
+                              constraints: const BoxConstraints(),
+                            ),
+
+                            const SizedBox(width: 18),
+
+                            Expanded(
+                              child: Text(
+                                widget.category,
+
+                                style: GoogleFonts.playfairDisplay(
+                                  fontSize: 23,
+
+                                  fontWeight: FontWeight.w700,
+
+                                  color: primaryGreen,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
 
-                        const SizedBox(width: 18),
+                        const SizedBox(height: 24),
 
-                        Expanded(
+                        // -------------------------------------------------
+
+                        // SEARCH BAR
+
+                        // -------------------------------------------------
+                        Container(
+                          height: 50,
+
+                          decoration: BoxDecoration(
+                            color: cardColor,
+
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+
+                          child: TextField(
+                            controller: _searchController,
+
+                            onChanged: (value) {
+                              setState(() {});
+                            },
+
+                            style: GoogleFonts.inter(
+                              fontSize: 14,
+
+                              color: primaryGreen,
+                            ),
+
+                            decoration: InputDecoration(
+                              hintText: 'Search in ${widget.category}...',
+
+                              hintStyle: GoogleFonts.inter(
+                                fontSize: 13,
+
+                                color: primaryGreen.withValues(alpha: 0.60),
+                              ),
+
+                              prefixIcon: const Icon(
+                                Icons.search,
+
+                                color: primaryGreen,
+
+                                size: 21,
+                              ),
+
+                              border: InputBorder.none,
+
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 15,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 28),
+
+                        // -------------------------------------------------
+
+                        // CATEGORY ICON
+
+                        // -------------------------------------------------
+                        Center(
+                          child: Container(
+                            width: 68,
+
+                            height: 68,
+
+                            decoration: BoxDecoration(
+                              color: cardColor,
+
+                              shape: BoxShape.circle,
+                            ),
+
+                            child: Icon(
+                              _categoryIcon,
+
+                              size: 32,
+
+                              color: accentColor,
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 15),
+
+                        // -------------------------------------------------
+
+                        // TITLE
+
+                        // -------------------------------------------------
+                        Center(
                           child: Text(
-                            widget.category,
+                            '${widget.category} in ${widget.cityName}',
+
+                            textAlign: TextAlign.center,
 
                             style: GoogleFonts.playfairDisplay(
                               fontSize: 23,
@@ -233,248 +373,143 @@ class _ServicePlacesScreenState extends State<ServicePlacesScreen> {
                             ),
                           ),
                         ),
-                      ],
-                    ),
 
-                    const SizedBox(height: 24),
+                        const SizedBox(height: 8),
 
-                    // -------------------------------------------------
+                        // -------------------------------------------------
 
-                    // SEARCH BAR
+                        // DESCRIPTION
 
-                    // -------------------------------------------------
-                    Container(
-                      height: 50,
+                        // -------------------------------------------------
+                        Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 15),
 
-                      decoration: BoxDecoration(
-                        color: cardColor,
+                            child: Text(
+                              _description,
 
-                        borderRadius: BorderRadius.circular(15),
-                      ),
+                              textAlign: TextAlign.center,
 
-                      child: TextField(
-                        controller: _searchController,
+                              style: GoogleFonts.inter(
+                                fontSize: 13,
 
-                        onChanged: (value) {
-                          setState(() {});
-                        },
+                                height: 1.5,
 
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-
-                          color: primaryGreen,
-                        ),
-
-                        decoration: InputDecoration(
-                          hintText: 'Search in ${widget.category}...',
-
-                          hintStyle: GoogleFonts.inter(
-                            fontSize: 13,
-
-                            color: primaryGreen.withValues(alpha: 0.60),
-                          ),
-
-                          prefixIcon: const Icon(
-                            Icons.search,
-
-                            color: primaryGreen,
-
-                            size: 21,
-                          ),
-
-                          border: InputBorder.none,
-
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 15,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 28),
-
-                    // -------------------------------------------------
-
-                    // CATEGORY ICON
-
-                    // -------------------------------------------------
-                    Center(
-                      child: Container(
-                        width: 68,
-
-                        height: 68,
-
-                        decoration: BoxDecoration(
-                          color: cardColor,
-
-                          shape: BoxShape.circle,
-                        ),
-
-                        child: Icon(
-                          _categoryIcon,
-
-                          size: 32,
-
-                          color: accentColor,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    // -------------------------------------------------
-
-                    // TITLE
-
-                    // -------------------------------------------------
-                    Center(
-                      child: Text(
-                        '${widget.category} in ${widget.cityName}',
-
-                        textAlign: TextAlign.center,
-
-                        style: GoogleFonts.playfairDisplay(
-                          fontSize: 23,
-
-                          fontWeight: FontWeight.w700,
-
-                          color: primaryGreen,
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 8),
-
-                    // -------------------------------------------------
-
-                    // DESCRIPTION
-
-                    // -------------------------------------------------
-                    Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-
-                        child: Text(
-                          _description,
-
-                          textAlign: TextAlign.center,
-
-                          style: GoogleFonts.inter(
-                            fontSize: 13,
-
-                            height: 1.5,
-
-                            color: primaryGreen.withValues(alpha: 0.75),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(height: 22),
-
-                    // -------------------------------------------------
-
-                    // FILTER CHIPS
-
-                    // -------------------------------------------------
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-
-                      child: Row(
-                        children: _filters.map((filter) {
-                          final bool selected = _selectedFilter == filter;
-
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 9),
-
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  _selectedFilter = filter;
-                                });
-                              },
-
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 180),
-
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 17,
-
-                                  vertical: 9,
-                                ),
-
-                                decoration: BoxDecoration(
-                                  color: selected ? primaryGreen : cardColor,
-
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-
-                                child: Text(
-                                  filter,
-
-                                  style: GoogleFonts.inter(
-                                    fontSize: 12,
-
-                                    fontWeight: FontWeight.w600,
-
-                                    color: selected
-                                        ? backgroundColor
-                                        : primaryGreen,
-                                  ),
-                                ),
+                                color: primaryGreen.withValues(alpha: 0.75),
                               ),
                             ),
-                          );
-                        }).toList(),
-                      ),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    // -------------------------------------------------
-
-                    // NO RESULTS
-
-                    // -------------------------------------------------
-                    if (places.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 45),
-
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Icon(
-                                Icons.search_off_rounded,
-
-                                size: 45,
-
-                                color: primaryGreen.withValues(alpha: 0.45),
-                              ),
-
-                              const SizedBox(height: 10),
-
-                              Text(
-                                'No places found',
-
-                                style: GoogleFonts.inter(
-                                  fontSize: 14,
-
-                                  fontWeight: FontWeight.w600,
-
-                                  color: primaryGreen,
-                                ),
-                              ),
-                            ],
                           ),
                         ),
-                      )
-                    // -------------------------------------------------
-                    // PLACE CARDS
-                    // -------------------------------------------------
-                    else
-                      ...places.map((place) => _buildPlaceCard(place)),
-                  ],
-                ),
+
+                        const SizedBox(height: 22),
+
+                        // -------------------------------------------------
+
+                        // FILTER CHIPS
+
+                        // -------------------------------------------------
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+
+                          child: Row(
+                            children: _filters.map((filter) {
+                              final bool selected = _selectedFilter == filter;
+
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 9),
+
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _selectedFilter = filter;
+                                    });
+                                  },
+
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 180),
+
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 17,
+
+                                      vertical: 9,
+                                    ),
+
+                                    decoration: BoxDecoration(
+                                      color: selected
+                                          ? primaryGreen
+                                          : cardColor,
+
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+
+                                    child: Text(
+                                      filter,
+
+                                      style: GoogleFonts.inter(
+                                        fontSize: 12,
+
+                                        fontWeight: FontWeight.w600,
+
+                                        color: selected
+                                            ? backgroundColor
+                                            : primaryGreen,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // -------------------------------------------------
+
+                        // NO RESULTS
+
+                        // -------------------------------------------------
+                        if (places.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 45),
+
+                            child: Center(
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.search_off_rounded,
+
+                                    size: 45,
+
+                                    color: primaryGreen.withValues(alpha: 0.45),
+                                  ),
+
+                                  const SizedBox(height: 10),
+
+                                  Text(
+                                    'No places found',
+
+                                    style: GoogleFonts.inter(
+                                      fontSize: 14,
+
+                                      fontWeight: FontWeight.w600,
+
+                                      color: primaryGreen,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        // -------------------------------------------------
+                        // PLACE CARDS
+                        // -------------------------------------------------
+                        else
+                          ...places.map((place) => _buildPlaceCard(place)),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
 
@@ -546,17 +581,26 @@ class _ServicePlacesScreenState extends State<ServicePlacesScreen> {
 
                 color: backgroundColor,
 
-                child: place.imagePath.isNotEmpty
-                    ? Image.asset(
-                        place.imagePath,
-
+                child: place.imagePath.trim().isEmpty
+                    ? _buildPlaceholderIcon()
+                    : place.imagePath.trim().startsWith('http://') ||
+                          place.imagePath.trim().startsWith('https://')
+                    ? Image.network(
+                        place.imagePath.trim(),
                         fit: BoxFit.cover,
-
-                        errorBuilder: (context, error, stackTrace) {
-                          return _buildPlaceholderIcon();
-                        },
+                        width: 82,
+                        height: 82,
+                        errorBuilder: (context, error, stackTrace) =>
+                            _buildPlaceholderIcon(),
                       )
-                    : _buildPlaceholderIcon(),
+                    : Image.asset(
+                        place.imagePath,
+                        fit: BoxFit.cover,
+                        width: 82,
+                        height: 82,
+                        errorBuilder: (context, error, stackTrace) =>
+                            _buildPlaceholderIcon(),
+                      ),
               ),
             ),
 

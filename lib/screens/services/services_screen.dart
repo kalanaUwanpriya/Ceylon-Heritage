@@ -5,16 +5,19 @@ import 'suggest_service_screen.dart';
 import '../home_screen.dart';
 import '../profile_screen.dart';
 import '../saved_places_screen.dart';
+import 'firestore_services_repository.dart';
 
 class ServiceCity {
   final String name;
   final String imagePath;
   final String description;
+  final bool isNetworkImage;
 
   const ServiceCity({
     required this.name,
     required this.imagePath,
     required this.description,
+    this.isNetworkImage = false,
   });
 }
 
@@ -163,41 +166,80 @@ class _ServicesScreenState extends State<ServicesScreen> {
                       // ==================================================
                       // SERVICES GRID
                       // ==================================================
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
+                      StreamBuilder<List<Map<String, dynamic>>>(
+                        stream: FirestoreServicesRepository.watchCities(),
+                        builder: (context, snapshot) {
+                          final List<ServiceCity> allCities =
+                              List<ServiceCity>.from(_cities);
 
-                        itemCount: _cities.length,
+                          if (snapshot.hasData) {
+                            for (final data in snapshot.data!) {
+                              final name = (data['name'] ?? '')
+                                  .toString()
+                                  .trim();
 
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 14,
-                              childAspectRatio: 0.80,
-                            ),
+                              if (name.isEmpty) continue;
 
-                        itemBuilder: (context, index) {
-                          return _buildCityCard(_cities[index]);
+                              // Avoid duplicate cities.
+                              final alreadyExists = allCities.any(
+                                (city) =>
+                                    city.name.toLowerCase() ==
+                                    name.toLowerCase(),
+                              );
+
+                              if (alreadyExists) continue;
+
+                              final imageUrl = (data['imageUrl'] ?? '')
+                                  .toString()
+                                  .trim();
+
+                              allCities.add(
+                                ServiceCity(
+                                  name: name,
+                                  imagePath: imageUrl,
+                                  description:
+                                      (data['description'] ??
+                                              'Explore services and facilities in $name.')
+                                          .toString(),
+                                  isNetworkImage: true,
+                                ),
+                              );
+                            }
+                          }
+
+                          return GridView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: allCities.length,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  crossAxisSpacing: 12,
+                                  mainAxisSpacing: 14,
+                                  childAspectRatio: 0.80,
+                                ),
+                            itemBuilder: (context, index) =>
+                                _buildCityCard(allCities[index]),
+                          ); // GridView.builder
                         },
-                      ),
-                      const SizedBox(height: 18),
-
+                      ), // StreamBuilder
+                      // ==================================================
+                      // SUGGEST SERVICE CARD
+                      // ==================================================
                       _buildSuggestServiceCard(),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
+                    ], // Inner Column children
+                  ), // Inner Column
+                ), // Padding
+              ), // SingleChildScrollView
+            ), // Expanded
             // ==================================================
             // BOTTOM NAVIGATION
             // ==================================================
             _buildBottomNavigationBar(),
-          ],
-        ),
-      ),
-    );
+          ], // Outer Column children
+        ), // Outer Column
+      ), // SafeArea
+    ); // Scaffold
   }
 
   // ============================================================
@@ -300,6 +342,15 @@ class _ServicesScreenState extends State<ServicesScreen> {
     );
   }
 
+  Widget _buildCityImagePlaceholder() {
+    return Container(
+      color: backgroundColor,
+      child: const Center(
+        child: Icon(Icons.image_outlined, color: primaryGreen, size: 35),
+      ),
+    );
+  }
+
   Widget _buildCityCard(ServiceCity city) {
     return Container(
       decoration: BoxDecoration(
@@ -331,6 +382,7 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   builder: (context) => CityServicesScreen(
                     cityName: city.name,
                     imagePath: city.imagePath,
+                    isNetworkImage: city.isNetworkImage,
                   ),
                 ),
               );
@@ -348,24 +400,21 @@ class _ServicesScreenState extends State<ServicesScreen> {
                   child: SizedBox(
                     width: double.infinity,
 
-                    child: Image.asset(
-                      city.imagePath,
-                      fit: BoxFit.cover,
-
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: backgroundColor,
-
-                          child: const Center(
-                            child: Icon(
-                              Icons.image_outlined,
-                              color: primaryGreen,
-                              size: 35,
-                            ),
+                    child: city.isNetworkImage
+                        ? Image.network(
+                            city.imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return _buildCityImagePlaceholder();
+                            },
+                          )
+                        : Image.asset(
+                            city.imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return _buildCityImagePlaceholder();
+                            },
                           ),
-                        );
-                      },
-                    ),
                   ),
                 ),
 
