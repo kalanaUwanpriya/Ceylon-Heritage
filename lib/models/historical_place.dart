@@ -41,7 +41,9 @@ class HistoricalPlace {
           ? 7.9405
           : destination.toLowerCase().contains('dambulla')
               ? 7.8566
-              : 8.3500);
+              : destination.toLowerCase().contains('south')
+                  ? 6.0269
+                  : 8.3500);
 
   double get lng =>
       longitude ??
@@ -51,7 +53,9 @@ class HistoricalPlace {
           ? 81.0028
           : destination.toLowerCase().contains('dambulla')
               ? 80.6483
-              : 80.3962);
+              : destination.toLowerCase().contains('south')
+                  ? 80.2170
+                  : 80.3962);
 
   static const Map<String, ({double lat, double lng})> _defaultCoordinates = {
     'ruwanwelisaya': (lat: 8.350044, lng: 80.396236),
@@ -75,5 +79,18 @@ class HistoricalPlace {
     'sri_dalada_maligawa': (lat: 7.2936, lng: 80.6413),
     'nallur_kandaswamy_kovil': (lat: 9.6745, lng: 80.0296),
     'jaffna_fort': (lat: 9.6617, lng: 80.0097),
+    // Down South
+    'galle_dutch_fort_lighthouse': (lat: 6.0269, lng: 80.2170),
+    'galle_dutch_fort': (lat: 6.0269, lng: 80.2170),
+    'galle_fort': (lat: 6.0269, lng: 80.2170),
+    'galle': (lat: 6.0269, lng: 80.2170),
+    'star_fort_matara': (lat: 5.9490, lng: 80.5447),
+    'star_fort': (lat: 5.9490, lng: 80.5447),
+    'mulgirigala_rock_temple': (lat: 6.0822, lng: 80.7675),
+    'mulgirigala': (lat: 6.0822, lng: 80.7675),
+    'kushta_raja_gala': (lat: 5.9744, lng: 80.4286),
+    'kushta_raja': (lat: 5.9744, lng: 80.4286),
+    'ariyapala_masks_museum': (lat: 6.2366, lng: 80.0543),
+    'ariyapala_masks': (lat: 6.2366, lng: 80.0543),
   };
 }

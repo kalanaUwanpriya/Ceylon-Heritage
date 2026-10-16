@@ -276,6 +276,23 @@ class ReviewService {
           reviews = await getPlaceReviewsOnce('ibbankatuwa');
         } else if (normalized == 'ibbankatuwa') {
           reviews = await getPlaceReviewsOnce('ibbankatuwa_megalithic_tombs');
+        } else if (normalized == 'galle_dutch_fort_lighthouse') {
+          reviews = await getPlaceReviewsOnce('galle_fort');
+          if (reviews.isEmpty) reviews = await getPlaceReviewsOnce('galle');
+        } else if (normalized == 'galle_fort' || normalized == 'galle') {
+          reviews = await getPlaceReviewsOnce('galle_dutch_fort_lighthouse');
+        } else if (normalized == 'star_fort_matara') {
+          reviews = await getPlaceReviewsOnce('star_fort');
+        } else if (normalized == 'star_fort') {
+          reviews = await getPlaceReviewsOnce('star_fort_matara');
+        } else if (normalized == 'mulkirigala_rock_temple') {
+          reviews = await getPlaceReviewsOnce('mulkirigala');
+        } else if (normalized == 'mulkirigala') {
+          reviews = await getPlaceReviewsOnce('mulkirigala_rock_temple');
+        } else if (normalized == 'kushta_raja_gala') {
+          reviews = await getPlaceReviewsOnce('kushta_raja');
+        } else if (normalized == 'kushta_raja') {
+          reviews = await getPlaceReviewsOnce('kushta_raja_gala');
         }
       }
       if (reviews.isEmpty) {
@@ -339,6 +356,22 @@ class ReviewService {
             ratings = ratingsMap['ibbankatuwa'];
           } else if (normalized == 'ibbankatuwa') {
             ratings = ratingsMap['ibbankatuwa_megalithic_tombs'];
+          } else if (normalized == 'galle_dutch_fort_lighthouse') {
+            ratings = ratingsMap['galle_fort'] ?? ratingsMap['galle'];
+          } else if (normalized == 'galle_fort' || normalized == 'galle') {
+            ratings = ratingsMap['galle_dutch_fort_lighthouse'];
+          } else if (normalized == 'star_fort_matara') {
+            ratings = ratingsMap['star_fort'];
+          } else if (normalized == 'star_fort') {
+            ratings = ratingsMap['star_fort_matara'];
+          } else if (normalized == 'mulkirigala_rock_temple') {
+            ratings = ratingsMap['mulkirigala'];
+          } else if (normalized == 'mulkirigala') {
+            ratings = ratingsMap['mulkirigala_rock_temple'];
+          } else if (normalized == 'kushta_raja_gala') {
+            ratings = ratingsMap['kushta_raja'];
+          } else if (normalized == 'kushta_raja') {
+            ratings = ratingsMap['kushta_raja_gala'];
           }
         }
         if (ratings == null || ratings.isEmpty) {
